@@ -1,24 +1,23 @@
 package com.bookstore.readme.domain.member.application;
 
-import com.bookstore.readme.domain.member.domain.Member;
-import com.bookstore.readme.domain.member.dto.MemberDto;
-import com.bookstore.readme.domain.member.repository.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bookstore.readme.domain.member.dto.MemberJoinDto;
+import com.bookstore.readme.domain.member.dto.MemberResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class MemberService {
+    
+    private final MemberQueryService memberQueryService;
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    public Member save(MemberDto memberDto) {
-
-        Member member = memberDto.toEntity();
-
-        Member save = memberRepository.save(member);
-        System.out.println("save = " + save);
-
-        return save;
+    public MemberResponse memberJoin(MemberJoinDto memberJoinDto) {
+        boolean save = memberQueryService.save(memberJoinDto);
+        return MemberResponse
+                .builder()
+                .status(200)
+                .message("Success")
+                .data(save)
+                .build();
     }
 }
