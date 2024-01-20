@@ -1,4 +1,15 @@
 package com.bookstore.readme.domain.member.repository;
 
-public class MemberRepository {
+import com.bookstore.readme.domain.member.domain.Member;
+import com.bookstore.readme.domain.member.dto.MemberDto;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface MemberRepository extends JpaRepository<Member, Long> {
+
+    public Optional<Member> findByEmail(Member member);
+
 }
