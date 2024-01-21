@@ -24,9 +24,6 @@ logging:
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql: trace
 
-spring-doc:
-  show-login-endpoint: true
-
 server:
   port: 8080
 ---
