@@ -5,12 +5,11 @@ import com.bookstore.readme.domain.member.dto.MemberDto;
 import com.bookstore.readme.domain.member.dto.MemberJoinDto;
 import com.bookstore.readme.domain.member.dto.MemberLoginDto;
 import com.bookstore.readme.domain.member.dto.MemberResponse;
+import com.bookstore.readme.domain.member.exception.DuplicationMemberException;
+import com.bookstore.readme.domain.member.exception.MemberErrorResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,4 +28,16 @@ public class MemberApi {
         return ResponseEntity.ok(memberService.memberLogin(memberLoginDto));
     }
 
+    @ExceptionHandler(DuplicationMemberException.class)
+    public ResponseEntity<MemberResponse> handler(DuplicationMemberException e) {
+
+        MemberErrorResponse errorResponse = e.getMemberErrorResponse();
+        MemberResponse response = new MemberResponse(
+                errorResponse.getStatus(),
+                errorResponse.getMessage(),
+                null
+        );
+
+        return ResponseEntity.badRequest().body(response);
+    }
 }
