@@ -1,8 +1,7 @@
 package com.bookstore.readme.domain.member.dto;
 
-import com.bookstore.readme.domain.member.domain.Member;
+import com.bookstore.readme.domain.member.model.Member;
 import lombok.Data;
-import lombok.Getter;
 
 @Data
 public class MemberJoinDto {
