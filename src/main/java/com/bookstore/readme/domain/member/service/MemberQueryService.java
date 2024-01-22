@@ -1,6 +1,6 @@
-package com.bookstore.readme.domain.member.application;
+package com.bookstore.readme.domain.member.service;
 
-import com.bookstore.readme.domain.member.domain.Member;
+import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.dto.MemberJoinDto;
 import com.bookstore.readme.domain.member.dto.MemberLoginDto;
 import com.bookstore.readme.domain.member.exception.DuplicationMemberException;
@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Slf4j
 @Service

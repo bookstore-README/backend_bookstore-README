@@ -1,14 +1,11 @@
-package com.bookstore.readme.domain.member.application;
+package com.bookstore.readme.domain.member.service;
 
-import com.bookstore.readme.domain.member.domain.Member;
+import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.dto.MemberJoinDto;
 import com.bookstore.readme.domain.member.dto.MemberLoginDto;
-import com.bookstore.readme.domain.member.dto.MemberResponse;
-import com.bookstore.readme.domain.member.exception.DuplicationMemberException;
+import com.bookstore.readme.domain.member.response.MemberResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Service
 @RequiredArgsConstructor
