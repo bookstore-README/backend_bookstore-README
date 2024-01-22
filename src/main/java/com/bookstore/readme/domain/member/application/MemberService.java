@@ -4,8 +4,11 @@ import com.bookstore.readme.domain.member.domain.Member;
 import com.bookstore.readme.domain.member.dto.MemberJoinDto;
 import com.bookstore.readme.domain.member.dto.MemberLoginDto;
 import com.bookstore.readme.domain.member.dto.MemberResponse;
+import com.bookstore.readme.domain.member.exception.DuplicationMemberException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Service
 @RequiredArgsConstructor
