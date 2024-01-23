@@ -7,19 +7,19 @@ import lombok.Data;
 import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AladinBookDto {
+public class BookDto {
+    private String version;
     private String title;
     private String link;
-    private String logo;
     private String pubDate;
     private int totalResults;
     private int startIndex;
     private int itemsPerPage;
     private String query;
-    private String version;
     private int searchCategoryId;
     private String searchCategoryName;
+    private String logo;
 
     @JsonProperty(value = "item")
-    private List<AladinBookItemDto> items;
+    private List<BookItemDto> items;
 }

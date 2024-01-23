@@ -1,6 +1,7 @@
 package com.bookstore.readme.domain.collection.controller;
 
 import com.bookstore.readme.domain.collection.request.list.AladdinListRequest;
+import com.bookstore.readme.domain.collection.request.product.AladdinProductRequest;
 import com.bookstore.readme.domain.collection.request.search.AladdinSearchRequest;
 import com.bookstore.readme.domain.collection.service.CollectionService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -32,5 +33,9 @@ public class CollectionController {
         return ResponseEntity.ok(service.list(request));
     }
 
+    @GetMapping("/aladdin/product")
+    public ResponseEntity<Object> product(@Valid AladdinProductRequest request) throws JsonProcessingException {
+        return ResponseEntity.ok(service.product(request));
+    }
 }
 

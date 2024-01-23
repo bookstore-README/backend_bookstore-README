@@ -1,12 +1,9 @@
 package com.bookstore.readme.domain.collection.service;
 
-import com.bookstore.readme.domain.collection.dto.aladdin.AladinBookDto;
-import com.bookstore.readme.domain.collection.request.SearchTarget;
+import com.bookstore.readme.domain.collection.dto.aladdin.BookDto;
 import com.bookstore.readme.domain.collection.request.list.AladdinListRequest;
-import com.bookstore.readme.domain.collection.request.list.QueryListType;
-import com.bookstore.readme.domain.collection.request.list.SubSearchTarget;
+import com.bookstore.readme.domain.collection.request.product.AladdinProductRequest;
 import com.bookstore.readme.domain.collection.request.search.AladdinSearchRequest;
-import com.bookstore.readme.domain.collection.response.AladdinResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -24,7 +19,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -34,7 +28,7 @@ public class AladdinCollectionService implements CollectionService {
     @Value("${book_api_aladdin}")
     private String apiKey;
 
-    public AladinBookDto list(AladdinListRequest request) throws JsonProcessingException {
+    public BookDto list(AladdinListRequest request) throws JsonProcessingException {
         //UriComponentsBuilder url 설정
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.newInstance()
                 .scheme("http").host("www.aladin.co.kr")
@@ -61,11 +55,11 @@ public class AladdinCollectionService implements CollectionService {
         log.debug("Response Stirng Data: {}", uriString);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(uriString, AladinBookDto.class);
+        return objectMapper.readValue(uriString, BookDto.class);
     }
 
     @Override
-    public AladinBookDto search(AladdinSearchRequest request) throws JsonProcessingException {
+    public BookDto search(AladdinSearchRequest request) throws JsonProcessingException {
         //UriComponentsBuilder url 설정
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.newInstance()
                 .scheme("http").host("www.aladin.co.kr")
@@ -90,7 +84,36 @@ public class AladdinCollectionService implements CollectionService {
         String jsonString = getUriString(uriComponent);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(jsonString, AladinBookDto.class);
+        return objectMapper.readValue(jsonString, BookDto.class);
+    }
+
+    @Override
+    public BookDto product(AladdinProductRequest request) throws JsonProcessingException {
+        //UriComponentsBuilder url 설정
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.newInstance()
+                .scheme("http").host("www.aladin.co.kr")
+                .path("/ttb/api/ItemLookUp.aspx");
+
+        //UriComponents에 들어갈 데이터 Map으로 변환
+        Map<String, Object> query = new HashMap<>();
+        query.put("ttbkey", apiKey);
+        query.put("ItemId", request.getItemId());
+        query.put("ItemIdType", request.getItemIdType().getItemidType());
+        query.put("Cover", request.getCover() == null ? null : request.getCover().getCoverSize());
+        query.put("Output", "JS");
+        query.put("InputEncoding", "utf-8");
+        query.put("Version", "20131101");
+
+        String optResult = "ebookList,usedList,fileFormatList,c2binfo,packing,b2bSupply,subbarcode,cardReviewImgList,ratingInfo,bestSellerRank,previewImgList,eventList,authors,reviewList,fulldescription,fulldescription2,Toc,Story,categoryIdList,mdrecommend,phraseList";
+        query.put("OptResult", optResult);
+
+        UriComponents uriComponents = getUriComponents(uriBuilder, query);
+        log.debug("Request Uri: {}", uriComponents);
+
+        String jsonString = getUriString(uriComponents);
+        log.debug("Response: {}", jsonString);
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(jsonString, BookDto.class);
     }
 
     /**
