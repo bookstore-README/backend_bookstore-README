@@ -24,8 +24,16 @@ logging:
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql: trace
 
+book:
+  api:
+    aladdin: ${BOOK_API_ALADDIN}
 server:
   port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 ---
 spring:
   config:
