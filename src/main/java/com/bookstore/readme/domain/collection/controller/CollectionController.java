@@ -26,5 +26,11 @@ public class CollectionController {
     public ResponseEntity<Object> search(@Valid AladdinSearchRequest request) throws JsonProcessingException {
         return ResponseEntity.ok(service.search(request));
     }
+
+    @GetMapping("/aladdin/list")
+    public ResponseEntity<Object> list(@Valid AladdinListRequest request) throws JsonProcessingException {
+        return ResponseEntity.ok(service.list(request));
+    }
+
 }
 

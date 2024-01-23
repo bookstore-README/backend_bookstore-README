@@ -35,7 +35,33 @@ public class AladdinCollectionService implements CollectionService {
     private String apiKey;
 
     public AladinBookDto list(AladdinListRequest request) throws JsonProcessingException {
-        return null;
+        //UriComponentsBuilder url 설정
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.newInstance()
+                .scheme("http").host("www.aladin.co.kr")
+                .path("/ttb/api/ItemList.aspx");
+
+        //UriComponents에 들어갈 데이터 Map으로 변환
+        Map<String, Object> query = new HashMap<>();
+        query.put("ttbkey", apiKey);
+        query.put("QueryType", request.getQueryType().getQueryType());
+        query.put("SearchTarget", request.getSearchTarget() == null ? null : request.getSearchTarget().getTarget());
+        query.put("SubSearchTarget", request.getSubSearchTarget() == null ? null : request.getSubSearchTarget().getSubSearchTarget());
+        query.put("Start", request.getStart());
+        query.put("MaxResults", request.getMaxResults());
+        query.put("Cover", request.getCover() == null ? null : request.getCover().getCoverSize());
+        query.put("outofStockfilter", request.getOutofStockFilter());
+        query.put("Output", "JS");
+        query.put("InputEncoding", "utf-8");
+        query.put("Version", "20131101");
+
+        UriComponents uriComponents = getUriComponents(uriBuilder, query);
+        log.debug("Request Url: {}", uriComponents);
+
+        String uriString = getUriString(uriComponents);
+        log.debug("Response Stirng Data: {}", uriString);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(uriString, AladinBookDto.class);
     }
 
     @Override
