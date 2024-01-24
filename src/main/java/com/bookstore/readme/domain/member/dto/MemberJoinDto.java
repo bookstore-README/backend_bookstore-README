@@ -1,6 +1,7 @@
 package com.bookstore.readme.domain.member.dto;
 
 import com.bookstore.readme.domain.member.model.Member;
+import com.bookstore.readme.domain.member.model.MemberRole;
 import lombok.Data;
 
 @Data
@@ -18,6 +19,7 @@ public class MemberJoinDto {
                 .profileImage(profileImage)
                 .email(email)
                 .password(password)
+                .role(MemberRole.USER)
                 .build();
     }
 }

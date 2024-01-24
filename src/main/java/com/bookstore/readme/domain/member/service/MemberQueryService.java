@@ -9,6 +9,7 @@ import com.bookstore.readme.domain.member.exception.MemberErrorResponse;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberQueryService {
     private final MemberRepository memberRepository;
+    private final PasswordEncoder encoder;
 
     @Transactional
     public boolean save(MemberJoinDto memberJoinDto) {
@@ -26,6 +28,9 @@ public class MemberQueryService {
             MemberErrorResponse memberErrorResponse = new MemberErrorResponse(MemberCode.DUPLICATE_MEMBER);
             throw new DuplicationMemberException(memberErrorResponse);
         }
+        
+        // 비밀번호 암호화
+        memberJoinDto.setPassword(encoder.encode(memberJoinDto.getPassword()));
 
         Member entity = memberJoinDto.toEntity();
         memberRepository.save(entity);
@@ -35,8 +40,6 @@ public class MemberQueryService {
     }
 
     public Member login(MemberLoginDto memberLoginDto) {
-        Member member = memberRepository.findByEmailAndPassword(memberLoginDto.getEmail(), memberLoginDto.getPassword()).orElse(null);
-        System.out.println("member = " + member);
-        return member;
+        return memberRepository.findByEmail(memberLoginDto.getEmail()).orElse(null);
     }
 }
