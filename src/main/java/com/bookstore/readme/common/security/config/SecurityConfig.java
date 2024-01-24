@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeRequests) -> {
                     authorizeRequests.requestMatchers("/member/**").permitAll();
                     authorizeRequests.requestMatchers(PathRequest.toH2Console()).permitAll();
+                    authorizeRequests.requestMatchers("/collection/**").denyAll();
                     authorizeRequests.anyRequest().authenticated();
                 })
                 .addFilterAt(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
