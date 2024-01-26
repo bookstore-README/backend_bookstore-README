@@ -1,4 +1,4 @@
-package com.bookstore.readme.domain.collection.request.product;
+package com.bookstore.readme.domain.collection.aladin.request.product;
 
 import lombok.Getter;
 

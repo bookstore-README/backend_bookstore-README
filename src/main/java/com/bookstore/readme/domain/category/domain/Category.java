@@ -32,10 +32,6 @@ public class Category {
 
     private String categoryName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
-    private Book book;
-
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createDate;
@@ -45,9 +41,8 @@ public class Category {
     private LocalDateTime updateDate;
 
     @Builder
-    public Category(String categoryName, Book book) {
+    public Category(String categoryName) {
         this.categoryName = categoryName;
-        this.book = book;
     }
 
     public void changeCategoryName(String categoryName) {

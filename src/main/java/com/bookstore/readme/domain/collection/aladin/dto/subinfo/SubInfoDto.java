@@ -1,11 +1,11 @@
-package com.bookstore.readme.domain.collection.aladin.dto.aladdin.subinfo;
+package com.bookstore.readme.domain.collection.aladin.dto.subinfo;
 
-import com.bookstore.readme.domain.collection.aladin.dto.aladdin.subinfo.author.AuthorDto;
-import com.bookstore.readme.domain.collection.aladin.dto.aladdin.subinfo.ebook.EbookListDto;
-import com.bookstore.readme.domain.collection.aladin.dto.aladdin.subinfo.packing.PackingDto;
-import com.bookstore.readme.domain.collection.aladin.dto.aladdin.subinfo.newbook.NewBookListDto;
-import com.bookstore.readme.domain.collection.aladin.dto.aladdin.subinfo.rating.RatingInfoDto;
-import com.bookstore.readme.domain.collection.aladin.dto.aladdin.subinfo.used.UsedListDto;
+import com.bookstore.readme.domain.collection.aladin.dto.subinfo.author.AuthorDto;
+import com.bookstore.readme.domain.collection.aladin.dto.subinfo.ebook.EbookListDto;
+import com.bookstore.readme.domain.collection.aladin.dto.subinfo.packing.PackingDto;
+import com.bookstore.readme.domain.collection.aladin.dto.subinfo.newbook.NewBookListDto;
+import com.bookstore.readme.domain.collection.aladin.dto.subinfo.rating.RatingInfoDto;
+import com.bookstore.readme.domain.collection.aladin.dto.subinfo.used.UsedListDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 

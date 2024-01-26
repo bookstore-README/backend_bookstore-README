@@ -1,4 +1,4 @@
-package com.bookstore.readme.domain.collection.aladin.dto.aladdin;
+package com.bookstore.readme.domain.collection.aladin.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

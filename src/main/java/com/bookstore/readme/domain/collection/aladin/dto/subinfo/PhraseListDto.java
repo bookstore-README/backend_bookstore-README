@@ -1,4 +1,4 @@
-package com.bookstore.readme.domain.collection.aladin.dto.aladdin.subinfo;
+package com.bookstore.readme.domain.collection.aladin.dto.subinfo;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.bookstore.readme.domain.collection.request.search;
+package com.bookstore.readme.domain.collection.aladin.request.search;
 
 import lombok.Getter;
 
