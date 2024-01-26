@@ -30,7 +30,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
-    private static final String AUTHENTICATION = "Authentication ";
+    private static final String AUTHENTICATION = "Authentication";
     private static final String PREFIX_BEARER = "Bearer ";
     private static final String EXPIRE = "Expire ";
 

@@ -22,7 +22,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -132,14 +131,4 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class).build();
     }
-
-    // @Bean
-    // public AuthenticationProvider authenticationProvider() {
-    //     return new CustomAuthenticationProvider(customUserDetailService, passwordEncoder());
-    // }
-    //
-    // @Bean
-    // public AuthenticationFailureHandler authenticationFailureHandler() {
-    //     return null;
-    // }
 }

@@ -1,4 +1,4 @@
-package com.bookstore.readme.domain.category.domain;
+package com.bookstore.readme.domain.review.domain;
 
 import com.bookstore.readme.domain.book.domain.Book;
 import jakarta.persistence.*;
@@ -7,45 +7,42 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-@Getter
 @Entity
-@Table(
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "category_unique",
-                        columnNames = {"category_name"}
-                )
-        }
-)
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class Category {
+public class Review {
     @Id
     @GeneratedValue
-    @Column(name = "category_id")
+    @Column(name = "review_id")
     private Long id;
+    private String title;
+    private String content;
 
-    private String categoryName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id")
+    private Book book;
 
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createDate;
 
-    @LastModifiedDate
+    @CreatedDate
     @Column(updatable = true)
     private LocalDateTime updateDate;
 
     @Builder
-    public Category(String categoryName) {
-        this.categoryName = categoryName;
+    public Review(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
 
-    public void changeCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void changeBook(Book book) {
+        this.book = book;
+        book.getReviews().add(this);
     }
 }
