@@ -1,10 +1,13 @@
 package com.bookstore.readme.domain.book.dto;
 
 import com.bookstore.readme.domain.book.domain.Book;
+import com.bookstore.readme.domain.review.domain.Review;
+import com.bookstore.readme.domain.review.dto.ReviewDto;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,7 +15,7 @@ import java.util.List;
 public class BookDto {
     private final Long bookId;
     private final String bookTitle;
-    private final Integer views;
+    private final List<ReviewDto> reviews = new ArrayList<>();
     private final String publishedDate;
     private final String bookImgUrl;
     private final List<String> authors;
@@ -24,10 +27,9 @@ public class BookDto {
     private final LocalDateTime updateDate;
 
     @Builder
-    public BookDto(Long bookId, String bookTitle, Integer views, String publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, String bookMarked, Double averageRating, LocalDateTime createDate, LocalDateTime updateDate) {
+    public BookDto(Long bookId, String bookTitle, String publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, String bookMarked, Double averageRating, LocalDateTime createDate, LocalDateTime updateDate) {
         this.bookId = bookId;
         this.bookTitle = bookTitle;
-        this.views = views;
         this.publishedDate = publishedDate;
         this.bookImgUrl = bookImgUrl;
         this.authors = authors;
@@ -43,7 +45,6 @@ public class BookDto {
         return BookDto.builder()
                 .bookId(book.getId())
                 .bookTitle(book.getBookTitle())
-                .views(book.getViews())
                 .publishedDate(book.getPublishedDate())
                 .bookImgUrl(book.getBookImgUrl())
                 .authors(convertAuthors(book.getAuthors()))
