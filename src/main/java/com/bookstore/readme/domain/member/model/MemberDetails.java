@@ -15,6 +15,10 @@ public class MemberDetails implements UserDetails {
 
     private Member member;
 
+    public MemberDetails(Member member) {
+        this.member = member;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collect = new ArrayList<>();
@@ -29,7 +33,7 @@ public class MemberDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return member.getName();
+        return member.getEmail();
     }
 
     @Override

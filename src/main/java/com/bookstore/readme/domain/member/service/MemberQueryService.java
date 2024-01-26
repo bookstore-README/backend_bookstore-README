@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class MemberQueryService {
+
     private final MemberRepository memberRepository;
     private final PasswordEncoder encoder;
 
@@ -37,9 +38,5 @@ public class MemberQueryService {
 
         log.debug("Save Member Entity: {}", entity);
         return true;
-    }
-
-    public Member login(MemberLoginDto memberLoginDto) {
-        return memberRepository.findByEmail(memberLoginDto.getEmail()).orElse(null);
     }
 }
