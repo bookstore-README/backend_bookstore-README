@@ -18,8 +18,19 @@ public class BookQueryService {
     private final EntityManager em;
 
     @Transactional
-    public List<Book> searchAll() {
+    public Book findById(Long bookId) {
+        return bookRepository.findById(bookId)
+                .orElseGet(() -> null);
+    }
+
+    @Transactional
+    public List<Book> findAll() {
         return bookRepository.findAll();
+    }
+
+    @Transactional
+    public Page<Book> scrollSearch(Integer bookId, PageRequest pageRequest) {
+        return bookRepository.findAllByIdGreaterThanEqualOrderByIdAsc(bookId.longValue(), pageRequest);
     }
 
     @Transactional
@@ -29,9 +40,5 @@ public class BookQueryService {
 
     public Long count() {
         return bookRepository.count();
-    }
-
-    public Page<Book> scrollSearch(Integer bookId, PageRequest pageRequest) {
-        return bookRepository.findAllByIdGreaterThanEqualOrderByIdAsc(bookId.longValue(), pageRequest);
     }
 }

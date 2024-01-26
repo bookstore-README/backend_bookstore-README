@@ -1,6 +1,7 @@
 package com.bookstore.readme.domain.book.domain;
 
 import com.bookstore.readme.domain.category.domain.Category;
+import com.bookstore.readme.domain.review.domain.Review;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,7 +24,10 @@ public class Book {
     @GeneratedValue
     private Long id;
     private String bookTitle;
-    private Integer views;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
+    private List<Review> reviews = new ArrayList<>();
+
     private String publishedDate;
     private String bookImgUrl;
     private String authors;
@@ -41,9 +45,8 @@ public class Book {
     private LocalDateTime updateDate;
 
     @Builder
-    public Book(String bookTitle, Integer views, String publishedDate, String bookImgUrl, String authors, String description, String categories, String bookmarked, Double averageRating) {
+    public Book(String bookTitle, String publishedDate, String bookImgUrl, String authors, String description, String categories, String bookmarked, Double averageRating) {
         this.bookTitle = bookTitle;
-        this.views = views;
         this.publishedDate = publishedDate;
         this.bookImgUrl = bookImgUrl;
         this.authors = authors;

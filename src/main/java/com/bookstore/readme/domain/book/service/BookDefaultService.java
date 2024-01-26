@@ -5,11 +5,13 @@ import com.bookstore.readme.domain.book.dto.BookDto;
 import com.bookstore.readme.domain.book.dto.BookListDto;
 import com.bookstore.readme.domain.book.request.BookRequest;
 import com.bookstore.readme.domain.book.response.BookResponse;
+import com.bookstore.readme.domain.review.dto.ReviewDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,10 +22,19 @@ public class BookDefaultService implements BookService {
     private final BookQueryService bookQueryService;
 
     @Override
+    @Transactional
     public BookResponse bookList() {
-        List<Book> books = bookQueryService.searchAll();
+        List<Book> books = bookQueryService.findAll();
         List<BookDto> convertBookDtos = books.stream()
-                .map(BookDto::toBookDto)
+                .map(book -> {
+                    BookDto convertBook = BookDto.toBookDto(book);
+                    List<ReviewDto> convertReview = book.getReviews().stream()
+                            .map(ReviewDto::toReviewDto)
+                            .toList();
+
+                    convertBook.getReviews().addAll(convertReview);
+                    return convertBook;
+                })
                 .toList();
 
         BookListDto data = BookListDto.builder()
@@ -38,13 +49,22 @@ public class BookDefaultService implements BookService {
     }
 
     @Override
+    @Transactional
     public BookResponse bookList(Integer bookId, Integer limit) {
         PageRequest pageRequest = PageRequest.of(0, limit);
         Page<Book> pageBooks = bookQueryService.scrollSearch(bookId, pageRequest);
 
         List<Book> books = pageBooks.getContent();
         List<BookDto> convertBootDtos = books.stream()
-                .map(BookDto::toBookDto)
+                .map(book -> {
+                    BookDto convertBook = BookDto.toBookDto(book);
+                    List<ReviewDto> convertReview = book.getReviews().stream()
+                            .map(ReviewDto::toReviewDto)
+                            .toList();
+
+                    convertBook.getReviews().addAll(convertReview);
+                    return convertBook;
+                })
                 .toList();
 
         int cursorId = pageBooks.hasNext() ? bookId + limit : -1;
