@@ -1,4 +1,4 @@
-package com.bookstore.readme.common.jwt;
+package com.bookstore.readme.common.security.provider;
 
 import com.bookstore.readme.common.security.service.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Objects;
 
 @RequiredArgsConstructor
-public class JwtAuthenticationProvider implements AuthenticationProvider {
+public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     private final CustomUserDetailService customUserDetailService;
     private final PasswordEncoder passwordEncoder;
@@ -24,15 +24,15 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         String email = auth.getName();
         String password = (String) auth.getCredentials();
 
-        UserDetails user = customUserDetailService.loadUserByUsername(email);
+        UserDetails userDetails = customUserDetailService.loadUserByUsername(email);
 
-        if(Objects.isNull(user))
+        if(Objects.isNull(userDetails))
             throw new BadCredentialsException("해당 유저는 존재하지 않습니다.");
-        else if(!this.passwordEncoder.matches(password, user.getPassword()))
+        else if(!this.passwordEncoder.matches(password, userDetails.getPassword()))
             throw new BadCredentialsException("비밀번호가 틀렸습니다.");
 
         return new UsernamePasswordAuthenticationToken(
-                email, null, user.getAuthorities()
+                userDetails, password, null
         );
     }
 

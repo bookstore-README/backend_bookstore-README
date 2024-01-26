@@ -8,6 +8,8 @@ import com.bookstore.readme.domain.member.exception.DuplicationMemberException;
 import com.bookstore.readme.domain.member.exception.MemberErrorResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,6 +26,7 @@ public class MemberController {
 
     @PostMapping("/sign-in")
     public ResponseEntity<MemberResponse> login(@RequestBody MemberLoginDto memberLoginDto) {
+        System.out.println("MemberController: sign-in");
         return ResponseEntity.ok(memberService.memberLogin(memberLoginDto));
     }
 
