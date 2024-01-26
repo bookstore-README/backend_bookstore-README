@@ -22,11 +22,12 @@ logging:
   level:
     com.bookstore.readme: debug
     org.hibernate.SQL: debug
-    org.hibernate.type.descriptor.sql: trace
-
+    org.hibernate.orm.jdbc.bind: trace
 book:
   api:
     aladdin: ${BOOK_API_ALADDIN}
+#    national: ${BOOK_API_NATIONAL}
+
 server:
   port: 8080
   servlet:
@@ -44,7 +45,6 @@ spring:
   h2:
     console:
       enabled: false
-      path: /h2-console
       settings:
         web-allow-others: false
   jpa:
@@ -59,7 +59,7 @@ logging:
   level:
     com.bookstore.readme: debug
     org.hibernate.SQL: debug
-    org.hibernate.type.descriptor.sql: trace
+    org.hibernate.orm.jdbc.bind: off
 server:
   port: 8080
 
