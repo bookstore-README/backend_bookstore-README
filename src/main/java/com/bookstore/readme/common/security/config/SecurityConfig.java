@@ -95,8 +95,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeRequests) -> {
                     authorizeRequests.requestMatchers("/member/**").permitAll();
                     authorizeRequests.requestMatchers(PathRequest.toH2Console()).permitAll();
-                    authorizeRequests.requestMatchers("/collection/**").denyAll();
-                    authorizeRequests.anyRequest().authenticated();
+//                    authorizeRequests.requestMatchers("/collection/**").denyAll();
+//                    authorizeRequests.anyRequest().authenticated();
+                    authorizeRequests.anyRequest().permitAll();
                 })
                 .addFilterAt(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))

@@ -1,6 +1,6 @@
-package com.bookstore.readme.domain.collection.request.product;
+package com.bookstore.readme.domain.collection.aladin.request.product;
 
-import com.bookstore.readme.domain.collection.request.CoverSize;
+import com.bookstore.readme.domain.collection.aladin.request.CoverSize;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

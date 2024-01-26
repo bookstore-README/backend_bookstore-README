@@ -1,8 +1,8 @@
-package com.bookstore.readme.domain.collection.request.search;
+package com.bookstore.readme.domain.collection.aladin.request.search;
 
-import com.bookstore.readme.domain.collection.request.CoverSize;
-import com.bookstore.readme.domain.collection.request.SearchTarget;
-import com.bookstore.readme.domain.collection.request.SortType;
+import com.bookstore.readme.domain.collection.aladin.request.CoverSize;
+import com.bookstore.readme.domain.collection.aladin.request.SearchTarget;
+import com.bookstore.readme.domain.collection.aladin.request.SortType;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;

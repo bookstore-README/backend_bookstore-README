@@ -1,6 +1,6 @@
-package com.bookstore.readme.domain.collection.aladin.dto.aladdin;
+package com.bookstore.readme.domain.collection.aladin.dto;
 
-import com.bookstore.readme.domain.collection.aladin.dto.aladdin.subinfo.SubInfoDto;
+import com.bookstore.readme.domain.collection.aladin.dto.subinfo.SubInfoDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

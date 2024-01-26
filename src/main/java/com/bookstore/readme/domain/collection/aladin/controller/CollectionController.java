@@ -1,9 +1,9 @@
-package com.bookstore.readme.domain.collection.controller;
+package com.bookstore.readme.domain.collection.aladin.controller;
 
-import com.bookstore.readme.domain.collection.request.list.AladdinListRequest;
-import com.bookstore.readme.domain.collection.request.product.AladdinProductRequest;
-import com.bookstore.readme.domain.collection.request.search.AladdinSearchRequest;
-import com.bookstore.readme.domain.collection.service.CollectionService;
+import com.bookstore.readme.domain.collection.aladin.request.list.AladdinListRequest;
+import com.bookstore.readme.domain.collection.aladin.service.CollectionService;
+import com.bookstore.readme.domain.collection.aladin.request.product.AladdinProductRequest;
+import com.bookstore.readme.domain.collection.aladin.request.search.AladdinSearchRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,21 +19,22 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/collection")
+
+@RequestMapping("/collection/aladdin")
 public class CollectionController {
     private final CollectionService service;
 
-    @GetMapping("/aladdin/search")
+    @GetMapping("/search")
     public ResponseEntity<Object> search(@Valid AladdinSearchRequest request) throws JsonProcessingException {
         return ResponseEntity.ok(service.search(request));
     }
 
-    @GetMapping("/aladdin/list")
+    @GetMapping("/list")
     public ResponseEntity<Object> list(@Valid AladdinListRequest request) throws JsonProcessingException {
         return ResponseEntity.ok(service.list(request));
     }
 
-    @GetMapping("/aladdin/product")
+    @GetMapping("/product")
     public ResponseEntity<Object> product(@Valid AladdinProductRequest request) throws JsonProcessingException {
         return ResponseEntity.ok(service.product(request));
     }

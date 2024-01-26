@@ -1,9 +1,9 @@
-package com.bookstore.readme.domain.collection.service;
+package com.bookstore.readme.domain.collection.aladin.service;
 
-import com.bookstore.readme.domain.collection.dto.aladdin.BookDto;
-import com.bookstore.readme.domain.collection.request.list.AladdinListRequest;
-import com.bookstore.readme.domain.collection.request.product.AladdinProductRequest;
-import com.bookstore.readme.domain.collection.request.search.AladdinSearchRequest;
+import com.bookstore.readme.domain.collection.aladin.request.list.AladdinListRequest;
+import com.bookstore.readme.domain.collection.aladin.dto.BookDto;
+import com.bookstore.readme.domain.collection.aladin.request.product.AladdinProductRequest;
+import com.bookstore.readme.domain.collection.aladin.request.search.AladdinSearchRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.stereotype.Service;
 

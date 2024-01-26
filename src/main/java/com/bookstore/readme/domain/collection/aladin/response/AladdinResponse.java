@@ -1,4 +1,4 @@
-package com.bookstore.readme.domain.collection.response;
+package com.bookstore.readme.domain.collection.aladin.response;
 
 import com.bookstore.readme.common.response.CommonResponse;
 import lombok.Builder;
