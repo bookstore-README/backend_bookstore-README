@@ -36,6 +36,7 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomUserDetailService customUserDetailService;
 
+    private final String[] permitUrl = new String[]{"/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**"};
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -62,6 +63,8 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeRequests) -> {
                     authorizeRequests.requestMatchers("/member/**").permitAll();
+                    authorizeRequests.requestMatchers("/review/**").permitAll();
+                    authorizeRequests.requestMatchers("/book/**").permitAll();
                     authorizeRequests.requestMatchers("/collection/**").denyAll();
                     authorizeRequests.anyRequest().authenticated();
                 })
@@ -99,7 +102,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeRequests) -> {
                     authorizeRequests.requestMatchers("/member/**").permitAll();
                     authorizeRequests.requestMatchers(PathRequest.toH2Console()).permitAll();
-                    authorizeRequests.requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**").permitAll();
+                    authorizeRequests.requestMatchers(permitUrl).permitAll();
                     authorizeRequests.requestMatchers("/collection/**").denyAll();
                     authorizeRequests.anyRequest().authenticated();
                 })

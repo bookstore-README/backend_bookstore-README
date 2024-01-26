@@ -23,13 +23,13 @@ public class MemberService {
                 .build();
     }
 
-    public MemberResponse memberLogin(MemberLoginDto memberLoginDto) {
-        Member member = memberQueryService.login(memberLoginDto);
-        return MemberResponse
-                .builder()
-                .status(200)
-                .message("Login Success")
-                .data(member)
-                .build();
-    }
+//    public MemberResponse memberLogin(MemberLoginDto memberLoginDto) {
+//        Member member = memberQueryService.login(memberLoginDto);
+//        return MemberResponse
+//                .builder()
+//                .status(200)
+//                .message("Login Success")
+//                .data(member)
+//                .build();
+//    }
 }
