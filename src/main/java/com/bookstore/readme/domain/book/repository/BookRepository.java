@@ -6,5 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
-    Page<Book> findAllByIdGreaterThanEqualOrderByIdAsc(Long id, Pageable pageRequest);
+    Page<Book> findAllByIdGreaterThanEqual(Long id, Pageable pageRequest);
+
+    Page<Book> findAllByIdLessThanEqual(Long id, Pageable pageRequest);
+
 }

@@ -1,33 +1,32 @@
 package com.bookstore.readme.domain.book.dto;
 
 import com.bookstore.readme.domain.book.domain.Book;
-import com.bookstore.readme.domain.review.domain.Review;
 import com.bookstore.readme.domain.review.dto.ReviewDto;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Getter
 public class BookDto {
     private final Long bookId;
     private final String bookTitle;
-    private final List<ReviewDto> reviews = new ArrayList<>();
     private final String publishedDate;
     private final String bookImgUrl;
     private final List<String> authors;
     private final String description;
     private final List<String> categories;
-    private final String bookMarked;
+    private final Integer bookMarked;
     private final Double averageRating;
+    private final Integer price;
     private final LocalDateTime createDate;
     private final LocalDateTime updateDate;
+    private final List<ReviewDto> reviews = new ArrayList<>();
 
     @Builder
-    public BookDto(Long bookId, String bookTitle, String publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, String bookMarked, Double averageRating, LocalDateTime createDate, LocalDateTime updateDate) {
+    public BookDto(Long bookId, String bookTitle, String publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Integer bookMarked, Double averageRating, Integer price, LocalDateTime createDate, LocalDateTime updateDate) {
         this.bookId = bookId;
         this.bookTitle = bookTitle;
         this.publishedDate = publishedDate;
@@ -37,6 +36,7 @@ public class BookDto {
         this.categories = categories;
         this.bookMarked = bookMarked;
         this.averageRating = averageRating;
+        this.price = price;
         this.createDate = createDate;
         this.updateDate = updateDate;
     }
@@ -52,6 +52,7 @@ public class BookDto {
                 .categories(convertCategories(book.getCategories()))
                 .bookMarked(book.getBookmarked())
                 .averageRating(book.getAverageRating())
+                .price(book.getPrice())
                 .createDate(book.getCreateDate())
                 .updateDate(book.getUpdateDate())
                 .build();

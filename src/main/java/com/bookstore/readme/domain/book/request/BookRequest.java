@@ -1,20 +1,21 @@
 package com.bookstore.readme.domain.book.request;
 
 import com.bookstore.readme.domain.book.domain.Book;
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
+@Getter
 public class BookRequest {
     private String bookTitle;
-    private String publishedDate;
-    private String bookImgUrl;
-    private List<String> authors;
     private String description;
+    private List<String> authors;
     private List<String> categories;
-    private String bookMarked;
+    private Integer bookMarked;
+    private Integer price;
     private Double averageRating;
+    private String bookImgUrl;
+    private String publishedDate;
 
     public Book toBook() {
         return Book.builder()
