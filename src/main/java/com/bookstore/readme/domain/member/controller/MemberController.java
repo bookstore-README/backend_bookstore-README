@@ -24,11 +24,11 @@ public class MemberController {
         return ResponseEntity.ok(memberService.memberJoin(memberJoinDto));
     }
 
-    @PostMapping("/sign-in")
-    public ResponseEntity<MemberResponse> login(@RequestBody MemberLoginDto memberLoginDto) {
-        System.out.println("MemberController: sign-in");
-        return ResponseEntity.ok(memberService.memberLogin(memberLoginDto));
-    }
+//    @PostMapping("/sign-in")
+//    public ResponseEntity<MemberResponse> login(@RequestBody MemberLoginDto memberLoginDto) {
+//        System.out.println("MemberController: sign-in");
+//        return ResponseEntity.ok(memberService.memberLogin(memberLoginDto));
+//    }
 
     @ExceptionHandler(DuplicationMemberException.class)
     public ResponseEntity<MemberResponse> handler(DuplicationMemberException e) {
