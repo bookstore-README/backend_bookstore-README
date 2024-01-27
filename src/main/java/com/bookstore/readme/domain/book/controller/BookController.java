@@ -1,5 +1,7 @@
 package com.bookstore.readme.domain.book.controller;
 
+import com.bookstore.readme.domain.book.dto.SortType;
+import com.bookstore.readme.domain.book.request.BookPageRequest;
 import com.bookstore.readme.domain.book.request.BookRequest;
 import com.bookstore.readme.domain.book.response.BookResponse;
 import com.bookstore.readme.domain.book.service.BookService;
@@ -27,14 +29,11 @@ public class BookController {
     }
 
     @GetMapping("/list/scroll")
-    public ResponseEntity<BookResponse> bookScrollList(
-            @RequestParam(defaultValue = "1", required = false) Integer bookId,
-            @RequestParam(defaultValue = "10", required = false) Integer limit
-    ) {
+    public ResponseEntity<BookResponse> bookScrollList(@ModelAttribute BookPageRequest request) {
         CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(30));
         return ResponseEntity.ok()
                 .cacheControl(cacheControl)
-                .body(bookService.bookList(bookId, limit));
+                .body(bookService.bookList(request));
     }
 
 

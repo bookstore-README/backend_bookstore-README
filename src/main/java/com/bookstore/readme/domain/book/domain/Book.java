@@ -24,17 +24,17 @@ public class Book {
     @GeneratedValue
     private Long id;
     private String bookTitle;
+    private String description;
+    private String authors;
+    private String categories;
+    private Integer bookmarked;
+    private Integer price;
+    private Double averageRating;
+    private String publishedDate;
+    private String bookImgUrl;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
     private List<Review> reviews = new ArrayList<>();
-
-    private String publishedDate;
-    private String bookImgUrl;
-    private String authors;
-    private String description;
-    private String categories;
-    private String bookmarked;
-    private Double averageRating;
 
     @CreatedDate
     @Column(updatable = false)
@@ -45,7 +45,7 @@ public class Book {
     private LocalDateTime updateDate;
 
     @Builder
-    public Book(String bookTitle, String publishedDate, String bookImgUrl, String authors, String description, String categories, String bookmarked, Double averageRating) {
+    public Book(String bookTitle, String publishedDate, String bookImgUrl, String authors, String description, String categories, Integer bookmarked, Double averageRating, Integer price) {
         this.bookTitle = bookTitle;
         this.publishedDate = publishedDate;
         this.bookImgUrl = bookImgUrl;
@@ -54,5 +54,6 @@ public class Book {
         this.categories = categories;
         this.bookmarked = bookmarked;
         this.averageRating = averageRating;
+        this.price = price;
     }
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +30,11 @@ public class BookQueryService {
     }
 
     @Transactional
-    public Page<Book> scrollSearch(Integer bookId, PageRequest pageRequest) {
-        return bookRepository.findAllByIdGreaterThanEqualOrderByIdAsc(bookId.longValue(), pageRequest);
+    public Page<Book> scrollSearch(Integer bookId, PageRequest pageRequest, boolean ascending) {
+        if (ascending)
+            return bookRepository.findAllByIdGreaterThanEqual(bookId.longValue(), pageRequest);
+        else
+            return bookRepository.findAllByIdLessThanEqual(bookId.longValue(), pageRequest);
     }
 
     @Transactional

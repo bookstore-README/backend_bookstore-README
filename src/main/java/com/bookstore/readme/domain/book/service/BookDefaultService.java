@@ -3,6 +3,8 @@ package com.bookstore.readme.domain.book.service;
 import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.dto.BookDto;
 import com.bookstore.readme.domain.book.dto.BookListDto;
+import com.bookstore.readme.domain.book.dto.SortType;
+import com.bookstore.readme.domain.book.request.BookPageRequest;
 import com.bookstore.readme.domain.book.request.BookRequest;
 import com.bookstore.readme.domain.book.response.BookResponse;
 import com.bookstore.readme.domain.review.dto.ReviewDto;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +45,7 @@ public class BookDefaultService implements BookService {
                 .limit(convertBookDtos.size())
                 .page(1)
                 .cursorId(-1)
-                .reviews(convertBookDtos)
+                .books(convertBookDtos)
                 .build();
 
         return BookResponse.ok(data);
@@ -50,9 +53,19 @@ public class BookDefaultService implements BookService {
 
     @Override
     @Transactional
-    public BookResponse bookList(Integer bookId, Integer limit) {
-        PageRequest pageRequest = PageRequest.of(0, limit);
-        Page<Book> pageBooks = bookQueryService.scrollSearch(bookId, pageRequest);
+    public BookResponse bookList(BookPageRequest request) {
+        if (request.getBookId() != null && request.getBookId() == -1) {
+            return null;
+        }
+
+        Long count = bookQueryService.count();
+        Integer cursorId = request.getBookId();
+        if (request.getBookId() == null)
+            cursorId = request.getAscending() ? 1 : count.intValue();
+
+        Integer limit = request.getLimit();
+        PageRequest pageRequest = PageRequest.of(0, limit, request.convertSort());
+        Page<Book> pageBooks = bookQueryService.scrollSearch(cursorId, pageRequest, request.getAscending());
 
         List<Book> books = pageBooks.getContent();
         List<BookDto> convertBootDtos = books.stream()
@@ -67,13 +80,19 @@ public class BookDefaultService implements BookService {
                 })
                 .toList();
 
-        int cursorId = pageBooks.hasNext() ? bookId + limit : -1;
+
+        int nextCursorId = books.get(books.size() - 1).getId().intValue();
+        nextCursorId = request.getAscending() ? nextCursorId + 1 : nextCursorId - 1;
+
+        if (!pageBooks.hasNext())
+            nextCursorId = -1;
+
         BookListDto data = BookListDto.builder()
                 .total((int) pageBooks.getTotalElements())
-                .limit(limit)
+                .limit(request.getLimit())
                 .page(pageBooks.getTotalPages())
-                .cursorId(cursorId)
-                .reviews(convertBootDtos)
+                .cursorId(nextCursorId)
+                .books(convertBootDtos)
                 .build();
 
         return BookResponse.ok(data);

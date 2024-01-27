@@ -11,14 +11,14 @@ public class BookListDto {
     private Integer page;
     private Integer limit;
     private Integer cursorId;
-    private List<BookDto> reviews;
+    private List<BookDto> books;
 
     @Builder
-    public BookListDto(Integer total, Integer page, Integer limit, Integer cursorId, List<BookDto> reviews) {
+    public BookListDto(Integer total, Integer page, Integer limit, Integer cursorId, List<BookDto> books) {
         this.total = total;
         this.page = page;
         this.limit = limit;
         this.cursorId = cursorId;
-        this.reviews = reviews;
+        this.books = books;
     }
 }
