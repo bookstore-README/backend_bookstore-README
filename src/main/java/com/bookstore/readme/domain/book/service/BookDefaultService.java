@@ -54,20 +54,54 @@ public class BookDefaultService implements BookService {
     @Override
     @Transactional
     public BookResponse bookList(BookPageRequest request) {
-        if (request.getBookId() != null && request.getBookId() == -1) {
-            return null;
+        Page<Book> scroll = Page.empty();
+        //커서아이디 확인
+        if (request.getBookId() == null) {
+
+            //정렬 기준 확인
+            if (request.getSort() == SortType.ID) {
+                //아이디
+                Sort orders = request.getAscending() ? Sort.by("id").ascending() : Sort.by("id").descending();
+                PageRequest pageRequest = PageRequest.of(0, request.getLimit(), orders);
+                scroll = bookQueryService.scroll(request.getBookId(), request.getSort(), request.getAscending(), pageRequest);
+
+            } else if (request.getSort() == SortType.PRICE) {
+                //가격
+                Sort orders = request.getAscending() ? Sort.by(Sort.Order.asc("price"), Sort.Order.asc("id")) : Sort.by(Sort.Order.desc("price"), Sort.Order.asc("id"));
+                PageRequest pageRequest = PageRequest.of(0, request.getLimit(), orders);
+                scroll = bookQueryService.scroll(request.getBookId(), request.getSort(), request.getAscending(), pageRequest);
+
+            } else if (request.getSort() == SortType.POPULATION) {
+                //인기
+                Sort orders = request.getAscending() ? Sort.by(Sort.Order.asc("bookmarked"), Sort.Order.asc("id")) : Sort.by(Sort.Order.desc("bookmarked"), Sort.Order.asc("id"));
+                PageRequest pageRequest = PageRequest.of(0, request.getLimit(), orders);
+                scroll = bookQueryService.scroll(request.getBookId(), request.getSort(), request.getAscending(), pageRequest);
+            }
+        } else if (request.getBookId() > 0) {
+            if (request.getSort() == SortType.ID) {
+                //아이디
+                Sort orders = request.getAscending() ? Sort.by("id").ascending() : Sort.by("id").descending();
+                PageRequest pageRequest = PageRequest.of(0, request.getLimit(), orders);
+                scroll = bookQueryService.scroll(request.getBookId(), request.getSort(), request.getAscending(), pageRequest);
+
+            } else if (request.getSort() == SortType.PRICE) {
+                //가격
+                Sort orders = request.getAscending() ? Sort.by(Sort.Order.asc("price"), Sort.Order.asc("id")) : Sort.by(Sort.Order.desc("price"), Sort.Order.asc("id"));
+                PageRequest pageRequest = PageRequest.of(0, request.getLimit(), orders);
+                scroll = bookQueryService.scroll(request.getBookId(), request.getSort(), request.getAscending(), pageRequest);
+
+            } else if (request.getSort() == SortType.POPULATION) {
+                //인기
+                Sort orders = request.getAscending() ? Sort.by(Sort.Order.asc("bookmarked"), Sort.Order.asc("id")) : Sort.by(Sort.Order.desc("bookmarked"), Sort.Order.asc("id"));
+                PageRequest pageRequest = PageRequest.of(0, request.getLimit(), orders);
+                scroll = bookQueryService.scroll(request.getBookId(), request.getSort(), request.getAscending(), pageRequest);
+            }
+        } else {
+            // 그냥 리턴
+            return BookResponse.emptyData();
         }
 
-        Long count = bookQueryService.count();
-        Integer cursorId = request.getBookId();
-        if (request.getBookId() == null)
-            cursorId = request.getAscending() ? 1 : count.intValue();
-
-        Integer limit = request.getLimit();
-        PageRequest pageRequest = PageRequest.of(0, limit, request.convertSort());
-        Page<Book> pageBooks = bookQueryService.scrollSearch(cursorId, pageRequest, request.getAscending());
-
-        List<Book> books = pageBooks.getContent();
+        List<Book> books = scroll.getContent();
         List<BookDto> convertBootDtos = books.stream()
                 .map(book -> {
                     BookDto convertBook = BookDto.toBookDto(book);
@@ -80,17 +114,11 @@ public class BookDefaultService implements BookService {
                 })
                 .toList();
 
-
-        int nextCursorId = books.get(books.size() - 1).getId().intValue();
-        nextCursorId = request.getAscending() ? nextCursorId + 1 : nextCursorId - 1;
-
-        if (!pageBooks.hasNext())
-            nextCursorId = -1;
-
+        int nextCursorId = scroll.hasNext() ? books.get(books.size() - 1).getId().intValue() : -1;
         BookListDto data = BookListDto.builder()
-                .total((int) pageBooks.getTotalElements())
+                .total(bookQueryService.count().intValue())
                 .limit(request.getLimit())
-                .page(pageBooks.getTotalPages())
+                .page(10000)
                 .cursorId(nextCursorId)
                 .books(convertBootDtos)
                 .build();

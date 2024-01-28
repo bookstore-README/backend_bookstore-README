@@ -22,4 +22,13 @@ public class BookResponse extends CommonResponse {
                 .data(data)
                 .build();
     }
+
+    public static BookResponse emptyData() {
+        return BookResponse
+                .builder()
+                .status(404)
+                .message("Fail")
+                .data(false)
+                .build();
+    }
 }
