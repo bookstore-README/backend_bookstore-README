@@ -3,10 +3,12 @@ package com.bookstore.readme.domain.book.service;
 import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.dto.SortType;
 import com.bookstore.readme.domain.book.repository.BookRepository;
+import com.bookstore.readme.domain.book.repository.BookSpecification;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,32 +46,13 @@ public class BookQueryService {
             throw new IllegalArgumentException("SortType은 Null일 수 없습니다.");
 
         if (bookId == null)
-            return bookRepository.findAllBy(pageRequest);
+            return bookRepository.findAll(pageRequest);
 
         Book book = bookRepository.findById(bookId.longValue())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품 아이디입니다."));
 
-        if (sortType == SortType.ID) {
-            if (ascending) {
-                return bookRepository.findAllByIdGreaterThan(bookId.longValue(), pageRequest);
-            } else {
-                return bookRepository.findAllByIdLessThan(bookId.longValue(), pageRequest);
-            }
-        } else if (sortType == SortType.PRICE) {
-            if (ascending) {
-                return bookRepository.findAllByPriceGreaterThanAndIdNot(book.getPrice(), book.getId(), pageRequest);
-            } else {
-                return bookRepository.findAllByPriceLessThanAndIdNot(book.getPrice(), book.getId(), pageRequest);
-            }
-        } else if (sortType == SortType.POPULATION) {
-            if (ascending) {
-                return bookRepository.findAllByBookmarkedGreaterThanAndIdNot(book.getBookmarked(), book.getId(), pageRequest);
-            } else {
-                return bookRepository.findAllByBookmarkedLessThanAndIdNot(book.getBookmarked(), book.getId(), pageRequest);
-            }
-        } else {
-            throw new IllegalArgumentException("해당하는 SortType이 존재하지 않습니다.");
-        }
+        Specification<Book> pagination = BookSpecification.pagination(sortType, ascending, book);
+        return bookRepository.findAll(pagination, pageRequest);
     }
 
     @Transactional
