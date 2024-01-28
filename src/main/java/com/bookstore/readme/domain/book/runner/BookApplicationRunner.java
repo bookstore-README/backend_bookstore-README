@@ -52,9 +52,9 @@ public class BookApplicationRunner implements ApplicationRunner {
                 .authors("작가1,작가2,작가3")
                 .description("여기는 설명 칸 " + i)
                 .categories("대분류,중분류")
-                .bookmarked(i)
+                .bookmarked(random.nextInt(1000, 1000000))
                 .averageRating(Math.floor(random.nextDouble(0, 5)))
-                .price((i % 2 == 0) ? 10000 + i : 5000 + i)
+                .price(random.nextInt(1000, 1000000))
                 .build();
     }
 }
