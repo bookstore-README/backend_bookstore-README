@@ -89,7 +89,6 @@ public class BookDefaultService implements BookService {
                 Sort orders = request.getAscending() ? Sort.by(Sort.Order.asc("price"), Sort.Order.asc("id")) : Sort.by(Sort.Order.desc("price"), Sort.Order.asc("id"));
                 PageRequest pageRequest = PageRequest.of(0, request.getLimit(), orders);
                 scroll = bookQueryService.scroll(request.getBookId(), request.getSort(), request.getAscending(), pageRequest);
-
             } else if (request.getSort() == SortType.POPULATION) {
                 //인기
                 Sort orders = request.getAscending() ? Sort.by(Sort.Order.asc("bookmarked"), Sort.Order.asc("id")) : Sort.by(Sort.Order.desc("bookmarked"), Sort.Order.asc("id"));
