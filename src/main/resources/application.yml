@@ -18,6 +18,9 @@ spring:
         format_sql: true
         default_batch_fetch_size: 100
     open-in-view: false
+#  profiles:
+#    include: oauth
+
 logging:
   level:
     com.bookstore.readme: debug
@@ -35,6 +38,7 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+
 jwt:
   secretKey: cd1eb84e9b3357b07cdc619778da964c49bc8ced2bb4ec44071efee226adbc0ab0f7b434a8cbc82f5b505ab1f011f1a51b3c6ff6a10d4ae7552fe13bfa1ecacf
 ---

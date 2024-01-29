@@ -1,10 +1,14 @@
 package com.bookstore.readme.common.security.config;
 
 import com.bookstore.readme.common.jwt.*;
-import com.bookstore.readme.common.security.filter.JwtAuthenticationFilter;
+import com.bookstore.readme.common.security.filter.CustomAuthenticationFilter;
 import com.bookstore.readme.common.security.filter.JwtAuthorizationFilter;
-import com.bookstore.readme.common.security.provider.CustomAuthenticationProvider;
+import com.bookstore.readme.common.security.handler.SignInFailureHanlder;
+import com.bookstore.readme.common.security.handler.SignInSuccessHanlder;
+import com.bookstore.readme.common.security.service.CustomOAuth2UserService;
 import com.bookstore.readme.common.security.service.CustomUserDetailService;
+import com.bookstore.readme.domain.member.repository.MemberRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -12,8 +16,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -23,6 +27,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -33,8 +38,11 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final MemberRepository memberRepository;
+    private final JwtTokenService jwtTokenService;
+    private final ObjectMapper objectMapper;
     private final CustomUserDetailService customUserDetailService;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     private final String[] permitUrl = new String[]{"/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**"};
 
@@ -73,8 +81,8 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
         http
-                .addFilterBefore(getJwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAt(getJwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(getCustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(getCustomAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -110,30 +118,63 @@ public class SecurityConfig {
                 })
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
+        /*
+         *  JWT 인증(Authentication) : 로그인 후 정상적이라면 JWT 발급하는 행동
+         *  JWT 인가(Authorization) : JWT Token에 있는 정보를 이용하여 토큰 유효 확인
+         */
         http
-                .addFilterBefore(getJwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAt(getJwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(getCustomAuthenticationFilter(), LogoutFilter.class)
+                .addFilterBefore(getCustomAuthorizationFilter(), CustomAuthenticationFilter.class);
+
+        // http
+        //         .oauth2Login(
+        //                 oauth -> oauth
+        //                             .userInfoEndpoint(userService -> {
+        //                                 userService.userService(customOAuth2UserService);
+        //                             })
+        //         );
 
         return http
                 .build();
     }
 
-    public JwtAuthorizationFilter getJwtAuthorizationFilter() throws Exception {
-        return new JwtAuthorizationFilter(jwtTokenProvider);
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(customUserDetailService);
+        return new ProviderManager(provider);
     }
 
-    public JwtAuthenticationFilter getJwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager(null), jwtTokenProvider);
+    /**
+     * 로그인 성공 시 호출되는 LoginSuccessJWTProviderHandler 빈 등록
+     */
+    @Bean
+    public SignInSuccessHanlder signInSuccessHanlder() {
+        return new SignInSuccessHanlder(jwtTokenService, memberRepository);
+    }
 
-        // 로그인 인증 Filter 적용 url
-        jwtAuthenticationFilter.setFilterProcessesUrl("/member/sign-in");
-        // customAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
-
-        return jwtAuthenticationFilter;
+    /**
+     * 로그인 실패 시 호출되는 LoginFailureHandler 빈 등록
+     */
+    @Bean
+    public SignInFailureHanlder signInFailureHanlder() {
+        return new SignInFailureHanlder();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class).build();
+    public JwtAuthorizationFilter getCustomAuthorizationFilter() throws Exception {
+        return new JwtAuthorizationFilter(jwtTokenService, memberRepository);
+    }
+
+    @Bean
+    public CustomAuthenticationFilter getCustomAuthenticationFilter() throws Exception {
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(objectMapper);
+
+        customAuthenticationFilter.setAuthenticationManager(authenticationManager());
+        customAuthenticationFilter.setAuthenticationSuccessHandler(signInSuccessHanlder()); // 로그인 성공 핸들러
+        customAuthenticationFilter.setAuthenticationFailureHandler(signInFailureHanlder()); // 로그인 실패 핸들러
+
+        return customAuthenticationFilter;
     }
 }
