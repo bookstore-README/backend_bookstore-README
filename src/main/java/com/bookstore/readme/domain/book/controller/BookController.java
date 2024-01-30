@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
@@ -39,7 +40,7 @@ public class BookController {
     @Operation(summary = "도서 전체 조회(커서 기반)", description = "무한 스크롤 기능을 위한 API")
     public ResponseEntity<BookResponse> bookScrollList(
             @ParameterObject
-            @ModelAttribute BookPageRequest request
+            @Valid BookPageRequest request
     ) {
         CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(30));
         return ResponseEntity.ok()
