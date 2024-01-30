@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Map;
+
 @Data
 @Builder
 public class AladdinListRequest {
@@ -32,22 +34,14 @@ public class AladdinListRequest {
     //특정 분야로 검색결과 제한.
     //private String categoryId;
 
-    //출력방법(JSON)
-    //private String outPut;
-
-    //검색어의 인코딩 값을 설정 (utf-8, euc-kr)
-    //private String inputEncoding;
-
-    //품절, 절판 등 재고 없는 상품 필터링(1인 경우 제외)
-    @Min(0)
-    @Max(1)
-    private Integer outofStockFilter;
-
-    /**
-     * 베스트셀러를 조회할 주간( 기본값 0 )<br>
-     * ex) Year=2022&Month=5&Week=3
-     */
-    private Integer year;
-    private Integer month;
-    private Integer week;
+    public Map<String, Object> getQuery(Map<String, Object> query) {
+        query.put("QueryType", queryType.getQueryType());
+        query.put("SearchTarget", searchTarget == null ? SearchTarget.BOOK : searchTarget.getTarget());
+        query.put("SubSearchTarget", subSearchTarget == null ? null : subSearchTarget.getSubSearchTarget());
+        query.put("Start", start);
+        query.put("MaxResults", maxResults);
+        query.put("Cover", cover == null ? null : cover.getCoverSize());
+        query.put("outofStockfilter", 0);
+        return query;
+    }
 }
