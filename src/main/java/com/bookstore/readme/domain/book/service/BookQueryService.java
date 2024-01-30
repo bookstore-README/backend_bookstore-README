@@ -22,7 +22,7 @@ public class BookQueryService {
     @Transactional
     public Book findById(Long bookId) {
         return bookRepository.findById(bookId)
-                .orElseGet(() -> null);
+                .orElseThrow(() -> new NotFoundBookByIdException(bookId));
     }
 
     @Transactional
