@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
-        info = @Info(title="README WEB",
+        info = @Info(title = "README WEB",
                 description = "README 웹 프로젝트 API 명세",
                 version = "v1"
         )
@@ -23,6 +23,7 @@ public class SwaggerConfig {
 
         return GroupedOpenApi.builder()
                 .group("README API")
+                .pathsToExclude("/collection/**", "/category/**")
                 .pathsToMatch(paths)
                 .build();
     }

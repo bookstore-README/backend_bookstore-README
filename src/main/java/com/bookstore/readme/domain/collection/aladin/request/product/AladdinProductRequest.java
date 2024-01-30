@@ -1,9 +1,14 @@
 package com.bookstore.readme.domain.collection.aladin.request.product;
 
 import com.bookstore.readme.domain.collection.aladin.request.CoverSize;
+import com.bookstore.readme.domain.collection.aladin.request.SearchTarget;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Data
 public class AladdinProductRequest {
@@ -15,12 +20,41 @@ public class AladdinProductRequest {
 
     private CoverSize cover;
 
-//    private String outPut;
-//    private String partner;
-//    private String version;
-//    private Integer includeKey;
-//    private String offCode;
+    private static final List<String> opts = List.of(
+            "packing",
+            "cardReviewImgList",
+            "ratingInfo",
+            "bestSellerRank",
+            "previewImgList",
+            "eventList",
+            "authors",
+            "reviewList",
+            "fulldescription",
+            "fulldescription2",
+            "Toc",
+            "Story",
+            "categoryIdList",
+            "mdrecommend",
+            "phraseList"
+    );
 
-//    요청시 OptResult=ebookList,usedList,reviewList 와 같은 Array 형태로 요청
-//    private OptionResultDto optResult;
+    public Map<String, Object> getQuery(Map<String, Object> defaultQuery) {
+        defaultQuery.put("ItemId", itemId);
+        defaultQuery.put("ItemIdType", itemIdType.getItemidType());
+        defaultQuery.put("Cover", cover == null ? null : cover.getCoverSize());
+        defaultQuery.put("OptResult", createOpt());
+        return defaultQuery;
+    }
+
+    private String createOpt() {
+        StringBuilder sb = new StringBuilder();
+        for (String opt : opts) {
+            sb.append(opt);
+            sb.append(",");
+        }
+
+        int length = sb.length();
+        sb.deleteCharAt(length - 1);
+        return sb.toString();
+    }
 }

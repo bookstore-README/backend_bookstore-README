@@ -8,6 +8,8 @@ import com.bookstore.readme.domain.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@Profile("dev")
 @Component
 @RequiredArgsConstructor
 public class BookApplicationRunner implements ApplicationRunner {

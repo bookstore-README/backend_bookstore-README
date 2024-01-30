@@ -17,12 +17,8 @@ import lombok.Getter;
 public enum SearchTarget {
     BOOK("Book"),
     FOREIGN("Foreign"),
-    MUSIC("Music"),
-    DVD("DVD"),
-    USED("Used"),
-    EBOOK("eBook"),
     ALL("All");
-    
+
     private final String target;
 
     SearchTarget(String target) {

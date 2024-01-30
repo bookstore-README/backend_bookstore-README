@@ -6,11 +6,15 @@ import com.bookstore.readme.domain.collection.aladin.request.SortType;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Map;
+
 @Data
 @Builder
+@AllArgsConstructor
 public class AladdinSearchRequest {
 
     //검색어
@@ -35,30 +39,19 @@ public class AladdinSearchRequest {
 
     private CoverSize cover;
 
-    //품절, 절판 등 재고 없는 상품 필터링(1인 경우 제외)
-    @Min(0)
-    @Max(1)
-    private Integer outofStockFilter;
+    private Integer categoryId;
 
-    //특정 분야로 검색결과 제한.
-    //private String categoryId;
 
-    //출력방법(JSON)
-    //private String outPut;
-
-    //제휴와 관련한 파트너코드, 제휴사의 경우 파트너코드 입력으로 제휴사 유효성 체크
-    //private String partner;
-
-    //includeKey가 1인 경우 결과의 상품페이지 링크값에 TTBKey가 포함
-    //private String includeKey;
-
-    //검색어의 인코딩 값을 설정 (utf-8, euc-kr)
-    //private String inputEncoding;
-
-    //검색 API의 Version을 설정 (최신버젼: 20131101)
-    //private String version;
-
-    //1인 경우 최근 한 달내, 0인 경우 전체 기간 출간 상품 검색
-    //private String recentPublishFilter;
-
+    public Map<String, Object> getQuery(Map<String, Object> defaultQuery) {
+        defaultQuery.put("query", this.query);
+        defaultQuery.put("QueryType", queryType == null ? QueryType.KEYWORD.getType() : queryType.getType());
+        defaultQuery.put("SearchTarget", searchTarget == null ? null : searchTarget.getTarget());
+        defaultQuery.put("Start", start);
+        defaultQuery.put("Cover", cover == null ? null : cover.getCoverSize());
+        defaultQuery.put("outofStockfilter", 0);
+        defaultQuery.put("MaxResults", maxResults);
+        defaultQuery.put("RecentPublishFilter", 0);
+        defaultQuery.put("CategoryId", categoryId == null ? 0 : categoryId);
+        return defaultQuery;
+    }
 }
