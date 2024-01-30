@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,10 +39,7 @@ public class BookController {
 
     @GetMapping("/list/scroll")
     @Operation(summary = "도서 전체 조회(커서 기반)", description = "무한 스크롤 기능을 위한 API")
-    public ResponseEntity<BookResponse> bookScrollList(
-            @ParameterObject
-            @Valid BookPageRequest request
-    ) {
+    public ResponseEntity<BookResponse> bookScrollList(@ParameterObject @Valid BookPageRequest request) {
         CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(30));
         return ResponseEntity.ok()
                 .cacheControl(cacheControl)
@@ -54,4 +52,11 @@ public class BookController {
     public ResponseEntity<BookResponse> bookSave(@RequestBody BookRequest request) {
         return ResponseEntity.ok(bookService.bookSave(request));
     }
+
+    @GetMapping("/{bookId}/bookmark")
+    @Operation(summary = "도서 북마크 개수 조회", description = "도서의 북마크 개수를 가져오기 위한 API")
+    public ResponseEntity<BookResponse> bookmarkCount(@Parameter(description = "북마크 개수를 가져올 도서 아이디") @PathVariable Long bookId) {
+        return ResponseEntity.ok(bookService.bookmarkCount(bookId));
+    }
+
 }

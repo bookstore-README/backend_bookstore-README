@@ -10,4 +10,6 @@ public interface BookService {
     BookResponse bookList(BookPageRequest request);
 
     BookResponse bookSave(BookRequest request);
+
+    BookResponse bookmarkCount(Long bookId);
 }
