@@ -14,7 +14,7 @@ public class BookPageRequest {
     private final Integer bookId;
     @Schema(description = "페이지당 가져올 데이터 수 입니다.", example = "10")
     private final Integer limit;
-    @Schema(description = "정렬 기준입니다.", example = "PRICE")
+    @Schema(description = "정렬 기준입니다(PRICE, POPULATION, ID).", example = "PRICE")
     private final SortType sort;
     @Schema(description = "정렬 오름차(true) 내림차(false) 기준입니다.", example = "true")
     private final Boolean ascending;
