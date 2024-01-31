@@ -86,7 +86,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    @Profile(value = "local")
+    @Profile(value = "default")
     public SecurityFilterChain filterChain2(HttpSecurity http) throws Exception {
 
         http
