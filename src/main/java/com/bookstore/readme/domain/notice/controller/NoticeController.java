@@ -35,4 +35,10 @@ public class NoticeController {
         Long noticeId = noticeService.save(request);
         return ResponseEntity.ok(NoticeResponse.ok(noticeId));
     }
+
+    @PostMapping("/delete/{noticeId}")
+    public ResponseEntity<NoticeResponse> noticeDelete(@Parameter @PathVariable Integer noticeId) {
+        Long delete = noticeService.delete(noticeId.longValue());
+        return ResponseEntity.ok(NoticeResponse.ok(delete));
+    }
 }
