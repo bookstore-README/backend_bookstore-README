@@ -4,9 +4,15 @@ import com.bookstore.readme.domain.notice.controller.NoticeController;
 import com.bookstore.readme.domain.notice.response.NoticeResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice(basePackageClasses = NoticeController.class)
 public class NoticeExceptionHandler {
@@ -22,6 +28,23 @@ public class NoticeExceptionHandler {
                 .data(ex.getNoticeId())
                 .build();
 
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<NoticeResponse> handlerMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errors.put(error.getField(), error.getDefaultMessage());
+        }
+
+        NoticeResponse response = NoticeResponse.builder()
+                .status(ex.getStatusCode().value())
+                .message("fail")
+                .data(errors)
+                .build();
         return ResponseEntity.badRequest().body(response);
     }
 }

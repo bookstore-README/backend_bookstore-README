@@ -24,4 +24,13 @@ public class NoticeResponse extends CommonResponse {
                 .build();
     }
 
+    public static NoticeResponse empty(Object data) {
+        return NoticeResponse
+                .builder()
+                .status(204)
+                .message("Success")
+                .data(data)
+                .build();
+    }
+
 }
