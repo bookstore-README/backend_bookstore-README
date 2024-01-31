@@ -28,14 +28,14 @@ public class NoticeController {
     @Operation(summary = "게시글 단일 조회", description = "게시글 아이디로 단일 조회하는 API")
     public ResponseEntity<NoticeResponse> noticeSearch(@Parameter @PathVariable Integer noticeId) {
         NoticeResponse noticeResponse = noticeService.getNotice(noticeId.longValue());
-        return ResponseEntity.ok(NoticeResponse.ok(noticeResponse));
+        return ResponseEntity.ok(noticeResponse);
     }
 
     @GetMapping("/list")
     @Operation(summary = "게시글 전체 조회", description = "모든 회원이 작성한 게시글 전체를 조회하는 API")
     public ResponseEntity<NoticeResponse> noticeList() {
         NoticeResponse noticeResponse = noticeService.getNotices();
-        return ResponseEntity.ok(NoticeResponse.ok(noticeResponse));
+        return ResponseEntity.ok(noticeResponse);
     }
 
     @PostMapping("/save")
