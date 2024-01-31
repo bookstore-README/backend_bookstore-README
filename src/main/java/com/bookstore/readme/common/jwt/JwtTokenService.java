@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -135,5 +132,13 @@ public class JwtTokenService {
             log.info("JWT 토큰이 잘못되었습니다.");
         }
         return false;
+    }
+
+    /**
+     * 구글 JWT ID Token 디코딩
+     */
+    public String getBaseUrlToken(String token) {
+        byte[] decode = Base64.getDecoder().decode(token);
+        return new String(decode, StandardCharsets.UTF_8);
     }
 }

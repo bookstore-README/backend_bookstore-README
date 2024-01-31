@@ -2,7 +2,6 @@ package com.bookstore.readme.domain.member.service;
 
 import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.dto.MemberJoinDto;
-import com.bookstore.readme.domain.member.dto.MemberLoginDto;
 import com.bookstore.readme.domain.member.response.MemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
