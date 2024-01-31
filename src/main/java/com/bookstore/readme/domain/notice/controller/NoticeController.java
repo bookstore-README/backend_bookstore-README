@@ -20,7 +20,13 @@ public class NoticeController {
 
     @GetMapping("/search/{noticeId}")
     public ResponseEntity<NoticeResponse> noticeSearch(@Parameter @PathVariable Integer noticeId) {
-        NoticeResponse noticeResponse = noticeService.searchNotice(noticeId.longValue());
+        NoticeResponse noticeResponse = noticeService.getNotice(noticeId.longValue());
+        return ResponseEntity.ok(NoticeResponse.ok(noticeResponse));
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<NoticeResponse> noticeList() {
+        NoticeResponse noticeResponse = noticeService.getNotices();
         return ResponseEntity.ok(NoticeResponse.ok(noticeResponse));
     }
 
