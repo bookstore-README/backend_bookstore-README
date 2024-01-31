@@ -46,7 +46,6 @@ public class SignInSuccessHanlder extends SimpleUrlAuthenticationSuccessHandler 
                 .email(member.getEmail())
                 .password(member.getPassword())
                 .role(member.getRole())
-                .socialType(member.getSocialType())
                 .refreshToken(refreshToken)
                 .build();
 

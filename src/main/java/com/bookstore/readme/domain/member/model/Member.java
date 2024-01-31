@@ -31,13 +31,10 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
-    @Enumerated(EnumType.STRING)
-    private SocialType socialType;
-
     private String refreshToken;
 
     @Builder
-    public Member(Long id, String name, String nickname, String profileImage, String email, String password, MemberRole role, SocialType socialType, String refreshToken) {
+    public Member(Long id, String name, String nickname, String profileImage, String email, String password, MemberRole role, String refreshToken) {
         this.id = id;
         this.name = name;
         this.nickname = nickname;
@@ -45,7 +42,6 @@ public class Member {
         this.email = email;
         this.password = password;
         this.role = role;
-        this.socialType = socialType;
         this.refreshToken = refreshToken;
     }
 }

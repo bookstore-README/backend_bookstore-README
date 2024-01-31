@@ -1,24 +1,13 @@
 package com.bookstore.readme.domain.social.controller;
 
-import com.bookstore.readme.common.jwt.JwtTokenService;
 import com.bookstore.readme.domain.social.domain.SocialType;
-import com.bookstore.readme.domain.social.dto.OAuth2GoogleRequestDto;
-import com.bookstore.readme.domain.social.dto.OAuth2GoogleResponseDto;
 import com.bookstore.readme.domain.social.service.SocialService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @RestController
@@ -72,12 +61,19 @@ public class SocialController {
     private final SocialService socialService;
 
     @SneakyThrows
-    @GetMapping("/{socialType}")
+    @GetMapping("/auth/{socialType}")
     ResponseEntity<Void> redirectAuthCodeRequestUrl(@PathVariable SocialType socialType,
                                                     HttpServletResponse response) {
         String redirectUrl = socialService.getAuthCodeRequestUrl(socialType);
         response.sendRedirect(redirectUrl);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/login/{socialType}")
+    ResponseEntity<Long> login(@PathVariable SocialType socialType,
+                               @RequestParam("code") String code) {
+        Long login = socialService.login(socialType, code);
+        return ResponseEntity.ok(login);
     }
 
 }
