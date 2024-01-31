@@ -5,12 +5,14 @@ import lombok.Getter;
 
 @Getter
 public class NoticeSearchDto extends NoticeDto {
+    private final Long noticeId;
 
-    public NoticeSearchDto(String title, String content) {
+    public NoticeSearchDto(Long noticeId, String title, String content) {
         super(title, content);
+        this.noticeId = noticeId;
     }
 
     public static NoticeSearchDto of(Notice notice) {
-        return new NoticeSearchDto(notice.getTitle(), notice.getContent());
+        return new NoticeSearchDto(notice.getId(), notice.getTitle(), notice.getContent());
     }
 }
