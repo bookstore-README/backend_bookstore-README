@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    default: local
   h2:
     console:
       enabled: true
@@ -39,6 +37,16 @@ server:
       enabled: true
       force: true
 
+oauth2:
+  user:
+    google:
+      client_id: ${GOOGLE_CLIENT_ID}
+      client_secret: ${GOOGLE_CLIENT_SECRET}
+      redirect_uri: ${GOOGLE_REDIRECT_URI}
+
+jwt:
+  secretKey: ${JWT_SECRET_KEY}
+
 ---
 spring:
   config:
@@ -64,4 +72,14 @@ logging:
     org.hibernate.orm.jdbc.bind: off
 server:
   port: 8080
+
+oauth2:
+  user:
+    google:
+      client_id: ${GOOGLE_CLIENT_ID}
+      client_secret: ${GOOGLE_CLIENT_SECRET}
+      redirect_uri: ${GOOGLE_REDIRECT_URI}
+
+jwt:
+  secretKey: ${JWT_SECRET_KEY}
 
