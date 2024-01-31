@@ -1,7 +1,6 @@
 package com.bookstore.readme.domain.notice.dto;
 
 import com.bookstore.readme.domain.notice.domain.Notice;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
