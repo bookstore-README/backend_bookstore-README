@@ -1,14 +1,17 @@
 package com.bookstore.readme.domain.notice.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class Notice {
     @Id
     @GeneratedValue
@@ -17,6 +20,14 @@ public class Notice {
 
     private String title;
     private String content;
+
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createDate;
+    @LastModifiedDate
+
+    @Column(updatable = true)
+    private LocalDateTime updateDate;
 
     @Builder
     public Notice(String title, String content) {

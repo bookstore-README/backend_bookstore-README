@@ -65,6 +65,7 @@ public class NoticeService {
             notice.updateContent(request.getContent());
         }
 
+        noticeRepository.flush();
         return NoticeDto.of(notice);
     }
 }
