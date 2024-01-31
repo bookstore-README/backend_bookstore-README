@@ -91,7 +91,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
      */
     public void saveAuthentication(Member member) {
 
-        System.out.println("member = " + member);
+        // System.out.println("member = " + member);
 
         UserDetails userDetailsUser = User.builder()
                 .username(member.getEmail())

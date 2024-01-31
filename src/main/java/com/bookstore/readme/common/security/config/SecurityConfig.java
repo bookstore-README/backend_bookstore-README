@@ -5,7 +5,6 @@ import com.bookstore.readme.common.security.filter.CustomAuthenticationFilter;
 import com.bookstore.readme.common.security.filter.JwtAuthorizationFilter;
 import com.bookstore.readme.common.security.handler.SignInFailureHanlder;
 import com.bookstore.readme.common.security.handler.SignInSuccessHanlder;
-import com.bookstore.readme.common.security.service.CustomOAuth2UserService;
 import com.bookstore.readme.common.security.service.CustomUserDetailService;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,7 +41,6 @@ public class SecurityConfig {
     private final JwtTokenService jwtTokenService;
     private final ObjectMapper objectMapper;
     private final CustomUserDetailService customUserDetailService;
-    private final CustomOAuth2UserService customOAuth2UserService;
 
     private final String[] permitUrl = new String[]{"/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**"};
 
@@ -88,29 +86,18 @@ public class SecurityConfig {
     }
 
     @Bean
-    @Profile(value = "default")
+    @Profile(value = "local")
     public SecurityFilterChain filterChain2(HttpSecurity http) throws Exception {
 
         http
-                // .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
-                //     @Override
-                //     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                //         CorsConfiguration config = new CorsConfiguration();
-                //         config.setAllowedOrigins(Collections.singletonList("*"));
-                //         config.setAllowedMethods(Collections.singletonList("*"));
-                //         config.setAllowCredentials(true);
-                //         config.setAllowedHeaders(Collections.singletonList("*"));
-                //         config.setMaxAge(3600L);
-                //         return config;
-                //     }
-                // }))
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagementConfigurer
                         -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorizeRequests) -> {
-                    authorizeRequests.requestMatchers("/member/**").permitAll();
+                    authorizeRequests.requestMatchers("/member/**", "/social/**").permitAll();
                     authorizeRequests.requestMatchers(PathRequest.toH2Console()).permitAll();
                     authorizeRequests.requestMatchers(permitUrl).permitAll();
                     authorizeRequests.requestMatchers("/collection/**").denyAll();
@@ -125,14 +112,6 @@ public class SecurityConfig {
         http
                 .addFilterAfter(getCustomAuthenticationFilter(), LogoutFilter.class)
                 .addFilterBefore(getCustomAuthorizationFilter(), CustomAuthenticationFilter.class);
-
-        // http
-        //         .oauth2Login(
-        //                 oauth -> oauth
-        //                             .userInfoEndpoint(userService -> {
-        //                                 userService.userService(customOAuth2UserService);
-        //                             })
-        //         );
 
         return http
                 .build();
