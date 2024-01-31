@@ -38,4 +38,9 @@ public class NoticeService {
         noticeRepository.save(notice);
         return notice.getId();
     }
+
+    public Long delete(Long noticeId) {
+        noticeRepository.deleteById(noticeId);
+        return noticeId;
+    }
 }
