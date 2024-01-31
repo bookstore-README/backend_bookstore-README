@@ -22,19 +22,12 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
-//    @Bean
-//    public GroupedOpenApi openApi() {
-//        String[] paths = {"/review/**"};
-//
-//        return GroupedOpenApi.builder()
-//                .group("review")
-//                .pathsToMatch(paths)
-//                .build();
-//    }
-
     @Bean
     public GroupedOpenApi bookApi() {
-        String[] paths = {"/book/**"};
+        String[] paths = {
+                "/book/**",
+                "/notice/**"
+        };
 
         return GroupedOpenApi.builder()
                 .group("book")
@@ -42,10 +35,21 @@ public class SwaggerConfig {
                 .build();
     }
 
+//    @Bean
+//    public GroupedOpenApi noticeApi() {
+//        String[] paths = {"/notice/**"};
+//
+//        return GroupedOpenApi.builder()
+//                .group("notice")
+//                .pathsToMatch(paths)
+//                .build();
+//    }
+
     @Bean
     public OpenAPI openAPI() {
         List<Tag> tagList = List.of(
-                createTag("도서 API", "도서 관련 API")
+                createTag("도서 API", "도서 관련 API"),
+                createTag("커뮤니티 API", "커뮤니티 관련 API")
         );
 
         return new OpenAPI().info(
