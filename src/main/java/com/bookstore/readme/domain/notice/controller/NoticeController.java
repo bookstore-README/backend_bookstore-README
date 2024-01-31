@@ -1,6 +1,8 @@
 package com.bookstore.readme.domain.notice.controller;
 
+import com.bookstore.readme.domain.notice.dto.NoticeDto;
 import com.bookstore.readme.domain.notice.request.NoticeSaveRequest;
+import com.bookstore.readme.domain.notice.request.NoticeUpdateRequest;
 import com.bookstore.readme.domain.notice.response.NoticeResponse;
 import com.bookstore.readme.domain.notice.service.NoticeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,5 +56,16 @@ public class NoticeController {
             @PathVariable Integer noticeId) {
         Long delete = noticeService.delete(noticeId.longValue());
         return ResponseEntity.ok(NoticeResponse.ok(delete));
+    }
+
+    @PostMapping("/update/{noticeId}")
+    @Operation(summary = "게시글 수정", description = "게시글 아이디로 수정하는 API")
+    public ResponseEntity<NoticeResponse> noticeUpdate(
+            @Parameter(description = "수정할 게시글 아이디.", example = "1", required = true)
+            @PathVariable Integer noticeId,
+            @RequestBody NoticeUpdateRequest request
+    ) {
+        NoticeDto update = noticeService.update(noticeId.longValue(), request);
+        return ResponseEntity.ok(NoticeResponse.ok(update));
     }
 }
