@@ -1,6 +1,7 @@
 package com.bookstore.readme.domain.notice.service;
 
 import com.bookstore.readme.domain.notice.domain.Notice;
+import com.bookstore.readme.domain.notice.dto.NoticeListDto;
 import com.bookstore.readme.domain.notice.dto.NoticeSearchDto;
 import com.bookstore.readme.domain.notice.exception.NotFoundNoticeByIdException;
 import com.bookstore.readme.domain.notice.repository.NoticeRepository;
@@ -26,8 +27,8 @@ public class NoticeService {
 
     public NoticeResponse getNotices() {
         List<Notice> notices = noticeRepository.findAll();
-        List<NoticeSearchDto> convertNotices = notices.stream()
-                .map(NoticeSearchDto::of)
+        List<NoticeListDto> convertNotices = notices.stream()
+                .map(NoticeListDto::of)
                 .toList();
 
         return NoticeResponse.ok(convertNotices);
