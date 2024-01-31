@@ -31,6 +31,9 @@ public class NoticeService {
                 .map(NoticeListDto::of)
                 .toList();
 
+        if (convertNotices.isEmpty())
+            return NoticeResponse.empty(convertNotices);
+        
         return NoticeResponse.ok(convertNotices);
     }
 

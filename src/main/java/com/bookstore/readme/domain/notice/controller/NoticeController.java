@@ -26,7 +26,9 @@ public class NoticeController {
 
     @GetMapping("/search/{noticeId}")
     @Operation(summary = "게시글 단일 조회", description = "게시글 아이디로 단일 조회하는 API")
-    public ResponseEntity<NoticeResponse> noticeSearch(@Parameter @PathVariable Integer noticeId) {
+    public ResponseEntity<NoticeResponse> noticeSearch(
+            @Parameter(description = "조회할 게시글 아이디", example = "1", required = true)
+            @PathVariable Integer noticeId) {
         NoticeResponse noticeResponse = noticeService.getNotice(noticeId.longValue());
         return ResponseEntity.ok(noticeResponse);
     }
@@ -47,7 +49,9 @@ public class NoticeController {
 
     @PostMapping("/delete/{noticeId}")
     @Operation(summary = "게시글 삭제", description = "게시글 아이디로 삭제하는 API")
-    public ResponseEntity<NoticeResponse> noticeDelete(@Parameter @PathVariable Integer noticeId) {
+    public ResponseEntity<NoticeResponse> noticeDelete(
+            @Parameter(description = "삭제할 게시글 아이디.", example = "1", required = true)
+            @PathVariable Integer noticeId) {
         Long delete = noticeService.delete(noticeId.longValue());
         return ResponseEntity.ok(NoticeResponse.ok(delete));
     }
