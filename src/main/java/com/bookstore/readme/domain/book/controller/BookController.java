@@ -1,6 +1,7 @@
 package com.bookstore.readme.domain.book.controller;
 
 import com.bookstore.readme.domain.book.dto.BookSearchDto;
+import com.bookstore.readme.domain.book.dto.BookSearchReviewDto;
 import com.bookstore.readme.domain.book.dto.SortType;
 import com.bookstore.readme.domain.book.request.BookPageRequest;
 import com.bookstore.readme.domain.book.request.BookRequest;
@@ -39,6 +40,16 @@ public class BookController {
     ) {
         BookSearchDto bookSearchDto = bookSearchService.searchBook(bookId.longValue());
         return ResponseEntity.ok(BookResponse.ok(bookSearchDto));
+    }
+
+    @GetMapping("/search/{bookId}/review")
+    @Operation(summary = "도서 단일 조회(리뷰 포함)", description = "도서 아이디로 단일 조회(리뷰 포함)하는 API")
+    public ResponseEntity<BookResponse> searchBookAndReview(
+            @Parameter(description = "도서를 조회할 아이디", required = true)
+            @PathVariable(name = "bookId") Integer bookId
+    ) {
+        BookSearchReviewDto bookSearchReviewDto = bookSearchService.searchBookAndReview(bookId.longValue());
+        return ResponseEntity.ok(BookResponse.ok(bookSearchReviewDto));
     }
 
     @GetMapping("/list/scroll")
