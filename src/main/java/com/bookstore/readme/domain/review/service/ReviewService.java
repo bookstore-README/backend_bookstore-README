@@ -5,8 +5,4 @@ import com.bookstore.readme.domain.review.response.ReviewResponse;
 
 public interface ReviewService {
     ReviewResponse reviewList();
-
-    ReviewResponse searchReview(Long reviewId);
-
-    ReviewResponse saveReview(ReviewRequest request);
 }

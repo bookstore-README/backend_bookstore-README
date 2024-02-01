@@ -22,7 +22,6 @@ import java.util.List;
 public class ReviewDefaultService implements ReviewService {
 
     private final ReviewQueryService reviewQueryService;
-    private final BookQueryService bookQueryService;
 
     @Override
     public ReviewResponse reviewList() {
@@ -40,26 +39,4 @@ public class ReviewDefaultService implements ReviewService {
 
         return ReviewResponse.ok(result);
     }
-
-    public ReviewResponse searchReview(Long reviewId) {
-        Review review = reviewQueryService.findById(reviewId);
-        ReviewDto reviewDto = ReviewDto.of(review);
-        return ReviewResponse.ok(reviewDto);
-    }
-
-    @Transactional
-    public ReviewResponse saveReview(ReviewRequest request) {
-
-        //Book
-        Long bookId = request.getBookId();
-        Book book = bookQueryService.findById(bookId);
-
-        //Review
-        Review review = request.toReview();
-        review.changeBook(book);
-
-        Long save = reviewQueryService.save(review);
-        return ReviewResponse.ok(save);
-    }
-
 }

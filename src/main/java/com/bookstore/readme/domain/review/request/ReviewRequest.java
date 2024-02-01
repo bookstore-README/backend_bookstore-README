@@ -6,9 +6,15 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
-@Data
+@Getter
+@SuperBuilder
 public class ReviewRequest {
+    @NotNull(message = "회원 아이디는 필수 입니다.")
+    private Long memberId;
+
     @NotNull(message = "책 아이디는 필수 입니다.")
     private Long bookId;
 
@@ -25,10 +31,10 @@ public class ReviewRequest {
         this.content = content;
     }
 
-    public Review toReview() {
+    public static Review toReview(ReviewRequest request) {
         return Review.builder()
-                .title(title)
-                .content(content)
+                .title(request.getTitle())
+                .content(request.getContent())
                 .build();
     }
 }

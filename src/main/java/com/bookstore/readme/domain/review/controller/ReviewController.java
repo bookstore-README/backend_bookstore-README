@@ -2,7 +2,9 @@ package com.bookstore.readme.domain.review.controller;
 
 import com.bookstore.readme.domain.review.dto.ReviewSearchDto;
 import com.bookstore.readme.domain.review.request.ReviewRequest;
+import com.bookstore.readme.domain.review.request.ReviewSaveRequest;
 import com.bookstore.readme.domain.review.response.ReviewResponse;
+import com.bookstore.readme.domain.review.service.ReviewSaveService;
 import com.bookstore.readme.domain.review.service.ReviewSearchService;
 import com.bookstore.readme.domain.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class ReviewController {
     private final ReviewService reviewService;
     private final ReviewSearchService reviewSearchService;
+    private final ReviewSaveService reviewSaveService;
 
     @GetMapping("/list")
     public ResponseEntity<ReviewResponse> reviewList() {
@@ -37,8 +40,9 @@ public class ReviewController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<ReviewResponse> saveReview(@Valid @RequestBody ReviewRequest request) {
-        ReviewResponse reviewResponse = reviewService.saveReview(request);
-        return ResponseEntity.ok(reviewResponse);
+    @Operation(summary = "리뷰 등록", description = "리뷰를 등록하는 API")
+    public ResponseEntity<ReviewResponse> saveReview(@Valid @RequestBody ReviewSaveRequest request) {
+        Long reviewId = reviewSaveService.save(request);
+        return ResponseEntity.ok(ReviewResponse.ok(reviewId));
     }
 }

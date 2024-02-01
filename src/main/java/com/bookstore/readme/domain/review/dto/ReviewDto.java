@@ -1,10 +1,12 @@
 package com.bookstore.readme.domain.review.dto;
 
 import com.bookstore.readme.domain.review.domain.Review;
+import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
+@Getter
 @SuperBuilder
 public class ReviewDto {
     private Long id;
