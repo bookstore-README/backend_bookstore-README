@@ -32,7 +32,7 @@ public class BookDefaultService implements BookService {
                 .map(book -> {
                     BookDto convertBook = BookDto.toBookDto(book);
                     List<ReviewDto> convertReview = book.getReviews().stream()
-                            .map(ReviewDto::toReviewDto)
+                            .map(ReviewDto::of)
                             .toList();
 
                     convertBook.getReviews().addAll(convertReview);
@@ -105,7 +105,7 @@ public class BookDefaultService implements BookService {
                 .map(book -> {
                     BookDto convertBook = BookDto.toBookDto(book);
                     List<ReviewDto> convertReview = book.getReviews().stream()
-                            .map(ReviewDto::toReviewDto)
+                            .map(ReviewDto::of)
                             .toList();
 
                     convertBook.getReviews().addAll(convertReview);

@@ -26,7 +26,8 @@ public class SwaggerConfig {
     public GroupedOpenApi bookApi() {
         String[] paths = {
                 "/book/**",
-                "/notice/**"
+                "/notice/**",
+                "/review/**"
         };
 
         return GroupedOpenApi.builder()
@@ -49,7 +50,8 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         List<Tag> tagList = List.of(
                 createTag("도서 API", "도서 관련 API"),
-                createTag("커뮤니티 API", "커뮤니티 관련 API")
+                createTag("커뮤니티 API", "커뮤니티 관련 API"),
+                createTag("리뷰 API", "리뷰 관련 API")
         );
 
         return new OpenAPI().info(
