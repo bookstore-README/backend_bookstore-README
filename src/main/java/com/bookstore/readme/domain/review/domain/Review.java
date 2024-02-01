@@ -45,4 +45,12 @@ public class Review {
         this.book = book;
         book.getReviews().add(this);
     }
+
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
 }
