@@ -1,6 +1,5 @@
 package com.bookstore.readme.common.security.handler;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +9,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 import java.io.IOException;
 
 @Slf4j
-public class SignInFailureHanlder extends SimpleUrlAuthenticationFailureHandler {
+public class SignInFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {

@@ -3,8 +3,8 @@ package com.bookstore.readme.common.security.config;
 import com.bookstore.readme.common.jwt.*;
 import com.bookstore.readme.common.security.filter.CustomAuthenticationFilter;
 import com.bookstore.readme.common.security.filter.JwtAuthorizationFilter;
-import com.bookstore.readme.common.security.handler.SignInFailureHanlder;
-import com.bookstore.readme.common.security.handler.SignInSuccessHanlder;
+import com.bookstore.readme.common.security.handler.SignInFailureHandler;
+import com.bookstore.readme.common.security.handler.SignInSuccessHandler;
 import com.bookstore.readme.common.security.service.CustomUserDetailService;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -129,16 +129,16 @@ public class SecurityConfig {
      * 로그인 성공 시 호출되는 LoginSuccessJWTProviderHandler 빈 등록
      */
     @Bean
-    public SignInSuccessHanlder signInSuccessHanlder() {
-        return new SignInSuccessHanlder(jwtTokenService, memberRepository);
+    public SignInSuccessHandler signInSuccessHanlder() {
+        return new SignInSuccessHandler(jwtTokenService, memberRepository);
     }
 
     /**
      * 로그인 실패 시 호출되는 LoginFailureHandler 빈 등록
      */
     @Bean
-    public SignInFailureHanlder signInFailureHanlder() {
-        return new SignInFailureHanlder();
+    public SignInFailureHandler signInFailureHanlder() {
+        return new SignInFailureHandler();
     }
 
     @Bean
@@ -156,4 +156,5 @@ public class SecurityConfig {
 
         return customAuthenticationFilter;
     }
+
 }
