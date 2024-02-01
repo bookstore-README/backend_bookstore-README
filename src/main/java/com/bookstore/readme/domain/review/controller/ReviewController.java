@@ -4,6 +4,7 @@ import com.bookstore.readme.domain.review.dto.ReviewSearchDto;
 import com.bookstore.readme.domain.review.request.ReviewRequest;
 import com.bookstore.readme.domain.review.request.ReviewSaveRequest;
 import com.bookstore.readme.domain.review.response.ReviewResponse;
+import com.bookstore.readme.domain.review.service.ReviewDeleteService;
 import com.bookstore.readme.domain.review.service.ReviewSaveService;
 import com.bookstore.readme.domain.review.service.ReviewSearchService;
 import com.bookstore.readme.domain.review.service.ReviewService;
@@ -23,6 +24,7 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final ReviewSearchService reviewSearchService;
     private final ReviewSaveService reviewSaveService;
+    private final ReviewDeleteService reviewDeleteService;
 
     @GetMapping("/list")
     public ResponseEntity<ReviewResponse> reviewList() {
@@ -34,8 +36,9 @@ public class ReviewController {
     @Operation(summary = "리뷰 단일 조회", description = "리뷰 아이디로 단일 조회하는 API")
     public ResponseEntity<ReviewResponse> searchReview(
             @Parameter(description = "조회할 리뷰 아이디", example = "1", required = true)
-            @PathVariable("reviewId") Integer review) {
-        ReviewSearchDto reviewSearchDto = reviewSearchService.searchReview(review.longValue());
+            @PathVariable("reviewId") Integer reviewId
+    ) {
+        ReviewSearchDto reviewSearchDto = reviewSearchService.searchReview(reviewId.longValue());
         return ResponseEntity.ok(ReviewResponse.ok(reviewSearchDto));
     }
 
@@ -44,5 +47,15 @@ public class ReviewController {
     public ResponseEntity<ReviewResponse> saveReview(@Valid @RequestBody ReviewSaveRequest request) {
         Long reviewId = reviewSaveService.save(request);
         return ResponseEntity.ok(ReviewResponse.ok(reviewId));
+    }
+
+    @PostMapping("/delete/{reviewId}")
+    @Operation(summary = "리뷰 삭제", description = "리뷰 아이디로 삭제하는 API")
+    public ResponseEntity<ReviewResponse> deleteReview(
+            @Parameter(description = "삭제할 리뷰 아이디", example = "1", required = true)
+            @PathVariable("reviewId") Integer reviewId
+    ) {
+        Long deleteReviewId = reviewDeleteService.delete(reviewId.longValue());
+        return ResponseEntity.ok(ReviewResponse.ok(deleteReviewId));
     }
 }
