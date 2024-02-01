@@ -5,7 +5,6 @@ import com.bookstore.readme.domain.book.service.BookQueryService;
 import com.bookstore.readme.domain.review.domain.Review;
 import com.bookstore.readme.domain.review.dto.ReviewDto;
 import com.bookstore.readme.domain.review.dto.ReviewListDto;
-import com.bookstore.readme.domain.review.repository.ReviewRepository;
 import com.bookstore.readme.domain.review.request.ReviewRequest;
 import com.bookstore.readme.domain.review.response.ReviewResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,7 @@ public class ReviewDefaultService implements ReviewService {
     public ReviewResponse reviewList() {
         List<Review> reviews = reviewQueryService.findAll();
         List<ReviewDto> convertReviews = reviews.stream()
-                .map(ReviewDto::toReviewDto)
+                .map(ReviewDto::of)
                 .toList();
 
         ReviewListDto result = ReviewListDto.builder()
@@ -44,7 +43,7 @@ public class ReviewDefaultService implements ReviewService {
 
     public ReviewResponse searchReview(Long reviewId) {
         Review review = reviewQueryService.findById(reviewId);
-        ReviewDto reviewDto = ReviewDto.toReviewDto(review);
+        ReviewDto reviewDto = ReviewDto.of(review);
         return ReviewResponse.ok(reviewDto);
     }
 
