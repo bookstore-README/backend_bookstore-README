@@ -2,14 +2,15 @@ package com.bookstore.readme.domain.book.dto;
 
 import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.review.dto.ReviewDto;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@SuperBuilder
 public class BookDto {
     private final Long bookId;
     private final String bookTitle;
@@ -23,9 +24,7 @@ public class BookDto {
     private final Integer price;
     private final LocalDateTime createDate;
     private final LocalDateTime updateDate;
-    private final List<ReviewDto> reviews = new ArrayList<>();
 
-    @Builder
     public BookDto(Long bookId, String bookTitle, String publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Integer bookMarked, Double averageRating, Integer price, LocalDateTime createDate, LocalDateTime updateDate) {
         this.bookId = bookId;
         this.bookTitle = bookTitle;
@@ -41,7 +40,7 @@ public class BookDto {
         this.updateDate = updateDate;
     }
 
-    public static BookDto toBookDto(Book book) {
+    public static BookDto of(Book book) {
         return BookDto.builder()
                 .bookId(book.getId())
                 .bookTitle(book.getBookTitle())
@@ -58,12 +57,12 @@ public class BookDto {
                 .build();
     }
 
-    private static List<String> convertAuthors(String author) {
+    protected static List<String> convertAuthors(String author) {
         String[] split = author.split(",");
         return List.of(split);
     }
 
-    private static List<String> convertCategories(String category) {
+    protected static List<String> convertCategories(String category) {
         String[] split = category.split(",");
         return List.of(split);
     }

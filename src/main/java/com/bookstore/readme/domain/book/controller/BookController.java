@@ -1,9 +1,11 @@
 package com.bookstore.readme.domain.book.controller;
 
+import com.bookstore.readme.domain.book.dto.BookSearchDto;
 import com.bookstore.readme.domain.book.dto.SortType;
 import com.bookstore.readme.domain.book.request.BookPageRequest;
 import com.bookstore.readme.domain.book.request.BookRequest;
 import com.bookstore.readme.domain.book.response.BookResponse;
+import com.bookstore.readme.domain.book.service.BookSearchService;
 import com.bookstore.readme.domain.book.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,14 +29,16 @@ import java.time.Duration;
 @Tag(name = "도서 API")
 public class BookController {
     private final BookService bookService;
+    private final BookSearchService bookSearchService;
 
-    @GetMapping("/list")
-    @Operation(summary = "도서 전체 조회", description = "도서를 전체 조회하기 위한 API")
-    public ResponseEntity<BookResponse> bookList() {
-        CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(30));
-        return ResponseEntity.ok()
-                .cacheControl(cacheControl)
-                .body(bookService.bookList());
+    @GetMapping("/search/{bookId}")
+    @Operation(summary = "도서 단일 조회", description = "도서 아이디로 단일 조회하는 API")
+    public ResponseEntity<BookResponse> bookSearch(
+            @Parameter(description = "도서를 조회할 아이디", required = true)
+            @PathVariable(name = "bookId") Integer bookId
+    ) {
+        BookSearchDto bookSearchDto = bookSearchService.searchBook(bookId.longValue());
+        return ResponseEntity.ok(BookResponse.ok(bookSearchDto));
     }
 
     @GetMapping("/list/scroll")
@@ -45,7 +49,6 @@ public class BookController {
                 .cacheControl(cacheControl)
                 .body(bookService.bookList(request));
     }
-
 
     @PostMapping("/save")
     @Operation(summary = "도서 저장", description = "도서를 저장하기 위한 API")
@@ -58,5 +61,4 @@ public class BookController {
     public ResponseEntity<BookResponse> bookmarkCount(@Parameter(description = "북마크 개수를 가져올 도서 아이디") @PathVariable Long bookId) {
         return ResponseEntity.ok(bookService.bookmarkCount(bookId));
     }
-
 }

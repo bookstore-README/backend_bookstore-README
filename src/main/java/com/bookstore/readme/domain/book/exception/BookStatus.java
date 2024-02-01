@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum BookStatus {
-    NOT_FOUND_BOOK_BY_ID(404, "존재하지 않는 상품 아이디입니다.");
+    NOT_FOUND_BOOK_BY_ID(400, "존재하지 않는 상품 아이디입니다.");
 
     private final Integer status;
     private final String message;

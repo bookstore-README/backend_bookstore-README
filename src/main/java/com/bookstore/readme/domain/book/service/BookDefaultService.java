@@ -30,12 +30,12 @@ public class BookDefaultService implements BookService {
         List<Book> books = bookQueryService.findAll();
         List<BookDto> convertBookDtos = books.stream()
                 .map(book -> {
-                    BookDto convertBook = BookDto.toBookDto(book);
+                    BookDto convertBook = BookDto.of(book);
                     List<ReviewDto> convertReview = book.getReviews().stream()
                             .map(ReviewDto::of)
                             .toList();
 
-                    convertBook.getReviews().addAll(convertReview);
+//                    convertBook.getReviews().addAll(convertReview);
                     return convertBook;
                 })
                 .toList();
@@ -103,12 +103,12 @@ public class BookDefaultService implements BookService {
         List<Book> books = scroll.getContent();
         List<BookDto> convertBootDtos = books.stream()
                 .map(book -> {
-                    BookDto convertBook = BookDto.toBookDto(book);
+                    BookDto convertBook = BookDto.of(book);
                     List<ReviewDto> convertReview = book.getReviews().stream()
                             .map(ReviewDto::of)
                             .toList();
 
-                    convertBook.getReviews().addAll(convertReview);
+//                    convertBook.getReviews().addAll(convertReview);
                     return convertBook;
                 })
                 .toList();
