@@ -4,21 +4,14 @@ import com.bookstore.readme.common.jwt.JwtTokenService;
 import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.model.MemberRole;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
-import com.bookstore.readme.domain.social.domain.SocialMember;
 import com.bookstore.readme.domain.social.domain.SocialType;
 import com.bookstore.readme.domain.social.domain.authcode.AuthCodeRequestUrlProviderComposite;
 import com.bookstore.readme.domain.social.domain.client.SocialMemberClientComposite;
 import com.bookstore.readme.domain.social.dto.SocialLoginResponseDto;
-import com.bookstore.readme.domain.social.repository.SocialMemberRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -28,7 +21,6 @@ public class SocialService {
 
     private final AuthCodeRequestUrlProviderComposite authCodeRequestUrlProviderComposite;
     private final SocialMemberClientComposite socialMemberClientComposite;
-    // private final SocialMemberRepository socialMemberRepository;
     private final MemberRepository memberRepository;
     private final JwtTokenService jwtTokenService;
     private final PasswordEncoder passwordEncoder;
