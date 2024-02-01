@@ -1,16 +1,13 @@
-package com.bookstore.readme.domain.book.dto;
+package com.bookstore.readme.domain.book.dto.page;
 
 import com.bookstore.readme.domain.book.domain.Book;
-import com.bookstore.readme.domain.review.dto.ReviewDto;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@SuperBuilder
 public class BookDto {
     private final Long bookId;
     private final String bookTitle;
@@ -25,6 +22,7 @@ public class BookDto {
     private final LocalDateTime createDate;
     private final LocalDateTime updateDate;
 
+    @Builder
     public BookDto(Long bookId, String bookTitle, String publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Integer bookMarked, Double averageRating, Integer price, LocalDateTime createDate, LocalDateTime updateDate) {
         this.bookId = bookId;
         this.bookTitle = bookTitle;

@@ -1,7 +1,7 @@
 package com.bookstore.readme.domain.book.service;
 
 import com.bookstore.readme.domain.book.domain.Book;
-import com.bookstore.readme.domain.book.dto.BookDto;
+import com.bookstore.readme.domain.book.dto.search.BookDto;
 import com.bookstore.readme.domain.book.dto.BookListDto;
 import com.bookstore.readme.domain.book.dto.SortType;
 import com.bookstore.readme.domain.book.request.BookPageRequest;

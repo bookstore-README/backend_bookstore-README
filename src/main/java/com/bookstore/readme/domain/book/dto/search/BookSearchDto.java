@@ -1,8 +1,6 @@
-package com.bookstore.readme.domain.book.dto;
+package com.bookstore.readme.domain.book.dto.search;
 
 import com.bookstore.readme.domain.book.domain.Book;
-import com.bookstore.readme.domain.review.dto.ReviewDto;
-import com.bookstore.readme.domain.review.dto.ReviewSearchDto;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
@@ -11,16 +9,13 @@ import java.util.List;
 
 @Getter
 @SuperBuilder
-public class BookSearchReviewDto extends BookDto {
-    private List<ReviewSearchDto> reviews;
-
-    public BookSearchReviewDto(Long bookId, String bookTitle, String publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Integer bookMarked, Double averageRating, Integer price, LocalDateTime createDate, LocalDateTime updateDate, List<ReviewSearchDto> reviews) {
+public class BookSearchDto extends BookDto {
+    public BookSearchDto(Long bookId, String bookTitle, String publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Integer bookMarked, Double averageRating, Integer price, LocalDateTime createDate, LocalDateTime updateDate) {
         super(bookId, bookTitle, publishedDate, bookImgUrl, authors, description, categories, bookMarked, averageRating, price, createDate, updateDate);
-        this.reviews = reviews;
     }
 
-    public static BookSearchReviewDto of(Book book, List<ReviewSearchDto> reviews) {
-        return BookSearchReviewDto.builder()
+    public static BookSearchDto of(Book book) {
+        return BookSearchDto.builder()
                 .bookId(book.getId())
                 .bookTitle(book.getBookTitle())
                 .publishedDate(book.getPublishedDate())
@@ -31,9 +26,9 @@ public class BookSearchReviewDto extends BookDto {
                 .bookMarked(book.getBookmarked())
                 .averageRating(book.getAverageRating())
                 .price(book.getPrice())
-                .reviews(reviews)
                 .createDate(book.getCreateDate())
                 .updateDate(book.getUpdateDate())
                 .build();
     }
+
 }
