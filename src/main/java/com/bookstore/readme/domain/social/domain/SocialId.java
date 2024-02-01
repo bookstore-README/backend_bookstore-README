@@ -13,11 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SocialId {
 
-    @Column(nullable = false, name = "social_server_id")
+    @Column(name = "social_server_id")
     private String socialServerId;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, name = "social_server")
+    @Column(name = "social_server")
     private SocialType socialType;
 
     public String socialServerId() {

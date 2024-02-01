@@ -18,7 +18,7 @@ import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
-public class SignInSuccessHanlder extends SimpleUrlAuthenticationSuccessHandler {
+public class SignInSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtTokenService jwtTokenService;
     private final MemberRepository memberRepository;

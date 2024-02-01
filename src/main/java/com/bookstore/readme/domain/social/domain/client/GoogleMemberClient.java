@@ -1,6 +1,6 @@
 package com.bookstore.readme.domain.social.domain.client;
 
-import com.bookstore.readme.domain.social.domain.SocialMember;
+import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.social.domain.SocialType;
 import com.bookstore.readme.domain.social.dto.GoogleMemberResponseDto;
 import com.bookstore.readme.domain.social.dto.GoogleTokenDto;
@@ -24,7 +24,7 @@ public class GoogleMemberClient implements SocialMemberClient {
     }
 
     @Override
-    public SocialMember fetch(String authCode) {
+    public Member fetch(String authCode) {
         GoogleTokenDto token = googleApiClient.fetchToken(tokenRequestParams(authCode));
         GoogleMemberResponseDto googleMemberResponse =
                 googleApiClient.fetchMember(token.getToken_type() + " " + token.getAccess_token());

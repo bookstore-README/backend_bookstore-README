@@ -18,6 +18,8 @@ public class SocialMember {
     @Embedded
     private SocialId socialId;
 
+    private String email;
+
     private String nickname;
 
     private String profileImageUrl;
