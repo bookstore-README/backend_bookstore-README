@@ -5,9 +5,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @ToString
@@ -36,6 +42,14 @@ public class Member {
 
     @Embedded
     private SocialId socialId;
+
+    @CreatedDate
+    @Column(updatable = true)
+    private LocalDateTime createDate;
+
+    @LastModifiedDate
+    @Column(updatable = false)
+    private LocalDateTime updateDate;
 
     @Builder
     public Member(Long id, String name, String nickname, String profileImage, String email, String password, MemberRole role, String refreshToken, SocialId socialId) {

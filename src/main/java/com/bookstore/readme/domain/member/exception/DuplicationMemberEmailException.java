@@ -3,11 +3,11 @@ package com.bookstore.readme.domain.member.exception;
 import lombok.Getter;
 
 @Getter
-public class DuplicationMemberException extends MemberException {
-    private final Long memberId;
+public class DuplicationMemberEmailException extends MemberException {
+    private final String email;
 
-    public DuplicationMemberException(Long memberId) {
+    public DuplicationMemberEmailException(String email) {
         super(MemberStatus.DUPLICATE_MEMBER);
-        this.memberId = memberId;
+        this.email = email;
     }
 }
