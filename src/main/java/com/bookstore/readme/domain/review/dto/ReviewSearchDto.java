@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
+@Getter
 @SuperBuilder
 public class ReviewSearchDto extends ReviewDto {
     public ReviewSearchDto(Long id, String title, String content, LocalDateTime createDate, LocalDateTime updateDate) {

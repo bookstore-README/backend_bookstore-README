@@ -8,7 +8,7 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
-public class OAuth2GoogleResponseDto {
+public class GoogleTokenDto {
 
     private String access_token;
     private Long expires_in;

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -31,7 +32,7 @@ public class Review {
     @Column(updatable = false)
     private LocalDateTime createDate;
 
-    @CreatedDate
+    @LastModifiedDate
     @Column(updatable = true)
     private LocalDateTime updateDate;
 
@@ -44,5 +45,13 @@ public class Review {
     public void changeBook(Book book) {
         this.book = book;
         book.getReviews().add(this);
+    }
+
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    public void changeContent(String content) {
+        this.content = content;
     }
 }
