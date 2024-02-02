@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @SuperBuilder
@@ -23,5 +24,11 @@ public class ReviewSearchDto extends ReviewDto {
                 .createDate(review.getCreateDate())
                 .updateDate(review.getUpdateDate())
                 .build();
+    }
+
+    public static List<ReviewSearchDto> ofs(List<Review> reviews) {
+        return reviews.stream()
+                .map(ReviewSearchDto::of)
+                .toList();
     }
 }

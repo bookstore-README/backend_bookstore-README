@@ -4,12 +4,10 @@ import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.dto.SortType;
 import com.bookstore.readme.domain.book.dto.page.BookDto;
 import com.bookstore.readme.domain.book.dto.page.BookPageDto;
-
 import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
 import com.bookstore.readme.domain.book.repository.BookRepository;
 import com.bookstore.readme.domain.book.repository.BookSpecification;
 import com.bookstore.readme.domain.book.request.BookPageRequest;
-import com.bookstore.readme.domain.review.dto.ReviewDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,17 +30,13 @@ public class BookPageService {
         Page<Book> scroll = scroll(request.getBookId(), request.getSort(), request.getAscending(), pageRequest);
         //커서아이디 확인
 
+//        List<ReviewSearchDto> convertReview = book.getReviews().stream()
+//                .map(ReviewSearchDto::of)
+//                .toList();
+
         List<Book> books = scroll.getContent();
         List<BookDto> convertBootDto = books.stream()
-                .map(book -> {
-                    BookDto convertBook = BookDto.of(book);
-                    List<ReviewDto> convertReview = book.getReviews().stream()
-                            .map(ReviewDto::of)
-                            .toList();
-
-//                    convertBook.getReviews().addAll(convertReview);
-                    return convertBook;
-                })
+                .map(BookDto::of)
                 .toList();
 
         int nextCursorId = scroll.hasNext() ? books.get(books.size() - 1).getId().intValue() : -1;
