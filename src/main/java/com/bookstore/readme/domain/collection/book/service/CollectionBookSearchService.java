@@ -19,6 +19,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -27,7 +29,14 @@ public class CollectionBookSearchService extends CollectionService {
     private final AladdinCollectionService collectionService;
     private final BookRepository bookRepository;
 
-    @Transactional
+    public void save(List<Book> books) {
+        List<Book> filterBooks = books.stream()
+                .filter(book -> !bookRepository.existsByBookTitle(book.getBookTitle()))
+                .toList();
+
+        bookRepository.saveAll(filterBooks);
+    }
+
     public List<BookDto> save(SaveDto saveDto) {
         List<AladdinSearchRequest> requests = search(saveDto);
         List<BookDto> getData = new ArrayList<>();
@@ -35,24 +44,39 @@ public class CollectionBookSearchService extends CollectionService {
             BookDto search;
             try {
                 search = collectionService.search(request);
+                if (search.getItems().isEmpty())
+                    continue;
+
                 getData.add(search);
             } catch (Exception e) {
+                log.error("뭔가 추가하는데 에러가 난거같어..{}", e.toString());
                 continue;
             }
 
             List<BookItemDto> items = search.getItems();
             List<Book> books = items.stream()
-                    .filter(item -> StringUtils.hasText(item.getCategoryName()))
+                    .filter(item -> StringUtils.hasText(item.getCategoryName()) && item.getCategoryName().contains(">"))
                     .map(item -> {
-                        log.debug("{}", item.getCategoryName());
                         String author = item.getAuthor();
                         String authors = author.replace(">", ",");
 
                         String categoryName = item.getCategoryName();
-                        String categories = categoryName.replaceAll(">", ",");
-                        log.debug("{}", categories);
-                        log.debug("{}", categories.indexOf(",", 5));
-                        String substring = categories.substring(0, categories.indexOf(",", 5));
+                        String[] split = categoryName.split(">");
+                        StringBuilder categories = new StringBuilder();
+                        for (int i = 0; i < 2; i++) {
+                            categories.append(split[i]);
+                            categories.append(",");
+                        }
+
+                        categories.deleteCharAt(categories.length() - 1);
+
+
+                        try {
+
+                        } catch (Exception e) {
+                            log.debug(categoryName);
+                            throw new RuntimeException();
+                        }
 
                         return Book.builder()
                                 .bookTitle(item.getTitle())
@@ -60,13 +84,14 @@ public class CollectionBookSearchService extends CollectionService {
                                 .bookImgUrl(item.getCover())
                                 .authors(authors)
                                 .description(item.getDescription())
-                                .categories(substring)
+                                .categories(categories.toString())
                                 .bookmarked(0)
                                 .averageRating(0D)
                                 .price(item.getPriceStandard())
                                 .build();
                     }).toList();
-            bookRepository.saveAll(books);
+
+            save(books);
         }
         return getData;
     }
@@ -74,13 +99,15 @@ public class CollectionBookSearchService extends CollectionService {
     private List<AladdinSearchRequest> search(SaveDto saveDto) {
 
         List<String> searches = saveDto.getSearches();
+        Set<String> setSearches = Set.copyOf(searches);
+        log.debug("count: {}", setSearches.size());
         QueryType queryType = saveDto.getQueryType();
         SearchTarget searchTarget = saveDto.getSearchTarget();
         List<Integer> starts = saveDto.getStarts();
         Integer maxResult = saveDto.getMaxResult();
 
         List<AladdinSearchRequest> requests = new ArrayList<>();
-        searches.forEach(search -> {
+        setSearches.forEach(search -> {
             starts.forEach(start -> {
                 AladdinSearchRequest aladdinSearchRequest = new AladdinSearchRequest(search, queryType, searchTarget, start, maxResult, null, null, null);
                 requests.add(aladdinSearchRequest);

@@ -23,9 +23,11 @@ public class Book {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(length = 1000)
     private String bookTitle;
     @Column(length = 1000)
     private String description;
+    @Column(length = 1000)
     private String authors;
     private String categories;
     private Integer bookmarked;

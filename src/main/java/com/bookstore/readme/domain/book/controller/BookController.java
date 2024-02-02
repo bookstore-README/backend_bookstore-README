@@ -24,14 +24,13 @@ import java.time.Duration;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/book")
 @Tag(name = "도서 API")
 public class BookController {
     private final BookService bookService;
     private final BookSearchService bookSearchService;
     private final BookPageService bookPageService;
 
-    @GetMapping("/search/{bookId}")
+    @GetMapping("/book/{bookId}")
     @Operation(summary = "도서 단일 조회", description = "도서 아이디로 단일 조회하는 API")
     public ResponseEntity<BookResponse> bookSearch(
             @Parameter(description = "도서를 조회할 아이디", required = true)
@@ -41,7 +40,7 @@ public class BookController {
         return ResponseEntity.ok(BookResponse.ok(bookSearchDto));
     }
 
-    @GetMapping("/search/{bookId}/review")
+    @GetMapping("/book/{bookId}/review")
     @Operation(summary = "도서 단일 조회(리뷰 포함)", description = "도서 아이디로 단일 조회(리뷰 포함)하는 API")
     public ResponseEntity<BookResponse> searchBookAndReview(
             @Parameter(description = "도서를 조회할 아이디", required = true)
@@ -51,12 +50,12 @@ public class BookController {
         return ResponseEntity.ok(BookResponse.ok(bookSearchReviewDto));
     }
 
-    @GetMapping("/page")
+    @GetMapping("/book")
     @Operation(summary = "도서 전체 조회(커서 기반)", description = "무한 스크롤 기능을 위한 API")
     public ResponseEntity<BookResponse> bookPage(@ParameterObject @Valid BookPageRequest request) {
-        CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(30));
+//        CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(30));
         return ResponseEntity.ok()
-                .cacheControl(cacheControl)
+//                .cacheControl(cacheControl)
                 .body(BookResponse.ok(bookPageService.bookList(request)));
     }
 

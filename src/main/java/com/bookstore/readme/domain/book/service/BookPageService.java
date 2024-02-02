@@ -28,11 +28,6 @@ public class BookPageService {
         Sort sort = getSort(request.getSort(), request.getAscending());
         PageRequest pageRequest = PageRequest.of(0, request.getLimit(), sort);
         Page<Book> scroll = scroll(request.getBookId(), request.getSort(), request.getAscending(), pageRequest);
-        //커서아이디 확인
-
-//        List<ReviewSearchDto> convertReview = book.getReviews().stream()
-//                .map(ReviewSearchDto::of)
-//                .toList();
 
         List<Book> books = scroll.getContent();
         List<BookDto> convertBootDto = books.stream()
