@@ -26,4 +26,13 @@ public class MemberDto {
                 .build();
     }
 
+    public static MemberDto of(Member member) {
+        return MemberDto.builder()
+                .name(member.getName())
+                .nickname(member.getNickname())
+                .profileImage(member.getProfileImage())
+                .email(member.getEmail())
+                .password(member.getPassword())
+                .build();
+    }
 }
