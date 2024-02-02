@@ -1,25 +1,38 @@
 package com.bookstore.readme.domain.member.service;
 
+import com.bookstore.readme.domain.member.dto.MemberDto;
+import com.bookstore.readme.domain.member.dto.MemberSaveDto;
+import com.bookstore.readme.domain.member.exception.DuplicationMemberEmailException;
+import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
 import com.bookstore.readme.domain.member.model.Member;
-import com.bookstore.readme.domain.member.dto.MemberJoinDto;
-import com.bookstore.readme.domain.member.response.MemberResponse;
+import com.bookstore.readme.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
-    
-    private final MemberQueryService memberQueryService;
 
-    public MemberResponse memberJoin(MemberJoinDto memberJoinDto) {
-        boolean save = memberQueryService.save(memberJoinDto);
-        return MemberResponse
-                .builder()
-                .status(200)
-                .message("Success")
-                .data(save)
-                .build();
+    private final MemberRepository memberRepository;
+
+    @Transactional
+    public Long joinMember(MemberSaveDto memberSaveDto) {
+        Member member = memberSaveDto.toEntity();
+        if (memberRepository.existsByEmail(member.getEmail())) {
+            throw new DuplicationMemberEmailException(member.getEmail());
+        }
+
+        memberRepository.save(member);
+        return member.getId();
+    }
+
+    @Transactional
+    public MemberDto searchMember(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
+
+        return MemberDto.of(member);
     }
 
 //    public MemberResponse memberLogin(MemberLoginDto memberLoginDto) {
