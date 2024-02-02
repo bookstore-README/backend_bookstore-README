@@ -10,6 +10,14 @@ import org.hibernate.annotations.DynamicInsert;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @ToString
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "member_unique",
+                        columnNames = {"email"}
+                )
+        }
+)
 public class Member {
     @Id
     @GeneratedValue
@@ -22,7 +30,6 @@ public class Member {
 
     private String profileImage;
 
-    @Column(unique = true)
     private String email;
 
     @JsonIgnore

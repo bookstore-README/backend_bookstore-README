@@ -1,6 +1,6 @@
 package com.bookstore.readme.domain.book.domain;
 
-import com.bookstore.readme.domain.category.domain.Category;
+import com.bookstore.readme.domain.bookmark.domain.Bookmark;
 import com.bookstore.readme.domain.review.domain.Review;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -22,6 +22,7 @@ import java.util.List;
 public class Book {
     @Id
     @GeneratedValue
+    @Column(name = "book_id")
     private Long id;
     @Column(length = 1000)
     private String bookTitle;
@@ -38,6 +39,9 @@ public class Book {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
     private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
+    private List<Bookmark> bookmarks = new ArrayList<>();
 
     @CreatedDate
     @Column(updatable = false)
