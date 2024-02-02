@@ -1,7 +1,9 @@
 package com.bookstore.readme.domain.member.service;
 
+import com.bookstore.readme.domain.member.dto.MemberDto;
 import com.bookstore.readme.domain.member.dto.MemberSaveDto;
 import com.bookstore.readme.domain.member.exception.DuplicationMemberEmailException;
+import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
 import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,14 @@ public class MemberService {
 
         memberRepository.save(member);
         return member.getId();
+    }
+
+    @Transactional
+    public MemberDto searchMember(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
+
+        return MemberDto.of(member);
     }
 
 //    public MemberResponse memberLogin(MemberLoginDto memberLoginDto) {

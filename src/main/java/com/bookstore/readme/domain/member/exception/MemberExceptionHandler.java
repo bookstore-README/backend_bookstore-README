@@ -30,6 +30,19 @@ public class MemberExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
+    @ExceptionHandler(NotFoundMemberByIdException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<MemberResponse> handler(NotFoundMemberByIdException e) {
+
+        MemberResponse response = MemberResponse.builder()
+                .status(e.getStatus())
+                .message(e.getMessage())
+                .data(e.getMemberId())
+                .build();
+
+        return ResponseEntity.badRequest().body(response);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<MemberResponse> handlerMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         Map<String, Object> errors = new HashMap<>();
@@ -42,7 +55,7 @@ public class MemberExceptionHandler {
                 .message("fail")
                 .data(errors)
                 .build();
-        
+
         return ResponseEntity.badRequest().body(response);
     }
 }
