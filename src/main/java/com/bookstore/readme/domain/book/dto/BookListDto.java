@@ -1,5 +1,6 @@
 package com.bookstore.readme.domain.book.dto;
 
+import com.bookstore.readme.domain.book.dto.search.BookDto;
 import lombok.Builder;
 import lombok.Data;
 

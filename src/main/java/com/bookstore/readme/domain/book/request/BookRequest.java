@@ -26,6 +26,7 @@ public class BookRequest {
                 .description(this.description)
                 .categories(convertCategory())
                 .bookmarked(this.bookMarked)
+                .price(this.price)
                 .averageRating(this.averageRating)
                 .build();
     }

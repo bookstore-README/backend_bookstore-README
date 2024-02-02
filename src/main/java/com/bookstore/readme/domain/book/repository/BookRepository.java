@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
 
+    boolean existsByBookTitle(String bookTitle);
+
     Page<Book> findAllBy(Pageable pageable);
 
     Page<Book> findAllByIdGreaterThanEqual(Long id, Pageable pageable);
