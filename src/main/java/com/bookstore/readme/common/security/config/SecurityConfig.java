@@ -101,7 +101,7 @@ public class SecurityConfig {
                     authorizeRequests.requestMatchers(PathRequest.toH2Console()).permitAll();
                     authorizeRequests.requestMatchers(permitUrl).permitAll();
                     authorizeRequests.requestMatchers("/collection/**").denyAll();
-                    authorizeRequests.anyRequest().authenticated();
+//                    authorizeRequests.anyRequest().authenticated();
                 })
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
