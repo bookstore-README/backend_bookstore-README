@@ -7,6 +7,7 @@ import com.bookstore.readme.domain.bookmark.domain.Bookmark;
 import com.bookstore.readme.domain.bookmark.dto.BookmarkCountDto;
 import com.bookstore.readme.domain.bookmark.dto.BookmarkDto;
 import com.bookstore.readme.domain.bookmark.repository.BookmarkRepository;
+import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
 import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class BookmarkService {
                 .orElseThrow(() -> new NotFoundBookByIdException(bookId));
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("아이디에 해당하는 회원이 없습니다."));
+                .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
 
 
         Bookmark bookmark = bookmarkRepository.findByBookIdAndMemberId(bookId, memberId)
