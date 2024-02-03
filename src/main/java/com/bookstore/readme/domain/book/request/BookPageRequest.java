@@ -14,7 +14,6 @@ import java.util.List;
 @Getter
 public class BookPageRequest {
     @Schema(description = "현재 조회를 시작할 도서 아이디입니다.", example = "1")
-    @NotNull(message = "검색할 도서 아이디는 필수 입니다.")
     private final Integer bookId;
     @Schema(description = "페이지당 가져올 데이터 수 입니다.", example = "10")
     private final Integer limit;

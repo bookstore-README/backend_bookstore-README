@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum SortType {
-    POPULATION("bookmark_count"),
+    POPULATION("bookmarkCount"),
     PRICE("price"),
     ID("id");
 

@@ -4,16 +4,27 @@ import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.dto.SortType;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.List;
+
 public class BookSpecification {
-    public static Specification<Book> defaultPage(Long bookId, boolean ascending) {
-        return ascending ? idGreaterThan(bookId) : idLessThanOrEqualTo(bookId);
+    public static Specification<Book> pagination(Book book, List<SortType> sortTypes, boolean ascending) {
+        Specification<Book> query = ascending ? idGreaterThan(book.getId()) : idLessThanOrEqualTo(book.getId());
+
+        SortType sortType = sortTypes.get(0);
+        if (sortType == SortType.PRICE) {
+            query = ascending ? priceGreaterThan(book.getPrice()) : priceLessThanOrEqualTo(book.getPrice());
+        } else if (sortType == SortType.POPULATION) {
+            query = ascending ? bookmarkCountGreaterThan(book.getBookmarkCount()) : bookmarkCountLessThanOrEqualTo(book.getBookmarkCount());
+        }
+
+        return query;
     }
 
     public static Specification<Book> pagination(SortType sortType, boolean ascending, Book book) {
         return switch (sortType) {
             case ID -> ascending ? idGreaterThan(book.getId()) : idLessThanOrEqualTo(book.getId());
             case PRICE ->
-                    ascending ? priceGreaterThanAndIdNot(book.getPrice(), book.getId()) : priceLessThanAndIdNot(book.getPrice(), book.getId());
+                    ascending ? bookmarkCountGreaterThan(book.getBookmarkCount()) : bookmarkCountLessThanOrEqualTo(book.getBookmarkCount());
             case POPULATION ->
                     ascending ? bookmarkedGreaterThanAndIdNot(book.getBookmarkCount(), book.getId()) : bookmarkedLessThanAndIdNot(book.getBookmarkCount(), book.getId());
             default -> throw new IllegalArgumentException("해당하는 SortType이 존재하지 않습니다.");
@@ -38,19 +49,19 @@ public class BookSpecification {
 
     private static Specification<Book> priceLessThanAndIdNot(double price, Long id) {
         return Specification
-                .where(priceLessThan(price))
+                .where(priceLessThanOrEqualTo(price))
                 .and(idNotEqual(id));
     }
 
     private static Specification<Book> bookmarkedGreaterThanAndIdNot(int bookmarked, Long id) {
         return Specification
-                .where(bookmarkedGreaterThan(bookmarked))
+                .where(bookmarkCountGreaterThan(bookmarked))
                 .and(idNotEqual(id));
     }
 
     private static Specification<Book> bookmarkedLessThanAndIdNot(int bookmarked, Long id) {
         return Specification
-                .where(bookmarkedLessThan(bookmarked))
+                .where(bookmarkCountLessThanOrEqualTo(bookmarked))
                 .and(idNotEqual(id));
     }
 
@@ -59,19 +70,19 @@ public class BookSpecification {
                 criteriaBuilder.greaterThan(root.get("price"), price);
     }
 
-    private static Specification<Book> priceLessThan(double price) {
+    private static Specification<Book> priceLessThanOrEqualTo(double price) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.lessThan(root.get("price"), price);
+                criteriaBuilder.lessThanOrEqualTo(root.get("price"), price);
     }
 
-    private static Specification<Book> bookmarkedGreaterThan(int bookmarked) {
+    private static Specification<Book> bookmarkCountGreaterThan(int bookmark_count) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.greaterThan(root.get("bookmarked"), bookmarked);
+                criteriaBuilder.greaterThan(root.get("bookmark_count"), bookmark_count);
     }
 
-    private static Specification<Book> bookmarkedLessThan(int bookmarked) {
+    private static Specification<Book> bookmarkCountLessThanOrEqualTo(int bookmark_count) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.lessThan(root.get("bookmarked"), bookmarked);
+                criteriaBuilder.lessThanOrEqualTo(root.get("bookmark_count"), bookmark_count);
     }
 
     private static Specification<Book> idNotEqual(Long id) {

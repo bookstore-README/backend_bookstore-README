@@ -4,6 +4,7 @@ import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.dto.SortType;
 import com.bookstore.readme.domain.book.dto.page.BookDto;
 import com.bookstore.readme.domain.book.dto.page.BookPageDto;
+import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
 import com.bookstore.readme.domain.book.repository.BookRepository;
 import com.bookstore.readme.domain.book.repository.BookSpecification;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +16,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,15 +27,20 @@ public class BookPageTestService {
 
     @Transactional
     public BookPageDto bookList(Integer cursorId, Integer limit, List<SortType> sortTypes, boolean ascending) {
-        Specification<Book> bookQuery;
-
-        if (sortTypes.isEmpty())
+        if (sortTypes.isEmpty() || !sortTypes.contains(SortType.ID))
             sortTypes.add(SortType.ID);
 
         PageRequest pageRequest = PageRequest.of(0, limit + 1, getSort(sortTypes, ascending));
+        Page<Book> pageBooks;
 
-        bookQuery = BookSpecification.defaultPage(cursorId.longValue(), ascending);
-        Page<Book> pageBooks = bookRepository.findAll(bookQuery, pageRequest);
+        if (cursorId == null) {
+            pageBooks = bookRepository.findAll(pageRequest);
+        } else {
+            Book book = bookRepository.findById(cursorId.longValue())
+                    .orElseThrow(() -> new NotFoundBookByIdException(cursorId.longValue()));
+            Specification<Book> bookQuery = BookSpecification.pagination(book, sortTypes, ascending);
+            pageBooks = bookRepository.findAll(bookQuery, pageRequest);
+        }
 
         List<Book> books = pageBooks.getContent();
         List<BookDto> convertBooks = books.stream()
@@ -67,7 +71,7 @@ public class BookPageTestService {
             return -1;
 
         BookDto book = convertBooks.get(convertBooks.size() - 1);
-        convertBooks.remove(convertBooks.size()-1);
+        convertBooks.remove(convertBooks.size() - 1);
 
         return book.getBookId().intValue();
     }
