@@ -3,6 +3,7 @@ package com.bookstore.readme.common.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +18,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class JwtTokenService {
 
-    private final static long ACCESS_TOKEN_EXPIRED_TIME = 1000L * 60 * 60; // 1시간
+    private final static long ACCESS_TOKEN_EXPIRED_TIME = 1000L * 60 * 30; // 30분
     private final static long REFRESH_TOKEN_EXPIRED_TIME = 1000L * 60L * 60L * 24L * 7L; // 7일
     private final static String AUTHORIZATION = "Authorization";
     private final static String TOKEN_PREFIX = "Bearer ";
@@ -55,8 +56,6 @@ public class JwtTokenService {
                 .setIssuedAt(date)
                 .setExpiration(new Date(date.getTime() + REFRESH_TOKEN_EXPIRED_TIME));
 
-        claims.put("email", email);
-
         return Jwts.builder()
                 .setHeader(createHeader())
                 .setClaims(claims)
@@ -77,7 +76,7 @@ public class JwtTokenService {
      * 헤더를 가져온 후 "Bearer"를 삭제(""로 replace)
      */
     public Optional<String> extractRefreshToken(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader("Refresh_Token"));
+        return Optional.ofNullable(request.getHeader("refreshToken"));
     }
 
     /**

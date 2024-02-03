@@ -19,7 +19,7 @@ public class MemberExceptionHandler {
 
     @ExceptionHandler(DuplicationMemberEmailException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<MemberResponse> handler(DuplicationMemberEmailException e) {
+    private ResponseEntity<MemberResponse> handler(DuplicationMemberEmailException e) {
 
         MemberResponse response = MemberResponse.builder()
                 .status(e.getStatus())
@@ -32,7 +32,7 @@ public class MemberExceptionHandler {
 
     @ExceptionHandler(NotFoundMemberByIdException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<MemberResponse> handler(NotFoundMemberByIdException e) {
+    private ResponseEntity<MemberResponse> handler(NotFoundMemberByIdException e) {
 
         MemberResponse response = MemberResponse.builder()
                 .status(e.getStatus())
@@ -44,7 +44,7 @@ public class MemberExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<MemberResponse> handlerMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    private ResponseEntity<MemberResponse> handlerMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         Map<String, Object> errors = new HashMap<>();
         for (FieldError error : e.getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
