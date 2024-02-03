@@ -12,9 +12,9 @@ public class BookSpecification {
 
         SortType sortType = sortTypes.get(0);
         if (sortType == SortType.PRICE) {
-            query = ascending ? priceGreaterThan(book.getPrice()) : priceLessThanOrEqualTo(book.getPrice());
+            query = ascending ? priceGreaterThanOrEqualTo(book.getPrice()) : priceLessThanOrEqualTo(book.getPrice());
         } else if (sortType == SortType.POPULATION) {
-            query = ascending ? bookmarkCountGreaterThan(book.getBookmarkCount()) : bookmarkCountLessThanOrEqualTo(book.getBookmarkCount());
+            query = ascending ? bookmarkCountGreaterThanOrEqualTo(book.getBookmarkCount()) : bookmarkCountLessThanOrEqualTo(book.getBookmarkCount());
         }
 
         return query;
@@ -24,7 +24,7 @@ public class BookSpecification {
         return switch (sortType) {
             case ID -> ascending ? idGreaterThan(book.getId()) : idLessThanOrEqualTo(book.getId());
             case PRICE ->
-                    ascending ? bookmarkCountGreaterThan(book.getBookmarkCount()) : bookmarkCountLessThanOrEqualTo(book.getBookmarkCount());
+                    ascending ? bookmarkCountGreaterThanOrEqualTo(book.getBookmarkCount()) : bookmarkCountLessThanOrEqualTo(book.getBookmarkCount());
             case POPULATION ->
                     ascending ? bookmarkedGreaterThanAndIdNot(book.getBookmarkCount(), book.getId()) : bookmarkedLessThanAndIdNot(book.getBookmarkCount(), book.getId());
             default -> throw new IllegalArgumentException("해당하는 SortType이 존재하지 않습니다.");
@@ -43,7 +43,7 @@ public class BookSpecification {
 
     private static Specification<Book> priceGreaterThanAndIdNot(double price, Long id) {
         return Specification
-                .where(priceGreaterThan(price))
+                .where(priceGreaterThanOrEqualTo(price))
                 .and(idNotEqual(id));
     }
 
@@ -55,7 +55,7 @@ public class BookSpecification {
 
     private static Specification<Book> bookmarkedGreaterThanAndIdNot(int bookmarked, Long id) {
         return Specification
-                .where(bookmarkCountGreaterThan(bookmarked))
+                .where(bookmarkCountGreaterThanOrEqualTo(bookmarked))
                 .and(idNotEqual(id));
     }
 
@@ -65,9 +65,9 @@ public class BookSpecification {
                 .and(idNotEqual(id));
     }
 
-    private static Specification<Book> priceGreaterThan(double price) {
+    private static Specification<Book> priceGreaterThanOrEqualTo(double price) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.greaterThan(root.get("price"), price);
+                criteriaBuilder.greaterThanOrEqualTo(root.get("price"), price);
     }
 
     private static Specification<Book> priceLessThanOrEqualTo(double price) {
@@ -75,9 +75,9 @@ public class BookSpecification {
                 criteriaBuilder.lessThanOrEqualTo(root.get("price"), price);
     }
 
-    private static Specification<Book> bookmarkCountGreaterThan(int bookmark_count) {
+    private static Specification<Book> bookmarkCountGreaterThanOrEqualTo(int bookmark_count) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.greaterThan(root.get("bookmark_count"), bookmark_count);
+                criteriaBuilder.greaterThanOrEqualTo(root.get("bookmark_count"), bookmark_count);
     }
 
     private static Specification<Book> bookmarkCountLessThanOrEqualTo(int bookmark_count) {
