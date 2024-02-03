@@ -2,7 +2,6 @@ package com.bookstore.readme.domain.collection.book.service;
 
 import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.repository.BookRepository;
-import com.bookstore.readme.domain.book.service.BookQueryService;
 import com.bookstore.readme.domain.collection.aladin.dto.BookDto;
 import com.bookstore.readme.domain.collection.aladin.dto.BookItemDto;
 import com.bookstore.readme.domain.collection.aladin.request.SearchTarget;
@@ -13,14 +12,11 @@ import com.bookstore.readme.domain.collection.book.request.SaveDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service

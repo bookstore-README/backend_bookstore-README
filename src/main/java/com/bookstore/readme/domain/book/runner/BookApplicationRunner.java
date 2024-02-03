@@ -2,22 +2,18 @@ package com.bookstore.readme.domain.book.runner;
 
 import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.repository.BookRepository;
-import com.bookstore.readme.domain.book.service.BookQueryService;
 import com.bookstore.readme.domain.review.domain.Review;
 import com.bookstore.readme.domain.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
-@Profile("dev")
+@Profile("default")
 @Component
 @RequiredArgsConstructor
 public class BookApplicationRunner implements ApplicationRunner {
@@ -56,6 +52,7 @@ public class BookApplicationRunner implements ApplicationRunner {
                 .description("여기는 설명 칸 " + i)
                 .categories("대분류,중분류")
                 .bookmarkCount(random.nextInt(1000, 1000000))
+                .reviewCount(random.nextInt(1000, 1000000))
                 .averageRating(Math.floor(random.nextDouble(0, 5)))
                 .price(random.nextInt(1000, 1000000))
                 .build();
