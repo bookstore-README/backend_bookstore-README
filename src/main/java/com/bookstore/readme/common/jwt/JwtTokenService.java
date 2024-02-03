@@ -2,6 +2,7 @@ package com.bookstore.readme.common.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class JwtTokenService {
     private final static long REFRESH_TOKEN_EXPIRED_TIME = 1000L * 60L * 60L * 24L * 7L; // 7일
     private final static String AUTHORIZATION = "Authorization";
     private final static String TOKEN_PREFIX = "Bearer ";
+    private final static String REFRESH_TOKEN = "RefreshToken";
 
     @Value("${jwt.secretKey}")
     private String jwtSecretKey;
@@ -76,7 +78,14 @@ public class JwtTokenService {
      * 헤더를 가져온 후 "Bearer"를 삭제(""로 replace)
      */
     public Optional<String> extractRefreshToken(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader("refreshToken"));
+        return Optional.ofNullable(request.getHeader(REFRESH_TOKEN));
+    }
+
+    public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
+        Cookie cookie = new Cookie("RefreshToken", refreshToken);
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setHeader(AUTHORIZATION, accessToken);
+        response.addCookie(cookie);
     }
 
     /**
