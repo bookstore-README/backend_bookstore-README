@@ -8,8 +8,8 @@ import com.bookstore.readme.domain.book.request.BookPageRequest;
 import com.bookstore.readme.domain.book.request.BookRequest;
 import com.bookstore.readme.domain.book.response.BookResponse;
 import com.bookstore.readme.domain.book.service.BookPageService;
+import com.bookstore.readme.domain.book.service.BookSaveService;
 import com.bookstore.readme.domain.book.service.BookSearchService;
-import com.bookstore.readme.domain.book.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Tag(name = "도서 API")
 public class BookController {
-    private final BookService bookService;
+    private final BookSaveService bookSaveService;
     private final BookSearchService bookSearchService;
     private final BookPageService bookPageService;
 
@@ -79,12 +79,6 @@ public class BookController {
     @PostMapping("/book")
     @Operation(summary = "도서 저장", description = "도서를 저장하기 위한 API")
     public ResponseEntity<BookResponse> bookSave(@RequestBody BookRequest request) {
-        return ResponseEntity.ok(bookService.bookSave(request));
-    }
-
-    @GetMapping("/{bookId}/bookmark")
-    @Operation(summary = "도서 북마크 개수 조회", description = "도서의 북마크 개수를 가져오기 위한 API")
-    public ResponseEntity<BookResponse> bookmarkCount(@Parameter(description = "북마크 개수를 가져올 도서 아이디") @PathVariable Long bookId) {
-        return ResponseEntity.ok(bookService.bookmarkCount(bookId));
+        return ResponseEntity.ok(bookSaveService.bookSave(request));
     }
 }
