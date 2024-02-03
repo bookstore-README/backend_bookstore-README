@@ -1,5 +1,6 @@
 package com.bookstore.readme.domain.bookmark.controller;
 
+import com.bookstore.readme.domain.bookmark.dto.BookmarkCountDto;
 import com.bookstore.readme.domain.bookmark.dto.BookmarkDto;
 import com.bookstore.readme.domain.bookmark.response.BookmarkResponse;
 import com.bookstore.readme.domain.bookmark.service.BookmarkService;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,4 +31,12 @@ public class BookMarkController {
         return ResponseEntity.ok(BookmarkResponse.ok(bookmarkDto));
     }
 
+    @GetMapping("/bookmark/{id}/book")
+    @Operation(summary = "상품 찜개수 조회", description = "상품이 찜된 개수 조회 API")
+    public ResponseEntity<BookmarkResponse> addBookmark(
+            @Parameter(description = "찜 개수를 조회할 도서 아이디", required = true) @PathVariable(name = "id") Integer bookId
+    ) {
+        BookmarkCountDto bookmarkCountDto = bookmarkService.searchBookmarkCountByBook(bookId.longValue());
+        return ResponseEntity.ok(BookmarkResponse.ok(bookmarkCountDto));
+    }
 }

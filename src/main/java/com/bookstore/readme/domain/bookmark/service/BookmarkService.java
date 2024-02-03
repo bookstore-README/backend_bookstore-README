@@ -4,6 +4,7 @@ import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
 import com.bookstore.readme.domain.book.repository.BookRepository;
 import com.bookstore.readme.domain.bookmark.domain.Bookmark;
+import com.bookstore.readme.domain.bookmark.dto.BookmarkCountDto;
 import com.bookstore.readme.domain.bookmark.dto.BookmarkDto;
 import com.bookstore.readme.domain.bookmark.repository.BookmarkRepository;
 import com.bookstore.readme.domain.member.model.Member;
@@ -11,6 +12,8 @@ import com.bookstore.readme.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +47,19 @@ public class BookmarkService {
                 .bookId(bookId)
                 .memberId(memberId)
                 .isMarked(bookmark.getIsMarked())
+                .build();
+    }
+
+    @Transactional
+    public BookmarkCountDto searchBookmarkCountByBook(Long bookId) {
+        List<Bookmark> bookmarks = bookmarkRepository.findByBookId(bookId);
+        List<Bookmark> filterBookmarks = bookmarks.stream()
+                .filter(Bookmark::getIsMarked)
+                .toList();
+
+        return BookmarkCountDto.builder()
+                .id(bookId)
+                .bookmarkCount(filterBookmarks.size())
                 .build();
     }
 
