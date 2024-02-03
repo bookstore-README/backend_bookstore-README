@@ -11,7 +11,7 @@ public class BookSpecification {
             case PRICE ->
                     ascending ? priceGreaterThanAndIdNot(book.getPrice(), book.getId()) : priceLessThanAndIdNot(book.getPrice(), book.getId());
             case POPULATION ->
-                    ascending ? bookmarkedGreaterThanAndIdNot(book.getBookmarked(), book.getId()) : bookmarkedLessThanAndIdNot(book.getBookmarked(), book.getId());
+                    ascending ? bookmarkedGreaterThanAndIdNot(book.getBookmarkCount(), book.getId()) : bookmarkedLessThanAndIdNot(book.getBookmarkCount(), book.getId());
             default -> throw new IllegalArgumentException("해당하는 SortType이 존재하지 않습니다.");
         };
     }

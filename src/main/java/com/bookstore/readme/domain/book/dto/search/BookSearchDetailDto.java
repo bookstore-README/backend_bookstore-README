@@ -1,8 +1,8 @@
 package com.bookstore.readme.domain.book.dto.search;
 
 import com.bookstore.readme.domain.book.domain.Book;
-import com.bookstore.readme.domain.bookmark.domain.Bookmark;
 import com.bookstore.readme.domain.bookmark.dto.BookmarkDto;
+import com.bookstore.readme.domain.review.dto.ReviewSearchDto;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
@@ -11,17 +11,18 @@ import java.util.List;
 
 @Getter
 @SuperBuilder
-public class BookSearchDto extends BookDto {
-
+public class BookSearchDetailDto extends BookDto {
     private List<BookmarkDto> bookmarks;
+    private List<ReviewSearchDto> reviews;
 
-    public BookSearchDto(Long bookId, String bookTitle, String publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Double averageRating, Integer price, Integer bookmarkCount, Integer reviewCount, LocalDateTime createDate, LocalDateTime updateDate, List<BookmarkDto> bookmarks) {
+    public BookSearchDetailDto(Long bookId, String bookTitle, String publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Double averageRating, Integer price, Integer bookmarkCount, Integer reviewCount, LocalDateTime createDate, LocalDateTime updateDate, List<BookmarkDto> bookmarks, List<ReviewSearchDto> reviews) {
         super(bookId, bookTitle, publishedDate, bookImgUrl, authors, description, categories, averageRating, price, bookmarkCount, reviewCount, createDate, updateDate);
         this.bookmarks = bookmarks;
+        this.reviews = reviews;
     }
 
-    public static BookSearchDto of(Book book, List<BookmarkDto> bookmarks) {
-        return BookSearchDto.builder()
+    public static BookSearchDetailDto of(Book book, List<ReviewSearchDto> reviews, List<BookmarkDto> bookmarks) {
+        return BookSearchDetailDto.builder()
                 .bookId(book.getId())
                 .bookTitle(book.getBookTitle())
                 .publishedDate(book.getPublishedDate())
@@ -29,9 +30,10 @@ public class BookSearchDto extends BookDto {
                 .authors(convertAuthors(book.getAuthors()))
                 .description(book.getDescription())
                 .categories(convertCategories(book.getCategories()))
-                .bookmarks(bookmarks)
                 .averageRating(book.getAverageRating())
                 .price(book.getPrice())
+                .bookmarks(bookmarks)
+                .reviews(reviews)
                 .bookmarkCount(book.getBookmarkCount())
                 .reviewCount(book.getReviewCount())
                 .createDate(book.getCreateDate())

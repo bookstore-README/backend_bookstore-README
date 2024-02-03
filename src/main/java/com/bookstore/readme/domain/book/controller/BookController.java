@@ -1,5 +1,7 @@
 package com.bookstore.readme.domain.book.controller;
 
+import com.bookstore.readme.domain.book.dto.search.BookDto;
+import com.bookstore.readme.domain.book.dto.search.BookSearchDetailDto;
 import com.bookstore.readme.domain.book.dto.search.BookSearchDto;
 import com.bookstore.readme.domain.book.dto.search.BookSearchReviewDto;
 import com.bookstore.readme.domain.book.request.BookPageRequest;
@@ -15,11 +17,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.Duration;
 
 @Slf4j
 @RestController
@@ -36,8 +35,8 @@ public class BookController {
             @Parameter(description = "도서를 조회할 아이디", required = true)
             @PathVariable(name = "bookId") Integer bookId
     ) {
-        BookSearchDto bookSearchDto = bookSearchService.searchBook(bookId.longValue());
-        return ResponseEntity.ok(BookResponse.ok(bookSearchDto));
+        BookDto bookDto = bookSearchService.searchBook(bookId.longValue());
+        return ResponseEntity.ok(BookResponse.ok(bookDto));
     }
 
     @GetMapping("/book/{bookId}/review")
@@ -50,16 +49,34 @@ public class BookController {
         return ResponseEntity.ok(BookResponse.ok(bookSearchReviewDto));
     }
 
+    @GetMapping("/book/{bookId}/bookmark")
+    @Operation(summary = "도서 단일 조회(북마크 포함)", description = "도서 아이디로 단일 조회하는 API")
+    public ResponseEntity<BookResponse> searchBookAndBookmark(
+            @Parameter(description = "도서를 조회할 아이디", required = true)
+            @PathVariable(name = "bookId") Integer bookId
+    ) {
+        BookSearchDto bookSearchDto = bookSearchService.searchBookAndBookmark(bookId.longValue());
+        return ResponseEntity.ok(BookResponse.ok(bookSearchDto));
+    }
+
+    @GetMapping("/book/{bookId}/detail")
+    @Operation(summary = "도서 단일 조회(리뷰 ,북마크 포함)", description = "도서 아이디로 단일 조회하는 API")
+    public ResponseEntity<BookResponse> searchBookDetail(
+            @Parameter(description = "도서를 조회할 아이디", required = true)
+            @PathVariable(name = "bookId") Integer bookId
+    ) {
+        BookSearchDetailDto bookSearchDetailDto = bookSearchService.searchBookDetail(bookId.longValue());
+        return ResponseEntity.ok(BookResponse.ok(bookSearchDetailDto));
+    }
+
     @GetMapping("/book")
     @Operation(summary = "도서 전체 조회(커서 기반)", description = "무한 스크롤 기능을 위한 API")
     public ResponseEntity<BookResponse> bookPage(@ParameterObject @Valid BookPageRequest request) {
-//        CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(30));
         return ResponseEntity.ok()
-//                .cacheControl(cacheControl)
                 .body(BookResponse.ok(bookPageService.bookList(request)));
     }
 
-    @PostMapping("/save")
+    @PostMapping("/book")
     @Operation(summary = "도서 저장", description = "도서를 저장하기 위한 API")
     public ResponseEntity<BookResponse> bookSave(@RequestBody BookRequest request) {
         return ResponseEntity.ok(bookService.bookSave(request));

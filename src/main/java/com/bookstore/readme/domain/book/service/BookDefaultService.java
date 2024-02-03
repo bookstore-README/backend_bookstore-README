@@ -134,7 +134,7 @@ public class BookDefaultService implements BookService {
 
     public BookResponse bookmarkCount(Long bookId) {
         Book book = bookQueryService.findById(bookId);
-        Integer bookmarked = book.getBookmarked();
+        Integer bookmarked = book.getBookmarkCount();
         return BookResponse.ok(bookmarked);
     }
 }
