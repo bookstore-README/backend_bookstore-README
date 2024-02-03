@@ -5,9 +5,13 @@ import com.bookstore.readme.domain.book.dto.SortType;
 import org.springframework.data.jpa.domain.Specification;
 
 public class BookSpecification {
+    public static Specification<Book> defaultPage(Long bookId, boolean ascending) {
+        return ascending ? idGreaterThan(bookId) : idLessThanOrEqualTo(bookId);
+    }
+
     public static Specification<Book> pagination(SortType sortType, boolean ascending, Book book) {
         return switch (sortType) {
-            case ID -> ascending ? idGreaterThan(book.getId()) : idLessThan(book.getId());
+            case ID -> ascending ? idGreaterThan(book.getId()) : idLessThanOrEqualTo(book.getId());
             case PRICE ->
                     ascending ? priceGreaterThanAndIdNot(book.getPrice(), book.getId()) : priceLessThanAndIdNot(book.getPrice(), book.getId());
             case POPULATION ->
@@ -18,12 +22,12 @@ public class BookSpecification {
 
     private static Specification<Book> idGreaterThan(Long id) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.greaterThan(root.get("id"), id);
+                criteriaBuilder.greaterThanOrEqualTo(root.get("id"), id);
     }
 
-    private static Specification<Book> idLessThan(Long id) {
+    private static Specification<Book> idLessThanOrEqualTo(Long id) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.lessThan(root.get("id"), id);
+                criteriaBuilder.lessThanOrEqualTo(root.get("id"), id);
     }
 
     private static Specification<Book> priceGreaterThanAndIdNot(double price, Long id) {
