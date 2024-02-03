@@ -13,8 +13,8 @@ import java.util.List;
 public class BookSearchReviewDto extends BookDto {
     private List<ReviewSearchDto> reviews;
 
-    public BookSearchReviewDto(Long bookId, String bookTitle, String publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Integer bookMarked, Double averageRating, Integer price, LocalDateTime createDate, LocalDateTime updateDate, List<ReviewSearchDto> reviews) {
-        super(bookId, bookTitle, publishedDate, bookImgUrl, authors, description, categories, bookMarked, averageRating, price, createDate, updateDate);
+    public BookSearchReviewDto(Long bookId, String bookTitle, String publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Double averageRating, Integer price, Integer bookmarkCount, Integer reviewCount, LocalDateTime createDate, LocalDateTime updateDate, List<ReviewSearchDto> reviews) {
+        super(bookId, bookTitle, publishedDate, bookImgUrl, authors, description, categories, averageRating, price, bookmarkCount, reviewCount, createDate, updateDate);
         this.reviews = reviews;
     }
 
@@ -27,10 +27,11 @@ public class BookSearchReviewDto extends BookDto {
                 .authors(convertAuthors(book.getAuthors()))
                 .description(book.getDescription())
                 .categories(convertCategories(book.getCategories()))
-                .bookMarked(book.getBookmarked())
                 .averageRating(book.getAverageRating())
-                .price(book.getPrice())
                 .reviews(reviews)
+                .price(book.getPrice())
+                .bookmarkCount(book.getBookmarkCount())
+                .reviewCount(book.getReviewCount())
                 .createDate(book.getCreateDate())
                 .updateDate(book.getUpdateDate())
                 .build();

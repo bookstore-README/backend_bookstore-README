@@ -47,7 +47,6 @@ oauth2:
 
 jwt:
   secretKey: ${JWT_SECRET_KEY}
-
 ---
 spring:
   config:
