@@ -25,6 +25,7 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi bookApi() {
         String[] paths = {
+                "/bookmark/**",
                 "/member/**",
                 "/book/**",
                 "/notice/**",
@@ -51,14 +52,15 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         List<Tag> tagList = List.of(
                 createTag("회원 API", "회원 관련 API"),
+                createTag("찜하기 API", "찜하기 관련 API"),
                 createTag("도서 API", "도서 관련 API"),
                 createTag("커뮤니티 API", "커뮤니티 관련 API"),
                 createTag("리뷰 API", "리뷰 관련 API")
         );
 
         return new OpenAPI().info(
-                new Info().title("test")
-                        .description("tset")
+                new Info().title("README WEB")
+                        .description("README 웹 프로젝트 API 명세")
                         .version("v1.0.6")
         ).tags(tagList);
     }

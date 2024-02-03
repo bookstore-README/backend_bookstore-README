@@ -51,7 +51,7 @@ public class BookApplicationRunner implements ApplicationRunner {
                 .authors("작가1,작가2,작가3")
                 .description("여기는 설명 칸 " + i)
                 .categories("대분류,중분류")
-                .bookmarkCount(random.nextInt(1000, 1000000))
+                .bookmarkCount(0)
                 .reviewCount(random.nextInt(1000, 1000000))
                 .averageRating(Math.floor(random.nextDouble(0, 5)))
                 .price(random.nextInt(1000, 1000000))

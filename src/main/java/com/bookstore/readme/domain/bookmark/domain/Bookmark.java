@@ -26,7 +26,7 @@ public class Bookmark {
     @JoinColumn(name = "book_id")
     private Book book;
 
-    private boolean isMarked;
+    private Boolean isMarked;
 
     @Builder
     public Bookmark(Member member, Book book, boolean isMarked) {

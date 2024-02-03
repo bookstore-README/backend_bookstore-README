@@ -4,13 +4,17 @@ import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
 import com.bookstore.readme.domain.book.repository.BookRepository;
 import com.bookstore.readme.domain.bookmark.domain.Bookmark;
+import com.bookstore.readme.domain.bookmark.dto.BookmarkCountDto;
 import com.bookstore.readme.domain.bookmark.dto.BookmarkDto;
 import com.bookstore.readme.domain.bookmark.repository.BookmarkRepository;
+import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
 import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,19 +30,50 @@ public class BookmarkService {
                 .orElseThrow(() -> new NotFoundBookByIdException(bookId));
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("아이디에 해당하는 회원이 없습니다."));
+                .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
 
 
         Bookmark bookmark = bookmarkRepository.findByBookIdAndMemberId(bookId, memberId)
                 .orElseGet(() -> createBookmark(member, book, false));
 
         bookmark.changeMarked();
+
+
+        int bookmarkCount = bookmark.getIsMarked() ? book.getBookmarkCount() + 1 : book.getBookmarkCount() - 1;
+        book.changeBookmarkCount(bookmarkCount);
+
         bookmarkRepository.save(bookmark);
 
         return BookmarkDto.builder()
                 .bookId(bookId)
                 .memberId(memberId)
-                .isMarked(bookmark.isMarked())
+                .isMarked(bookmark.getIsMarked())
+                .build();
+    }
+
+    @Transactional
+    public BookmarkCountDto searchBookmarkCountByBook(Long bookId) {
+        List<Bookmark> bookmarks = bookmarkRepository.findByBookId(bookId);
+        List<Bookmark> filterBookmarks = bookmarks.stream()
+                .filter(Bookmark::getIsMarked)
+                .toList();
+
+        return BookmarkCountDto.builder()
+                .id(bookId)
+                .bookmarkCount(filterBookmarks.size())
+                .build();
+    }
+
+    @Transactional
+    public BookmarkCountDto searchBookmarkCountByMember(Long memberId) {
+        List<Bookmark> bookmarks = bookmarkRepository.findByMemberId(memberId);
+        List<Bookmark> filterBookmarks = bookmarks.stream()
+                .filter(Bookmark::getIsMarked)
+                .toList();
+
+        return BookmarkCountDto.builder()
+                .id(memberId)
+                .bookmarkCount(filterBookmarks.size())
                 .build();
     }
 
