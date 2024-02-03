@@ -66,4 +66,8 @@ public class Book {
         this.reviewCount = reviewCount;
         this.bookmarkCount = bookmarkCount;
     }
+
+    public void changeBookmarkCount(int bookmarkCount) {
+        this.bookmarkCount = bookmarkCount;
+    }
 }

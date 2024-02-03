@@ -27,15 +27,6 @@ public class BookSearchService {
     public BookDto searchBook(Long bookId) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundBookByIdException(bookId));
-        List<Bookmark> bookmarks = book.getBookmarks();
-        List<BookmarkDto> bookmarkDto = bookmarks.stream()
-                .filter(Bookmark::isMarked)
-                .map(bookmark -> BookmarkDto.builder()
-                        .bookId(bookmark.getBook().getId())
-                        .memberId(bookmark.getMember().getId())
-                        .build())
-                .toList();
-
         return BookDto.of(book);
     }
 
@@ -45,10 +36,11 @@ public class BookSearchService {
                 .orElseThrow(() -> new NotFoundBookByIdException(bookId));
         List<Bookmark> bookmarks = book.getBookmarks();
         List<BookmarkDto> bookmarkDto = bookmarks.stream()
-                .filter(Bookmark::isMarked)
+                .filter(Bookmark::getIsMarked)
                 .map(bookmark -> BookmarkDto.builder()
                         .bookId(bookmark.getBook().getId())
                         .memberId(bookmark.getMember().getId())
+                        .isMarked(bookmark.getIsMarked())
                         .build())
                 .toList();
 
@@ -75,10 +67,11 @@ public class BookSearchService {
 
         List<Bookmark> bookmarks = book.getBookmarks();
         List<BookmarkDto> bookmarkDto = bookmarks.stream()
-                .filter(bookmark -> bookmark.isMarked())
+                .filter(Bookmark::getIsMarked)
                 .map(bookmark -> BookmarkDto.builder()
                         .bookId(bookmark.getBook().getId())
                         .memberId(bookmark.getMember().getId())
+                        .isMarked(bookmark.getIsMarked())
                         .build())
                 .toList();
 

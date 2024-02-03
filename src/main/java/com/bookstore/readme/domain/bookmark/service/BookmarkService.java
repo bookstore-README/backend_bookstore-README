@@ -33,12 +33,17 @@ public class BookmarkService {
                 .orElseGet(() -> createBookmark(member, book, false));
 
         bookmark.changeMarked();
+
+
+        int bookmarkCount = bookmark.getIsMarked() ? book.getBookmarkCount() + 1 : book.getBookmarkCount() - 1;
+        book.changeBookmarkCount(bookmarkCount);
+
         bookmarkRepository.save(bookmark);
 
         return BookmarkDto.builder()
                 .bookId(bookId)
                 .memberId(memberId)
-                .isMarked(bookmark.isMarked())
+                .isMarked(bookmark.getIsMarked())
                 .build();
     }
 
