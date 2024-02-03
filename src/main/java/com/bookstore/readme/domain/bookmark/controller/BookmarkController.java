@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "찜하기 API")
-public class BookMarkController {
+public class BookmarkController {
 
     private final BookmarkService bookmarkService;
 
@@ -33,10 +33,19 @@ public class BookMarkController {
 
     @GetMapping("/bookmark/{id}/book")
     @Operation(summary = "상품 찜개수 조회", description = "상품이 찜된 개수 조회 API")
-    public ResponseEntity<BookmarkResponse> addBookmark(
+    public ResponseEntity<BookmarkResponse> searchBookmarkCountByBook(
             @Parameter(description = "찜 개수를 조회할 도서 아이디", required = true) @PathVariable(name = "id") Integer bookId
     ) {
         BookmarkCountDto bookmarkCountDto = bookmarkService.searchBookmarkCountByBook(bookId.longValue());
+        return ResponseEntity.ok(BookmarkResponse.ok(bookmarkCountDto));
+    }
+
+    @GetMapping("/bookmark/{id}/member")
+    @Operation(summary = "회원 찜개수 조회", description = "회원이 찜한 개수 조회 API")
+    public ResponseEntity<BookmarkResponse> searchBookmarkCountByMember(
+            @Parameter(description = "찜 개수를 조회할 도서 아이디", required = true) @PathVariable(name = "id") Integer memberId
+    ) {
+        BookmarkCountDto bookmarkCountDto = bookmarkService.searchBookmarkCountByMember(memberId.longValue());
         return ResponseEntity.ok(BookmarkResponse.ok(bookmarkCountDto));
     }
 }

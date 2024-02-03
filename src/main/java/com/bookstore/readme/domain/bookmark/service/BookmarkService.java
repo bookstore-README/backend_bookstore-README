@@ -63,6 +63,19 @@ public class BookmarkService {
                 .build();
     }
 
+    @Transactional
+    public BookmarkCountDto searchBookmarkCountByMember(Long memberId) {
+        List<Bookmark> bookmarks = bookmarkRepository.findByMemberId(memberId);
+        List<Bookmark> filterBookmarks = bookmarks.stream()
+                .filter(Bookmark::getIsMarked)
+                .toList();
+
+        return BookmarkCountDto.builder()
+                .id(memberId)
+                .bookmarkCount(filterBookmarks.size())
+                .build();
+    }
+
     private Bookmark createBookmark(Member member, Book book, boolean isMarked) {
         return Bookmark.builder()
                 .member(member)
