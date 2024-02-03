@@ -1,7 +1,5 @@
 package com.bookstore.readme.domain.social.controller;
 
-import com.bookstore.readme.domain.member.model.Member;
-import com.bookstore.readme.domain.social.domain.SocialMember;
 import com.bookstore.readme.domain.social.domain.SocialType;
 import com.bookstore.readme.domain.social.dto.SocialLoginResponseDto;
 import com.bookstore.readme.domain.social.service.SocialService;

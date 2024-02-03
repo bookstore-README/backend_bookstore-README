@@ -67,13 +67,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         memberRepository.findByRefreshToken(refreshToken)
                 .ifPresent(member -> {
                     String reIssuedRefreshToken = reIssueRefreshToken(member);
-
-                    Cookie cookie = new Cookie("refreshToken", reIssuedRefreshToken);
-
-                    response.setStatus(HttpServletResponse.SC_OK);
-
-                    response.setHeader(AUTHORIZATION, jwtTokenService.createAccessToken(member.getEmail()));
-                    response.addCookie(cookie);
+                    jwtTokenService.sendAccessAndRefreshToken(response
+                            , jwtTokenService.createAccessToken(member.getEmail()), reIssuedRefreshToken);
                 });
     }
 

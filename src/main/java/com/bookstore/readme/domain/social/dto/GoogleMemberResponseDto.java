@@ -2,11 +2,7 @@ package com.bookstore.readme.domain.social.dto;
 
 import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.social.domain.SocialId;
-import com.bookstore.readme.domain.social.domain.SocialMember;
 import com.bookstore.readme.domain.social.domain.SocialType;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.time.LocalDateTime;
 
 public record GoogleMemberResponseDto(
         String id,
