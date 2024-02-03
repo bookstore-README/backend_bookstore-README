@@ -21,7 +21,7 @@ public class MemberSaveDto {
     private String profileImage;
 
     @NotEmpty(message = "이메일 주소는 필수 입니다.")
-    @Schema(description = "이메일 주소입니다.", example = "이메일주소")
+    @Schema(description = "이메일 주소입니다.", example = "이메일 주소")
     private String email;
 
     @NotEmpty(message = "비밀번호는 필수 입니다.")

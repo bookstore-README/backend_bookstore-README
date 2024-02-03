@@ -7,6 +7,7 @@ import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
 import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,10 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder encoder;
 
     @Transactional
     public Long joinMember(MemberSaveDto memberSaveDto) {
         Member member = memberSaveDto.toEntity();
+        member.passwordEncode(encoder);
         if (memberRepository.existsByEmail(member.getEmail())) {
             throw new DuplicationMemberEmailException(member.getEmail());
         }

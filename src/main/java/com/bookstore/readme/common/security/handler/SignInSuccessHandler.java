@@ -3,6 +3,8 @@ package com.bookstore.readme.common.security.handler;
 import com.bookstore.readme.common.jwt.JwtTokenService;
 import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
+import com.bookstore.readme.domain.member.response.MemberResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,23 +40,20 @@ public class SignInSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         );
 
         // refresh token update
-        Member updateMember = Member.builder()
-                .id(member.getId())
-                .name(member.getName())
-                .nickname(member.getNickname())
-                .profileImage(member.getProfileImage())
-                .email(member.getEmail())
-                .password(member.getPassword())
-                .role(member.getRole())
-                .refreshToken(refreshToken)
-                .build();
+        member.updateRefreshToken(refreshToken);
 
-        memberRepository.save(updateMember);
+        memberRepository.save(member);
 
         Cookie cookie = new Cookie("refreshToken", refreshToken);
 
+        ObjectMapper objectMapper = new ObjectMapper();
+
         response.setHeader(AUTHENTICATION, PREFIX_BEARER + accessToken);
         response.addCookie(cookie);
+
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        objectMapper.writeValue(response.getWriter(), MemberResponse.ok(member.getEmail()));
 
         log.info("로그인 성공. 이메일: {}", email);
         log.info("로그인 성공. AccessToken : {}", accessToken);
