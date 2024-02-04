@@ -19,7 +19,6 @@ public class BookDto {
     private final List<String> categories;
     private final Double averageRating;
     private final Integer price;
-
     private final Integer bookmarkCount;
     private final Integer reviewCount;
     private final LocalDateTime createDate;

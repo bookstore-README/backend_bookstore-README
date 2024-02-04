@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 public class BookController {
     private final BookSaveService bookSaveService;
     private final BookSearchService bookSearchService;
-//    private final BookPageService bookPageService;
     private final BookPageTestService bookPageTestService;
 
     @GetMapping("/book/{bookId}")
