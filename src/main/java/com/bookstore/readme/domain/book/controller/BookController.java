@@ -8,7 +8,7 @@ import com.bookstore.readme.domain.book.request.BookPageRequest;
 import com.bookstore.readme.domain.book.request.BookRequest;
 import com.bookstore.readme.domain.book.response.BookResponse;
 //import com.bookstore.readme.domain.book.service.BookPageService;
-import com.bookstore.readme.domain.book.service.BookPageTestService;
+import com.bookstore.readme.domain.book.service.BookPageService;
 import com.bookstore.readme.domain.book.service.BookSaveService;
 import com.bookstore.readme.domain.book.service.BookSearchService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 public class BookController {
     private final BookSaveService bookSaveService;
     private final BookSearchService bookSearchService;
-    private final BookPageTestService bookPageTestService;
+    private final BookPageService bookPageService;
 
     @GetMapping("/book/{bookId}")
     @Operation(summary = "도서 단일 조회", description = "도서 아이디로 단일 조회하는 API")
@@ -74,7 +74,7 @@ public class BookController {
     @Operation(summary = "도서 전체 조회(커서 기반)", description = "무한 스크롤 기능을 위한 API")
     public ResponseEntity<BookResponse> bookPage(@ParameterObject @Valid BookPageRequest request) {
         return ResponseEntity.ok()
-                .body(BookResponse.ok(bookPageTestService.bookList(
+                .body(BookResponse.ok(bookPageService.bookList(
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort(),

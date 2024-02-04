@@ -53,6 +53,7 @@ public class BookApplicationRunner implements ApplicationRunner {
                 .categories("대분류,중분류")
                 .bookmarkCount(0)
                 .reviewCount(random.nextInt(1000, 1000000))
+                .viewCount(random.nextInt(1000, 1000000))
                 .averageRating(Math.floor(random.nextDouble(0, 5)))
                 .price(random.nextInt(1000, 1000000))
                 .build();
