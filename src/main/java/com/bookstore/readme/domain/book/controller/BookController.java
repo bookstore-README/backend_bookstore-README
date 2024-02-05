@@ -20,8 +20,6 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -138,12 +136,13 @@ public class BookController {
         return ResponseEntity.ok(BookResponse.ok(bookPageDto));
     }
 
-    @PutMapping("/book/{bookId}/view")
-    @Operation(summary = "조회수 증가", description = "조회 수를 증가하기 위한 API(중복 방지 미완성)")
+    @PutMapping("/book/{bookId}/{memberId}/view")
+    @Operation(summary = "조회수 증가", description = "조회 수를 증가하기 위한 API")
     public ResponseEntity<BookResponse> bookView(
             @Parameter(description = "조회수를 올릴 도서 아이디", required = true)
-            @PathVariable(name = "bookId") Integer bookId) {
-        int i = viewService.addViewCount(bookId.longValue());
-        return ResponseEntity.ok(BookResponse.ok(i));
+            @PathVariable(name = "memberId") Integer memberId,
+            @PathVariable(name = "bookId") Integer bookId
+    ) {
+        return ResponseEntity.ok(BookResponse.ok(viewService.addViewCount(memberId.longValue(), bookId.longValue())));
     }
 }
