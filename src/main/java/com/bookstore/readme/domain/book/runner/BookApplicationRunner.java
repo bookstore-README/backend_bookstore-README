@@ -56,6 +56,7 @@ public class BookApplicationRunner implements ApplicationRunner {
                 .viewCount(random.nextInt(1000, 1000000))
                 .averageRating(Math.floor(random.nextDouble(0, 5)))
                 .price(random.nextInt(1000, 1000000))
+                .publisher("퍼블리셔")
                 .build();
     }
 }

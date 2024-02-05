@@ -69,12 +69,17 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeRequests) -> {
-                    authorizeRequests.requestMatchers("/member/**").permitAll();
-                    authorizeRequests.requestMatchers("/review/**").permitAll();
-                    authorizeRequests.requestMatchers("/book/**").permitAll();
+                    authorizeRequests.requestMatchers(
+                            "/member/**",
+                            "/review/**",
+                            "/book/**"
+                    ).permitAll(); //Permit
+                    authorizeRequests.requestMatchers(
+                            "/collection/**"
+                    ).authenticated(); //Authenticate
                     authorizeRequests.requestMatchers(permitUrl).permitAll();
-                    authorizeRequests.requestMatchers("/collection/**").denyAll();
-                    authorizeRequests.anyRequest().authenticated();
+                    
+//                    authorizeRequests.anyRequest().authenticated();
                 })
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 

@@ -27,10 +27,44 @@ public class BookPageService {
 
     @Transactional
     public BookPageDto bookList(Integer cursorId, Integer limit, List<SortType> sortTypes, boolean ascending) {
-        if (sortTypes.isEmpty() || !sortTypes.contains(SortType.ID))
-            sortTypes.add(SortType.ID);
+        PageRequest pageRequest = PageRequest.of(0, limit + 1, getSort(sortTypes, ascending));
+        Page<Book> pageBooks = getPagination(cursorId, sortTypes.get(0), ascending, pageRequest);
+        List<BookDto> convertBooks = getConvertBooks(pageBooks.getContent());
+        int nextCursorId = nextCursorId(pageBooks.hasNext(), convertBooks);
+        return getBookPageDto((int) bookRepository.count(), limit, nextCursorId, convertBooks);
+    }
+
+    @Transactional
+    public BookPageDto bookList(Integer cursorId, Integer limit, List<SortType> sortTypes, boolean ascending, String... categories) {
+        StringBuilder fullCategory = new StringBuilder();
+        for (String category : categories) {
+            fullCategory.append(category).append(",");
+        }
+        fullCategory.deleteCharAt(fullCategory.length() - 1);
+
 
         PageRequest pageRequest = PageRequest.of(0, limit + 1, getSort(sortTypes, ascending));
+        Page<Book> pageBooks = getPagination(cursorId, sortTypes.get(0), ascending, pageRequest, fullCategory.toString());
+        List<BookDto> convertBooks = getConvertBooks(pageBooks.getContent());
+        int nextCursorId = nextCursorId(pageBooks.hasNext(), convertBooks);
+        return getBookPageDto((int) bookRepository.count(), limit, nextCursorId, convertBooks);
+    }
+
+    private Page<Book> getPagination(Integer cursorId, SortType sortType, boolean ascending, PageRequest pageRequest, String category) {
+        Page<Book> pageBooks;
+
+        if (cursorId == null) {
+            pageBooks = bookRepository.findAllByCategoriesStartingWith(category, pageRequest);
+        } else {
+            Book book = bookRepository.findById(cursorId.longValue())
+                    .orElseThrow(() -> new NotFoundBookByIdException(cursorId.longValue()));
+            Specification<Book> bookQuery = BookSpecification.pagination(book, sortType, ascending, category);
+            pageBooks = bookRepository.findAll(bookQuery, pageRequest);
+        }
+        return pageBooks;
+    }
+
+    private Page<Book> getPagination(Integer cursorId, SortType sortType, boolean ascending, PageRequest pageRequest) {
         Page<Book> pageBooks;
 
         if (cursorId == null) {
@@ -38,29 +72,31 @@ public class BookPageService {
         } else {
             Book book = bookRepository.findById(cursorId.longValue())
                     .orElseThrow(() -> new NotFoundBookByIdException(cursorId.longValue()));
-            Specification<Book> bookQuery = BookSpecification.pagination(book, sortTypes, ascending);
+            Specification<Book> bookQuery = BookSpecification.pagination(book, sortType, ascending);
             pageBooks = bookRepository.findAll(bookQuery, pageRequest);
         }
+        return pageBooks;
+    }
 
-        List<Book> books = pageBooks.getContent();
-        List<BookDto> convertBooks = books.stream()
+    private static List<BookDto> getConvertBooks(List<Book> books) {
+        return books.stream()
                 .map(BookDto::of)
                 .collect(Collectors.toList());
+    }
 
-        int nextCursorId = nextCursorId(pageBooks.hasNext(), convertBooks);
-
+    private BookPageDto getBookPageDto(int total, int limit, Integer cursorId, List<BookDto> data) {
         return BookPageDto.builder()
-                .total((int) bookRepository.count())
+                .total(total)
                 .limit(limit)
-                .cursorId(nextCursorId)
-                .books(convertBooks)
+                .cursorId(cursorId)
+                .books(data)
                 .build();
-
     }
 
     private Sort getSort(List<SortType> sortTypes, boolean ascending) {
         List<Sort.Order> collect = sortTypes.stream()
-                .map(sortType -> ascending ? Sort.Order.asc(sortType.getSortType()) : Sort.Order.desc(sortType.getSortType()))
+                .map(SortType::getSortType)
+                .map(sort -> ascending ? Sort.Order.asc(sort) : Sort.Order.desc(sort))
                 .toList();
 
         return Sort.by(collect);

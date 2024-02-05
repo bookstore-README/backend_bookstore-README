@@ -73,6 +73,9 @@ public class CollectionBookSearchService extends CollectionService {
                                 .description(item.getDescription())
                                 .categories(categories.toString())
                                 .averageRating(0D)
+                                .viewCount(0)
+                                .bookmarkCount(0)
+                                .reviewCount(0)
                                 .price(item.getPriceStandard())
                                 .publisher(item.getPublisher())
                                 .build();

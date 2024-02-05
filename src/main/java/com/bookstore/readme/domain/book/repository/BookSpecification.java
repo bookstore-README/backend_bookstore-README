@@ -8,10 +8,16 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.List;
 
 public class BookSpecification {
-    public static Specification<Book> pagination(Book book, List<SortType> sortTypes, boolean ascending) {
+
+    public static Specification<Book> pagination(Book book, SortType sortType, boolean ascending, String category) {
+        Specification<Book> pagination = pagination(book, sortType, ascending);
+        return Specification.where(pagination)
+                .and(nameContains(category));
+    }
+
+    public static Specification<Book> pagination(Book book, SortType sortType, boolean ascending) {
         Specification<Book> query = ascending ? idGreaterThanOrEqualTo(book.getId()) : idLessThanOrEqualTo(book.getId());
 
-        SortType sortType = sortTypes.get(0);
         if (sortType == SortType.PRICE) {
             query = ascending ? priceGreaterThanOrEqualTo(book.getPrice() * 1000 + book.getId()) : priceLessThanOrEqualTo(book.getPrice() * 1000 + book.getId());
         } else if (sortType == SortType.POPULATION) {
@@ -151,4 +157,8 @@ public class BookSpecification {
 //        criteriaBuilder.lessThanOrEqualTo(root.get("viewCount"), viewCount);
     }
 
+    public static Specification<Book> nameContains(String keyword) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.like(root.get("categories"), "%" + keyword + "%");
+    }
 }

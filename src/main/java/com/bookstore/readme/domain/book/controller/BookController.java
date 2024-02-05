@@ -81,6 +81,35 @@ public class BookController {
                         request.getAscending())));
     }
 
+//    @GetMapping("/book/{main}")
+//    @Operation(summary = "도서 전체 조회(커서 기반)", description = "무한 스크롤 기능을 위한 API")
+//    public ResponseEntity<BookResponse> bookPage(
+//            @ParameterObject @Valid BookPageRequest request,
+//            @Parameter @PathVariable(name = "main") String main
+//    ) {
+//        return ResponseEntity.ok()
+//                .body(BookResponse.ok(bookPageService.bookList(
+//                        request.getBookId(),
+//                        request.getLimit(),
+//                        request.getSort(),
+//                        request.getAscending(), main)));
+//    }
+
+    @GetMapping("/book/{main}/{sub}")
+    @Operation(summary = "도서 전체 조회(대분류, 중분류)", description = "무한 스크롤 기능을 위한 API")
+    public ResponseEntity<BookResponse> bookPage(
+            @ParameterObject @Valid BookPageRequest request,
+            @Parameter @PathVariable(name = "main") String main,
+            @Parameter @PathVariable(name = "sub") String sub
+    ) {
+        return ResponseEntity.ok()
+                .body(BookResponse.ok(bookPageService.bookList(
+                        request.getBookId(),
+                        request.getLimit(),
+                        request.getSort(),
+                        request.getAscending(), main, sub)));
+    }
+
     @PostMapping("/book")
     @Operation(summary = "도서 저장", description = "도서를 저장하기 위한 API")
     public ResponseEntity<BookResponse> bookSave(@RequestBody BookRequest request) {
