@@ -139,9 +139,8 @@ public class BookController {
     @PutMapping("/book/{bookId}/{memberId}/view")
     @Operation(summary = "조회수 증가", description = "조회 수를 증가하기 위한 API")
     public ResponseEntity<BookResponse> bookView(
-            @Parameter(description = "조회수를 올릴 도서 아이디", required = true)
-            @PathVariable(name = "memberId") Integer memberId,
-            @PathVariable(name = "bookId") Integer bookId
+            @Parameter(description = "조회된 도서 아이디", required = true) @PathVariable(name = "bookId") Integer bookId,
+            @Parameter(description = "도서를 조회한 회원 아이디", required = true) @PathVariable(name = "memberId") Integer memberId
     ) {
         return ResponseEntity.ok(BookResponse.ok(viewService.addViewCount(memberId.longValue(), bookId.longValue())));
     }
