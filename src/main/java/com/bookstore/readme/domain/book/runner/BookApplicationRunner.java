@@ -53,7 +53,7 @@ public class BookApplicationRunner implements ApplicationRunner {
                 .bookImgUrl("https://cdn.pixabay.com/photo/2018/01/03/09/09/book-3057902_1280.png")
                 .authors("작가1,작가2,작가3")
                 .description("여기는 설명 칸 " + i)
-                .categories("대분류,중분류")
+                .categories(random.nextInt(1000, 1000000) % 2 == 0 ? "국내도서" : "외국도서")
                 .bookmarkCount(0)
                 .reviewCount(random.nextInt(1000, 1000000))
                 .viewCount(random.nextInt(1000, 1000000))

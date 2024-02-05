@@ -75,7 +75,7 @@ public class BookController {
     }
 
     @GetMapping("/book")
-    @Operation(summary = "도서 전체 조회(커서 기반)", description = "무한 스크롤 기능을 위한 API")
+    @Operation(summary = "도서 페이징 조회", description = "도서 페이징 조회 API")
     public ResponseEntity<BookResponse> bookPage(@ParameterObject @Valid BookPageRequest request) {
         return ResponseEntity.ok()
                 .body(BookResponse.ok(bookPageService.bookList(
@@ -85,22 +85,30 @@ public class BookController {
                         request.getAscending())));
     }
 
-//    @GetMapping("/book/{main}")
-//    @Operation(summary = "도서 전체 조회(커서 기반)", description = "무한 스크롤 기능을 위한 API")
-//    public ResponseEntity<BookResponse> bookPage(
-//            @ParameterObject @Valid BookPageRequest request,
-//            @Parameter @PathVariable(name = "main") String main
-//    ) {
-//        return ResponseEntity.ok()
-//                .body(BookResponse.ok(bookPageService.bookList(
-//                        request.getBookId(),
-//                        request.getLimit(),
-//                        request.getSort(),
-//                        request.getAscending(), main)));
-//    }
+    @GetMapping("/book/domestic")
+    @Operation(summary = "도서 페이징 조회(카테고리 - 국내도서)", description = "카테고리가 국내도서인 도서 조회 API")
+    public ResponseEntity<BookResponse> domesticBook(@ParameterObject @Valid BookPageRequest request) {
+        return ResponseEntity.ok()
+                .body(BookResponse.ok(bookPageService.bookList(
+                        request.getBookId(),
+                        request.getLimit(),
+                        request.getSort(),
+                        request.getAscending(), "국내도서")));
+    }
+
+    @GetMapping("/book/foreign")
+    @Operation(summary = "도서 페이징 조회(카테고리 - 외국도서)", description = "카테고리가 외국도서인 도서 조회 API")
+    public ResponseEntity<BookResponse> foreignBook(@ParameterObject @Valid BookPageRequest request) {
+        return ResponseEntity.ok()
+                .body(BookResponse.ok(bookPageService.bookList(
+                        request.getBookId(),
+                        request.getLimit(),
+                        request.getSort(),
+                        request.getAscending(), "외국도서")));
+    }
 
     @GetMapping("/book/{main}/{sub}")
-    @Operation(summary = "도서 전체 조회(대분류, 중분류)", description = "무한 스크롤 기능을 위한 API")
+    @Operation(summary = "도서 전체 조회(대분류, 중분류)", description = "도서 페이징 조회(대분류, 중분류) API")
     public ResponseEntity<BookResponse> bookPage(
             @ParameterObject @Valid BookPageRequest request,
             @Parameter @PathVariable(name = "main") String main,
