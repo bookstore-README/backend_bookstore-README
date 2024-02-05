@@ -1,5 +1,6 @@
 package com.bookstore.readme.domain.book.domain;
 
+import com.bookstore.readme.domain.book.util.DateTimeConverter;
 import com.bookstore.readme.domain.bookmark.domain.Bookmark;
 import com.bookstore.readme.domain.review.domain.Review;
 import jakarta.persistence.*;
@@ -33,7 +34,7 @@ public class Book {
     private String categories;
     private Integer price;
     private Double averageRating;
-    private String publishedDate;
+
     private String bookImgUrl;
     private Integer reviewCount;
     private Integer bookmarkCount;
@@ -46,6 +47,9 @@ public class Book {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
     private List<Bookmark> bookmarks = new ArrayList<>();
 
+    @Column(name = "published_date", columnDefinition = "DATETIME(6)")
+    private LocalDateTime publishedDate;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createDate;
@@ -55,7 +59,7 @@ public class Book {
     private LocalDateTime updateDate;
 
     @Builder
-    public Book(String bookTitle, String publishedDate, String bookImgUrl, String authors, String description, String categories, Double averageRating, Integer price, Integer reviewCount, Integer bookmarkCount, Integer viewCount, String publisher) {
+    public Book(String bookTitle, LocalDateTime publishedDate, String bookImgUrl, String authors, String description, String categories, Double averageRating, Integer price, Integer reviewCount, Integer bookmarkCount, Integer viewCount, String publisher) {
         this.bookTitle = bookTitle;
         this.publishedDate = publishedDate;
         this.bookImgUrl = bookImgUrl;
