@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +18,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @ToString
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "member_unique",
+                        columnNames = {"email"}
+                )
+        }
+)
 public class Member {
     @Id
     @GeneratedValue
@@ -29,7 +38,6 @@ public class Member {
 
     private String profileImage;
 
-    @Column(unique = true)
     private String email;
 
     @JsonIgnore
@@ -62,5 +70,13 @@ public class Member {
         this.role = role;
         this.refreshToken = refreshToken;
         this.socialId = socialId;
+    }
+
+    public void passwordEncode(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(this.password);
+    }
+
+    public void updateRefreshToken(String updateRefreshToken) {
+        this.refreshToken = updateRefreshToken;
     }
 }

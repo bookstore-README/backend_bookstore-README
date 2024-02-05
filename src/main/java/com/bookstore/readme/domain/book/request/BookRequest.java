@@ -11,7 +11,8 @@ public class BookRequest {
     private String description;
     private List<String> authors;
     private List<String> categories;
-    private Integer bookMarked;
+    private Integer bookmarkCount;
+    private Integer reviewCount;
     private Integer price;
     private Double averageRating;
     private String bookImgUrl;
@@ -25,7 +26,9 @@ public class BookRequest {
                 .authors(convertAuthor())
                 .description(this.description)
                 .categories(convertCategory())
-                .bookmarked(this.bookMarked)
+                .bookmarkCount(this.bookmarkCount)
+                .reviewCount(this.reviewCount)
+                .price(this.price)
                 .averageRating(this.averageRating)
                 .build();
     }

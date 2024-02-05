@@ -1,5 +1,6 @@
 package com.bookstore.readme.common.security.service;
 
+import com.bookstore.readme.domain.member.exception.NotFoundMemberByEmailException;
 import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.model.MemberDetails;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
@@ -21,7 +22,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
         Member byLoginMember = memberRepository.findByEmail(email)
                 .orElseThrow(
-                        () -> new UsernameNotFoundException("해당 유저가 존재하지 않습니다.")
+                        () -> new NotFoundMemberByEmailException(email)
                 );
 
         return User.builder()

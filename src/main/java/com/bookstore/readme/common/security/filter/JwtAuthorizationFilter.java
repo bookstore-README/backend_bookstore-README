@@ -5,6 +5,7 @@ import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +15,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtTokenService jwtTokenService;
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private final static String AUTHORIZATION = "Authorization";
     private final static String TOKEN_PREFIX = "Bearer ";
@@ -44,25 +48,38 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         // -> RefreshToken이 없거나 유효하지 않다면(DB에 저장된 RefreshToken과 다르다면) null을 반환
         // 사용자의 요청 헤더에 RefreshToken이 있는 경우는, AccessToken이 만료되어 요청한 경우밖에 없다.
         // 따라서, 위의 경우를 제외하면 추출한 refreshToken은 모두 null
-        // String refreshToken = jwtTokenService.extractRefreshToken(request)
-        //         .filter(jwtTokenService::isTokenValid)
-        //         .orElse(null);
+        String refreshToken = jwtTokenService.extractRefreshToken(request)
+                .filter(jwtTokenService::isTokenValid)
+                .orElse(null);
 
         // 리프레시 토큰이 요청 헤더에 존재했다면, 사용자가 AccessToken이 만료되어서
         // RefreshToken까지 보낸 것이므로 리프레시 토큰이 DB의 리프레시 토큰과 일치하는지 판단 후,
         // 일치한다면 AccessToken을 재발급해준다.
-        // if (refreshToken != null) {
-            // checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
-            // return; // RefreshToken을 보낸 경우에는 AccessToken을 재발급 하고 인증 처리는 하지 않게 하기위해 바로 return으로 필터 진행 막기
-        // }
+        if (refreshToken != null) {
+            checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
+            return; // RefreshToken을 보낸 경우에는 AccessToken을 재발급 하고 인증 처리는 하지 않게 하기위해 바로 return으로 필터 진행 막기
+        }
 
         // RefreshToken이 없거나 유효하지 않다면, AccessToken을 검사하고 인증을 처리하는 로직 수행
         // AccessToken이 없거나 유효하지 않다면, 인증 객체가 담기지 않은 상태로 다음 필터로 넘어가기 때문에 403 에러 발생
         // AccessToken이 유효하다면, 인증 객체가 담긴 상태로 다음 필터로 넘어가기 때문에 인증 성공
-        // if (refreshToken == null) {
-            // checkAccessTokenAndAuthentication(request, response, chain);
-        // }
         checkAccessTokenAndAuthentication(request, response, chain);
+    }
+
+    public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
+        memberRepository.findByRefreshToken(refreshToken)
+                .ifPresent(member -> {
+                    String reIssuedRefreshToken = reIssueRefreshToken(member);
+                    jwtTokenService.sendAccessAndRefreshToken(response
+                            , jwtTokenService.createAccessToken(member.getEmail()), reIssuedRefreshToken);
+                });
+    }
+
+    private String reIssueRefreshToken(Member member) {
+        String reIssuedRefreshToken = jwtTokenService.createRefreshToken(member.getEmail());
+        member.updateRefreshToken(reIssuedRefreshToken);
+        memberRepository.saveAndFlush(member);
+        return reIssuedRefreshToken;
     }
 
     /**
@@ -79,8 +96,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         jwtTokenService.extractAccessToken(request)
                 .filter(jwtTokenService::isTokenValid)
                 .flatMap(jwtTokenService::extractEmail)
-                .flatMap(memberRepository::findByEmail)
-                .ifPresent(this::saveAuthentication);
+                    .flatMap(memberRepository::findByEmail)
+                        .ifPresent(this::saveAuthentication);
 
         filterChain.doFilter(request, response);
     }
@@ -90,12 +107,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
      *
      */
     public void saveAuthentication(Member member) {
+        String password = member.getPassword();
 
-        // System.out.println("member = " + member);
+        if(null == password)
+            password = passwordEncoder.encode(UUID.randomUUID().toString());
 
         UserDetails userDetailsUser = User.builder()
                 .username(member.getEmail())
-                .password(member.getPassword())
+                .password(password)
                 .roles(member.getRole().name())
                 .build();
 

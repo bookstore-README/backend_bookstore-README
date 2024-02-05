@@ -8,7 +8,6 @@ import com.bookstore.readme.domain.social.domain.SocialType;
 import com.bookstore.readme.domain.social.domain.authcode.AuthCodeRequestUrlProviderComposite;
 import com.bookstore.readme.domain.social.domain.client.SocialMemberClientComposite;
 import com.bookstore.readme.domain.social.dto.SocialLoginResponseDto;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +22,6 @@ public class SocialService {
     private final SocialMemberClientComposite socialMemberClientComposite;
     private final MemberRepository memberRepository;
     private final JwtTokenService jwtTokenService;
-    private final PasswordEncoder passwordEncoder;
-
 
     public String getAuthCodeRequestUrl(SocialType socialType) {
         return authCodeRequestUrlProviderComposite.provide(socialType);
@@ -52,7 +49,6 @@ public class SocialService {
                 .nickname(socialMember.getNickname())
                 .profileImage(socialMember.getProfileImage())
                 .email(socialMember.getEmail())
-                .password(passwordEncoder.encode("1234"))
                 .role(MemberRole.USER)
                 .socialId(socialMember.getSocialId())
                 .build();

@@ -1,6 +1,6 @@
 package com.bookstore.readme.domain.book.domain;
 
-import com.bookstore.readme.domain.category.domain.Category;
+import com.bookstore.readme.domain.bookmark.domain.Bookmark;
 import com.bookstore.readme.domain.review.domain.Review;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -22,20 +22,29 @@ import java.util.List;
 public class Book {
     @Id
     @GeneratedValue
+    @Column(name = "book_id")
     private Long id;
+    @Column(length = 1000)
     private String bookTitle;
     @Column(length = 1000)
     private String description;
+    @Column(length = 1000)
     private String authors;
     private String categories;
-    private Integer bookmarked;
     private Integer price;
     private Double averageRating;
     private String publishedDate;
     private String bookImgUrl;
+    private Integer reviewCount;
+    private Integer bookmarkCount;
+    private Integer viewCount;
+    private String publisher;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
     private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
+    private List<Bookmark> bookmarks = new ArrayList<>();
 
     @CreatedDate
     @Column(updatable = false)
@@ -46,15 +55,22 @@ public class Book {
     private LocalDateTime updateDate;
 
     @Builder
-    public Book(String bookTitle, String publishedDate, String bookImgUrl, String authors, String description, String categories, Integer bookmarked, Double averageRating, Integer price) {
+    public Book(String bookTitle, String publishedDate, String bookImgUrl, String authors, String description, String categories, Double averageRating, Integer price, Integer reviewCount, Integer bookmarkCount, Integer viewCount, String publisher) {
         this.bookTitle = bookTitle;
         this.publishedDate = publishedDate;
         this.bookImgUrl = bookImgUrl;
         this.authors = authors;
         this.description = description;
         this.categories = categories;
-        this.bookmarked = bookmarked;
         this.averageRating = averageRating;
         this.price = price;
+        this.reviewCount = reviewCount;
+        this.bookmarkCount = bookmarkCount;
+        this.viewCount = viewCount;
+        this.publisher = publisher;
+    }
+
+    public void changeBookmarkCount(int bookmarkCount) {
+        this.bookmarkCount = bookmarkCount;
     }
 }

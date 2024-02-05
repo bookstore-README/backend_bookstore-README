@@ -4,7 +4,6 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
 import com.bookstore.readme.domain.member.model.Member;
-import com.bookstore.readme.domain.social.domain.SocialMember;
 import com.bookstore.readme.domain.social.domain.SocialType;
 import org.springframework.stereotype.Component;
 
