@@ -72,6 +72,10 @@ public class Member {
         this.socialId = socialId;
     }
 
+    public void updateNewPassword(String password, PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(password);
+    }
+
     public void passwordEncode(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
     }
