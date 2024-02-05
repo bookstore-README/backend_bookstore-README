@@ -1,9 +1,11 @@
 package com.bookstore.readme.domain.bookmark.service;
 
 import com.bookstore.readme.domain.book.domain.Book;
+import com.bookstore.readme.domain.book.dto.page.BookDto;
 import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
 import com.bookstore.readme.domain.book.repository.BookRepository;
 import com.bookstore.readme.domain.bookmark.domain.Bookmark;
+import com.bookstore.readme.domain.bookmark.dto.BookmarkAndBookDto;
 import com.bookstore.readme.domain.bookmark.dto.BookmarkCountDto;
 import com.bookstore.readme.domain.bookmark.dto.BookmarkDto;
 import com.bookstore.readme.domain.bookmark.repository.BookmarkRepository;
@@ -32,16 +34,14 @@ public class BookmarkService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
 
-
+        //북마크 True False 설정
         Bookmark bookmark = bookmarkRepository.findByBookIdAndMemberId(bookId, memberId)
                 .orElseGet(() -> createBookmark(member, book, false));
-
         bookmark.changeMarked();
 
-
+        //북마크 개수 설정
         int bookmarkCount = bookmark.getIsMarked() ? book.getBookmarkCount() + 1 : book.getBookmarkCount() - 1;
         book.changeBookmarkCount(bookmarkCount);
-
         bookmarkRepository.save(bookmark);
 
         return BookmarkDto.builder()
@@ -74,6 +74,22 @@ public class BookmarkService {
         return BookmarkCountDto.builder()
                 .id(memberId)
                 .bookmarkCount(filterBookmarks.size())
+                .build();
+    }
+
+    @Transactional
+    public BookmarkAndBookDto searchBookmarkAndBookByMember(Long memberId) {
+        List<Bookmark> bookmarks = bookmarkRepository.findByMemberId(memberId);
+        List<BookDto> books = bookmarks.stream()
+                .filter(Bookmark::getIsMarked)
+                .map(Bookmark::getBook)
+                .map(BookDto::of)
+                .toList();
+
+        return BookmarkAndBookDto.builder()
+                .memberId(memberId)
+                .bookmarkCount(books.size())
+                .books(books)
                 .build();
     }
 
