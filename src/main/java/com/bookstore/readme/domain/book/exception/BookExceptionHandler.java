@@ -3,6 +3,7 @@ package com.bookstore.readme.domain.book.exception;
 import com.bookstore.readme.domain.book.controller.BookController;
 import com.bookstore.readme.domain.book.response.BookResponse;
 import com.bookstore.readme.domain.category.response.CategoryResponse;
+import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,17 @@ public class BookExceptionHandler {
                         .status(ex.getStatus())
                         .message(ex.getMessage())
                         .data(ex.getBookId())
+                        .build());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NotFoundMemberByIdException.class)
+    public ResponseEntity<BookResponse> handleNotFoundMemberByIdException(NotFoundMemberByIdException ex) {
+        return ResponseEntity.badRequest()
+                .body(BookResponse.builder()
+                        .status(ex.getStatus())
+                        .message(ex.getMessage())
+                        .data(ex.getMemberId())
                         .build());
     }
 }
