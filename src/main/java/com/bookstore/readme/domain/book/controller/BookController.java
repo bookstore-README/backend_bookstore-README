@@ -1,5 +1,6 @@
 package com.bookstore.readme.domain.book.controller;
 
+import com.bookstore.readme.domain.book.dto.page.BookPageDto;
 import com.bookstore.readme.domain.book.dto.search.BookDto;
 import com.bookstore.readme.domain.book.dto.search.BookSearchDetailDto;
 import com.bookstore.readme.domain.book.dto.search.BookSearchDto;
@@ -131,9 +132,12 @@ public class BookController {
 
     @GetMapping("/book/new")
     @Operation(summary = "신간 도서 조회", description = "신간 도서를 조회하기 위한 API")
-    public ResponseEntity<BookResponse> newBook() {
-        List<com.bookstore.readme.domain.book.dto.page.BookDto> bookDtos = bookNewService.newBooks();
-        return ResponseEntity.ok(BookResponse.ok(bookDtos));
+    public ResponseEntity<BookResponse> newBook(
+            @Parameter(description = "조회할 개수", example = "1")
+            @RequestParam(defaultValue = "15") Integer limit
+    ) {
+        BookPageDto bookPageDto = bookNewService.newBooks(limit);
+        return ResponseEntity.ok(BookResponse.ok(bookPageDto));
     }
 
 }

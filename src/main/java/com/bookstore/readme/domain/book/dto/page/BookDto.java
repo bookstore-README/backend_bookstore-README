@@ -13,7 +13,7 @@ import java.util.List;
 public class BookDto {
     private final Long bookId;
     private final String bookTitle;
-    private final String publishedDate;
+    private final LocalDateTime publishedDate;
     private final String bookImgUrl;
     private final List<String> authors;
     private final String description;
@@ -27,7 +27,7 @@ public class BookDto {
     private final LocalDateTime createDate;
     private final LocalDateTime updateDate;
 
-    public BookDto(Long bookId, String bookTitle, String publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Double averageRating, Integer price, Integer bookmarkCount, Integer reviewCount, Integer viewCount, String publisher, LocalDateTime createDate, LocalDateTime updateDate) {
+    public BookDto(Long bookId, String bookTitle, LocalDateTime publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Double averageRating, Integer price, Integer bookmarkCount, Integer reviewCount, Integer viewCount, String publisher, LocalDateTime createDate, LocalDateTime updateDate) {
         this.bookId = bookId;
         this.bookTitle = bookTitle;
         this.publishedDate = publishedDate;
