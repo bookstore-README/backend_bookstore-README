@@ -9,10 +9,7 @@ import com.bookstore.readme.domain.book.request.BookPageRequest;
 import com.bookstore.readme.domain.book.request.BookRequest;
 import com.bookstore.readme.domain.book.response.BookResponse;
 //import com.bookstore.readme.domain.book.service.BookPageService;
-import com.bookstore.readme.domain.book.service.BookNewService;
-import com.bookstore.readme.domain.book.service.BookPageService;
-import com.bookstore.readme.domain.book.service.BookSaveService;
-import com.bookstore.readme.domain.book.service.BookSearchService;
+import com.bookstore.readme.domain.book.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,6 +31,7 @@ public class BookController {
     private final BookSearchService bookSearchService;
     private final BookPageService bookPageService;
     private final BookNewService bookNewService;
+    private final ViewService viewService;
 
     @GetMapping("/book/{bookId}")
     @Operation(summary = "도서 단일 조회", description = "도서 아이디로 단일 조회하는 API")
@@ -140,4 +138,12 @@ public class BookController {
         return ResponseEntity.ok(BookResponse.ok(bookPageDto));
     }
 
+    @PutMapping("/book/{bookId}/view")
+    @Operation(summary = "조회수 증가", description = "조회 수를 증가하기 위한 API(중복 방지 미완성)")
+    public ResponseEntity<BookResponse> bookView(
+            @Parameter(description = "조회수를 올릴 도서 아이디", required = true)
+            @PathVariable(name = "bookId") Integer bookId) {
+        int i = viewService.addViewCount(bookId.longValue());
+        return ResponseEntity.ok(BookResponse.ok(i));
+    }
 }
