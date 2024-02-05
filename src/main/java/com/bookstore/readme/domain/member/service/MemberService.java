@@ -2,6 +2,7 @@ package com.bookstore.readme.domain.member.service;
 
 import com.bookstore.readme.domain.member.dto.MemberDto;
 import com.bookstore.readme.domain.member.dto.MemberSaveDto;
+import com.bookstore.readme.domain.member.dto.MemberPasswordUpdateDto;
 import com.bookstore.readme.domain.member.exception.DuplicationMemberEmailException;
 import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
 import com.bookstore.readme.domain.member.model.Member;
@@ -36,6 +37,16 @@ public class MemberService {
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
 
         return MemberDto.of(member);
+    }
+
+    @Transactional
+    public boolean changePassword(MemberPasswordUpdateDto memberUpdateDto) {
+        Member member = memberRepository.findById(memberUpdateDto.getMember_id())
+                .orElseThrow(() -> new NotFoundMemberByIdException(memberUpdateDto.getMember_id()));
+
+        member.updateNewPassword(memberUpdateDto.getNew_password(), encoder);
+        memberRepository.saveAndFlush(member);
+        return true;
     }
 
 //    public MemberResponse memberLogin(MemberLoginDto memberLoginDto) {
