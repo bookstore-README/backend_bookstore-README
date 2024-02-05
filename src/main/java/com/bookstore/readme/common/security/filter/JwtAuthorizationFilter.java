@@ -15,9 +15,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,6 +28,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtTokenService jwtTokenService;
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private final static String AUTHORIZATION = "Authorization";
     private final static String TOKEN_PREFIX = "Bearer ";
@@ -104,9 +107,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
      *
      */
     public void saveAuthentication(Member member) {
+        String password = member.getPassword();
+
+        if(null == password)
+            password = passwordEncoder.encode(UUID.randomUUID().toString());
+
         UserDetails userDetailsUser = User.builder()
                 .username(member.getEmail())
-                .password(member.getPassword())
+                .password(password)
                 .roles(member.getRole().name())
                 .build();
 
