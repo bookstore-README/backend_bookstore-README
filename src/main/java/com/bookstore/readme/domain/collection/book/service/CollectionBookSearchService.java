@@ -2,6 +2,7 @@ package com.bookstore.readme.domain.collection.book.service;
 
 import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.repository.BookRepository;
+import com.bookstore.readme.domain.book.util.DateTimeConverter;
 import com.bookstore.readme.domain.collection.aladin.dto.BookDto;
 import com.bookstore.readme.domain.collection.aladin.dto.BookItemDto;
 import com.bookstore.readme.domain.collection.aladin.request.SearchTarget;
@@ -67,7 +68,7 @@ public class CollectionBookSearchService extends CollectionService {
                         categories.deleteCharAt(categories.length() - 1);
                         return Book.builder()
                                 .bookTitle(item.getTitle())
-                                .publishedDate(item.getPubDate())
+                                .publishedDate(DateTimeConverter.converter(item.getPubDate()))
                                 .bookImgUrl(item.getCover())
                                 .authors(authors)
                                 .description(item.getDescription())

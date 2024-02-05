@@ -11,6 +11,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Random;
 
 @Profile("default")
@@ -44,13 +48,14 @@ public class BookApplicationRunner implements ApplicationRunner {
     }
 
     private static Book createBook(int i) {
+
         return Book.builder()
                 .bookTitle("책 제목 " + i)
-                .publishedDate("20110223")
+                .publishedDate(generateRandomDate("2011-01-01", "2022-12-31"))
                 .bookImgUrl("https://cdn.pixabay.com/photo/2018/01/03/09/09/book-3057902_1280.png")
                 .authors("작가1,작가2,작가3")
                 .description("여기는 설명 칸 " + i)
-                .categories("대분류,중분류")
+                .categories(random.nextInt(1000, 1000000) % 2 == 0 ? "국내도서" : "외국도서")
                 .bookmarkCount(0)
                 .reviewCount(random.nextInt(1000, 1000000))
                 .viewCount(random.nextInt(1000, 1000000))
@@ -58,5 +63,24 @@ public class BookApplicationRunner implements ApplicationRunner {
                 .price(random.nextInt(1000, 1000000))
                 .publisher("퍼블리셔")
                 .build();
+    }
+
+    private static LocalDateTime generateRandomDate(String startDate, String endDate) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date start = dateFormat.parse(startDate);
+            Date end = dateFormat.parse(endDate);
+
+            long startTime = start.getTime();
+            long endTime = end.getTime();
+
+            long randomTime = startTime + (long) (Math.random() * (endTime - startTime));
+            Date randomDate = new Date(randomTime);
+
+            return randomDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -3,8 +3,13 @@ package com.bookstore.readme.domain.book.repository;
 import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.dto.SortType;
 import jakarta.persistence.criteria.Expression;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 
 public class BookSpecification {
@@ -35,7 +40,6 @@ public class BookSpecification {
         return query;
     }
 
-    //ID
     private static Specification<Book> idGreaterThanOrEqualTo(Long id) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.greaterThanOrEqualTo(root.get("id"), id);
@@ -46,7 +50,6 @@ public class BookSpecification {
                 criteriaBuilder.lessThanOrEqualTo(root.get("id"), id);
     }
 
-    //Price
     private static Specification<Book> priceGreaterThanOrEqualTo(Long price) {
         return (root, query, criteriaBuilder) -> {
             Expression<Long> id = root.get("id");
@@ -67,7 +70,6 @@ public class BookSpecification {
         };
     }
 
-    //Bookmark
     private static Specification<Book> bookmarkCountGreaterThanOrEqualTo(Long bookmarkCount) {
         return (root, query, criteriaBuilder) -> {
             Expression<Long> id = root.get("id");
@@ -90,7 +92,6 @@ public class BookSpecification {
 //                criteriaBuilder.lessThanOrEqualTo(root.get("bookmarkCount"), bookmarkCount);
     }
 
-    //Review
     private static Specification<Book> reviewCountGreaterThanOrEqualTo(Long reviewCount) {
         return (root, query, criteriaBuilder) -> {
             Expression<Long> id = root.get("id");
@@ -113,7 +114,6 @@ public class BookSpecification {
 //                criteriaBuilder.lessThanOrEqualTo(root.get("reviewCount"), reviewCount);
     }
 
-    //Star
     private static Specification<Book> averageRatingGreaterThanOrEqualTo(double averageRating) {
         return (root, query, criteriaBuilder) -> {
             Expression<Double> id = root.get("id");
@@ -134,7 +134,6 @@ public class BookSpecification {
         };
     }
 
-    //View
     private static Specification<Book> viewCountGreaterThanOrEqualTo(Long viewCount) {
         return (root, query, criteriaBuilder) -> {
             Expression<Long> id = root.get("id");
@@ -154,7 +153,6 @@ public class BookSpecification {
             Expression<Long> result = criteriaBuilder.sum(id, multipliedValue);
             return criteriaBuilder.lessThanOrEqualTo(result, viewCount);
         };
-//        criteriaBuilder.lessThanOrEqualTo(root.get("viewCount"), viewCount);
     }
 
     public static Specification<Book> nameContains(String keyword) {

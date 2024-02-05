@@ -1,6 +1,7 @@
 package com.bookstore.readme.domain.book.request;
 
 import com.bookstore.readme.domain.book.domain.Book;
+import com.bookstore.readme.domain.book.util.DateTimeConverter;
 import lombok.Getter;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class BookRequest {
     public Book toBook() {
         return Book.builder()
                 .bookTitle(this.bookTitle)
-                .publishedDate(this.publishedDate)
+                .publishedDate(DateTimeConverter.converter(this.publishedDate))
                 .bookImgUrl(this.bookImgUrl)
                 .authors(convertAuthor())
                 .description(this.description)

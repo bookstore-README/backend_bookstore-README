@@ -1,10 +1,11 @@
 package com.bookstore.readme.domain.member.controller;
 
 import com.bookstore.readme.domain.member.dto.MemberDto;
+import com.bookstore.readme.domain.member.dto.MemberPasswordUpdateDto;
+import com.bookstore.readme.domain.member.dto.MemberUpdateDto;
 import com.bookstore.readme.domain.member.service.MemberService;
 import com.bookstore.readme.domain.member.dto.MemberSaveDto;
 import com.bookstore.readme.domain.member.response.MemberResponse;
-import com.bookstore.readme.domain.member.exception.DuplicationMemberEmailException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,6 +35,18 @@ public class MemberController {
             @PathVariable(name = "memberId") Integer memberId) {
         MemberDto memberDto = memberService.searchMember(memberId.longValue());
         return ResponseEntity.ok(MemberResponse.ok(memberDto));
+    }
+
+    @PutMapping("/member/password")
+    @Operation(summary = "비밀번호 변경", description = "마이페이지 비밀번호 변경 API")
+    public ResponseEntity<MemberResponse> changePassword(@Valid @RequestBody MemberPasswordUpdateDto memberPasswordUpdateDto) {
+        return ResponseEntity.ok(MemberResponse.ok(memberService.changePassword(memberPasswordUpdateDto)));
+    }
+
+    @PutMapping("/member/profile")
+    @Operation(summary = "프로필 수정", description = "마이페이지 프로필 수정 API")
+    public ResponseEntity<MemberResponse> changeProfileImage(@RequestBody MemberUpdateDto memberUpdateDto) {
+        return ResponseEntity.ok(MemberResponse.ok(memberService.changeProfile(memberUpdateDto)));
     }
 
 //    @PostMapping("/sign-in")

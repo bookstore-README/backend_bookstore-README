@@ -52,11 +52,11 @@ public class Member {
     private SocialId socialId;
 
     @CreatedDate
-    @Column(updatable = true)
+    @Column(updatable = false)
     private LocalDateTime createDate;
 
     @LastModifiedDate
-    @Column(updatable = false)
+    @Column(updatable = true)
     private LocalDateTime updateDate;
 
     @Builder
@@ -70,6 +70,10 @@ public class Member {
         this.role = role;
         this.refreshToken = refreshToken;
         this.socialId = socialId;
+    }
+
+    public void updateNewPassword(String password, PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(password);
     }
 
     public void passwordEncode(PasswordEncoder passwordEncoder) {

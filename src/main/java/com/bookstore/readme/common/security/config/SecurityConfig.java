@@ -102,7 +102,7 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagementConfigurer
                         -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorizeRequests) -> {
-                    authorizeRequests.requestMatchers("/member/**", "/social/**").permitAll();
+                    authorizeRequests.requestMatchers("/member", "/member/sign-in", "/social/**").permitAll();
                     authorizeRequests.requestMatchers(PathRequest.toH2Console()).permitAll();
                     authorizeRequests.requestMatchers(permitUrl).permitAll();
                     authorizeRequests.requestMatchers("/collection/**").denyAll();
