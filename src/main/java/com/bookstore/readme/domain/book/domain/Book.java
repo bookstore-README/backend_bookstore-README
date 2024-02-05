@@ -1,6 +1,5 @@
 package com.bookstore.readme.domain.book.domain;
 
-import com.bookstore.readme.domain.book.util.DateTimeConverter;
 import com.bookstore.readme.domain.bookmark.domain.Bookmark;
 import com.bookstore.readme.domain.review.domain.Review;
 import jakarta.persistence.*;
@@ -76,5 +75,9 @@ public class Book {
 
     public void changeBookmarkCount(int bookmarkCount) {
         this.bookmarkCount = bookmarkCount;
+    }
+
+    public void addViewCount() {
+        this.viewCount += 1;
     }
 }
