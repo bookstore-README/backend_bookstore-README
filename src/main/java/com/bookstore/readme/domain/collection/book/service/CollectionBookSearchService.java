@@ -65,15 +65,6 @@ public class CollectionBookSearchService extends CollectionService {
                         }
 
                         categories.deleteCharAt(categories.length() - 1);
-
-
-                        try {
-
-                        } catch (Exception e) {
-                            log.debug(categoryName);
-                            throw new RuntimeException();
-                        }
-
                         return Book.builder()
                                 .bookTitle(item.getTitle())
                                 .publishedDate(item.getPubDate())
@@ -82,7 +73,11 @@ public class CollectionBookSearchService extends CollectionService {
                                 .description(item.getDescription())
                                 .categories(categories.toString())
                                 .averageRating(0D)
+                                .viewCount(0)
+                                .bookmarkCount(0)
+                                .reviewCount(0)
                                 .price(item.getPriceStandard())
+                                .publisher(item.getPublisher())
                                 .build();
                     }).toList();
 
