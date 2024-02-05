@@ -51,7 +51,7 @@ public class BookmarkController {
     }
 
     @GetMapping("/bookmark/{id}/member/detail")
-    @Operation(summary = "회원 찜개수 조회", description = "회원이 찜한 개수 조회 API")
+    @Operation(summary = "회원의 찜목록 조회", description = "회원 아이디로 찜목록 조회 API")
     public ResponseEntity<BookmarkResponse> searchBookmarkAndBookByMember(
             @Parameter(description = "찜 개수를 조회할 도서 아이디", required = true) @PathVariable(name = "id") Integer memberId
     ) {
