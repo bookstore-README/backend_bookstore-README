@@ -8,6 +8,7 @@ import com.bookstore.readme.domain.book.request.BookPageRequest;
 import com.bookstore.readme.domain.book.request.BookRequest;
 import com.bookstore.readme.domain.book.response.BookResponse;
 //import com.bookstore.readme.domain.book.service.BookPageService;
+import com.bookstore.readme.domain.book.service.BookNewService;
 import com.bookstore.readme.domain.book.service.BookPageService;
 import com.bookstore.readme.domain.book.service.BookSaveService;
 import com.bookstore.readme.domain.book.service.BookSearchService;
@@ -21,6 +22,8 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +32,7 @@ public class BookController {
     private final BookSaveService bookSaveService;
     private final BookSearchService bookSearchService;
     private final BookPageService bookPageService;
+    private final BookNewService bookNewService;
 
     @GetMapping("/book/{bookId}")
     @Operation(summary = "도서 단일 조회", description = "도서 아이디로 단일 조회하는 API")
@@ -115,4 +119,13 @@ public class BookController {
     public ResponseEntity<BookResponse> bookSave(@RequestBody BookRequest request) {
         return ResponseEntity.ok(bookSaveService.bookSave(request));
     }
+
+
+    @GetMapping("/book/new")
+    @Operation(summary = "신간 도서 조회", description = "신간 도서를 조회하기 위한 API")
+    public ResponseEntity<BookResponse> newBook() {
+        List<com.bookstore.readme.domain.book.dto.page.BookDto> bookDtos = bookNewService.newBooks();
+        return ResponseEntity.ok(BookResponse.ok(bookDtos));
+    }
+
 }
