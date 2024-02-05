@@ -3,6 +3,7 @@ package com.bookstore.readme.domain.member.service;
 import com.bookstore.readme.domain.member.dto.MemberDto;
 import com.bookstore.readme.domain.member.dto.MemberSaveDto;
 import com.bookstore.readme.domain.member.dto.MemberPasswordUpdateDto;
+import com.bookstore.readme.domain.member.dto.MemberUpdateDto;
 import com.bookstore.readme.domain.member.exception.DuplicationMemberEmailException;
 import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
 import com.bookstore.readme.domain.member.model.Member;
@@ -40,12 +41,21 @@ public class MemberService {
     }
 
     @Transactional
-    public boolean changePassword(MemberPasswordUpdateDto memberUpdateDto) {
+    public boolean changePassword(MemberPasswordUpdateDto memberPasswordUpdateDto) {
+        Member member = memberRepository.findById(memberPasswordUpdateDto.getMember_id())
+                .orElseThrow(() -> new NotFoundMemberByIdException(memberPasswordUpdateDto.getMember_id()));
+
+        member.updateNewPassword(memberPasswordUpdateDto.getNew_password(), encoder);
+        memberRepository.saveAndFlush(member);
+        return true;
+    }
+
+    @Transactional
+    public boolean changeProfile(MemberUpdateDto memberUpdateDto) {
         Member member = memberRepository.findById(memberUpdateDto.getMember_id())
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberUpdateDto.getMember_id()));
 
-        member.updateNewPassword(memberUpdateDto.getNew_password(), encoder);
-        memberRepository.saveAndFlush(member);
+        memberRepository.saveAndFlush(memberUpdateDto.toEntity(member));
         return true;
     }
 
