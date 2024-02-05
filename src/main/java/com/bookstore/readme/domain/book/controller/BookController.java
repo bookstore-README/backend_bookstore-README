@@ -137,7 +137,7 @@ public class BookController {
     }
 
     @PutMapping("/book/{bookId}/{memberId}/view")
-    @Operation(summary = "조회수 증가", description = "조회 수를 증가하기 위한 API(중복 방지 미완성)")
+    @Operation(summary = "조회수 증가", description = "조회 수를 증가하기 위한 API")
     public ResponseEntity<BookResponse> bookView(
             @Parameter(description = "조회수를 올릴 도서 아이디", required = true)
             @PathVariable(name = "memberId") Integer memberId,
