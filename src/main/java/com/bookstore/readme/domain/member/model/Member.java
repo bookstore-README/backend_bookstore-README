@@ -52,11 +52,11 @@ public class Member {
     private SocialId socialId;
 
     @CreatedDate
-    @Column(updatable = true)
+    @Column(updatable = false)
     private LocalDateTime createDate;
 
     @LastModifiedDate
-    @Column(updatable = false)
+    @Column(updatable = true)
     private LocalDateTime updateDate;
 
     @Builder

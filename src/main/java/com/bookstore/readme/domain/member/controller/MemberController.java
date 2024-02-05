@@ -37,28 +37,16 @@ public class MemberController {
         return ResponseEntity.ok(MemberResponse.ok(memberDto));
     }
 
-    @PutMapping
+    @PutMapping("/member/password")
     @Operation(summary = "비밀번호 변경", description = "마이페이지 비밀번호 변경 API")
-    public ResponseEntity<Boolean> changePassword(@Valid @RequestBody MemberPasswordUpdateDto memberPasswordUpdateDto) {
-        return ResponseEntity.ok(memberService.changePassword(memberPasswordUpdateDto));
+    public ResponseEntity<MemberResponse> changePassword(@Valid @RequestBody MemberPasswordUpdateDto memberPasswordUpdateDto) {
+        return ResponseEntity.ok(MemberResponse.ok(memberService.changePassword(memberPasswordUpdateDto)));
     }
 
-    @PostMapping
-    @Operation(summary = "프로필 이미지 업로드", description = "마이페이지 프로필 이미지 업로드 API")
-    public ResponseEntity<MemberResponse> initProfileImage(@RequestBody MemberUpdateDto memberUpdateDto) {
-        return ResponseEntity.ok(MemberResponse.ok(null));
-    }
-
-    @PutMapping
-    @Operation(summary = "프로필 이미지 수정", description = "마이페이지 프로필 이미지 수정 API")
+    @PutMapping("/member/profile")
+    @Operation(summary = "프로필 수정", description = "마이페이지 프로필 수정 API")
     public ResponseEntity<MemberResponse> changeProfileImage(@RequestBody MemberUpdateDto memberUpdateDto) {
-        return ResponseEntity.ok(MemberResponse.ok(null));
-    }
-
-    @PutMapping
-    @Operation(summary = "닉네임 수정", description = "마이페이지 닉네임 수정 API")
-    public ResponseEntity<MemberResponse> changeNickname(@RequestBody MemberPasswordUpdateDto memberUpdateDto) {
-        return ResponseEntity.ok(MemberResponse.ok(null));
+        return ResponseEntity.ok(MemberResponse.ok(memberService.changeProfile(memberUpdateDto)));
     }
 
 //    @PostMapping("/sign-in")
