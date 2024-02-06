@@ -1,5 +1,6 @@
 package com.bookstore.readme.domain.member.service;
 
+import com.bookstore.readme.domain.file.service.FileService;
 import com.bookstore.readme.domain.member.dto.MemberDto;
 import com.bookstore.readme.domain.member.dto.MemberSaveDto;
 import com.bookstore.readme.domain.member.dto.MemberPasswordUpdateDto;
@@ -12,11 +13,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
+    private final FileService fileService;
     private final MemberRepository memberRepository;
     private final PasswordEncoder encoder;
 
@@ -42,20 +45,35 @@ public class MemberService {
 
     @Transactional
     public boolean changePassword(MemberPasswordUpdateDto memberPasswordUpdateDto) {
-        Member member = memberRepository.findById(memberPasswordUpdateDto.getMember_id())
-                .orElseThrow(() -> new NotFoundMemberByIdException(memberPasswordUpdateDto.getMember_id()));
+        Member member = memberRepository.findById(memberPasswordUpdateDto.getMemberId())
+                .orElseThrow(() -> new NotFoundMemberByIdException(memberPasswordUpdateDto.getMemberId()));
 
-        member.updateNewPassword(memberPasswordUpdateDto.getNew_password(), encoder);
+        member.updateNewPassword(memberPasswordUpdateDto.getNewPassword(), encoder);
         memberRepository.saveAndFlush(member);
         return true;
     }
 
-    @Transactional
-    public boolean changeProfile(MemberUpdateDto memberUpdateDto) {
-        Member member = memberRepository.findById(memberUpdateDto.getMember_id())
-                .orElseThrow(() -> new NotFoundMemberByIdException(memberUpdateDto.getMember_id()));
+    @Transactional(rollbackFor = Exception.class)
+    public boolean changeProfile(MultipartFile profileImage, MemberUpdateDto memberUpdateDto) {
+        Member member = memberRepository.findById(memberUpdateDto.getMemberId())
+                .orElseThrow(() -> new NotFoundMemberByIdException(memberUpdateDto.getMemberId()));
 
-        memberRepository.saveAndFlush(memberUpdateDto.toEntity(member));
+        Long fileId = null;
+
+        // 파일 업로드 전 사용한 프로필 파일 확인
+        // fileService.existFileId(member.getProfileImage());
+
+        // 파일 업로드
+        if(!profileImage.isEmpty())
+            fileId = fileService.saveProfileImage(profileImage);
+        
+        // 닉네임 수정 시 중복 확인
+        if(!member.getNickname().equals(memberUpdateDto.getNickname())) {
+            if(!memberRepository.existsByNickname(memberUpdateDto.getNickname())) {
+                memberRepository.saveAndFlush(memberUpdateDto.toUpdateEntity(member, fileId));
+            }
+        }
+
         return true;
     }
 
