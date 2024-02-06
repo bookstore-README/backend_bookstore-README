@@ -12,6 +12,7 @@ import com.bookstore.readme.domain.book.service.BookNewService;
 import com.bookstore.readme.domain.book.service.BookSaveService;
 import com.bookstore.readme.domain.book.service.BookSearchService;
 import com.bookstore.readme.domain.book.service.ViewService;
+import com.bookstore.readme.domain.book.service.page.SingleSortAndCategoryPageService;
 import com.bookstore.readme.domain.book.service.page.SingleSortPageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,8 +31,8 @@ import org.springframework.web.bind.annotation.*;
 public class BookController {
     private final BookSaveService bookSaveService;
     private final BookSearchService bookSearchService;
-    //    private final BookPageService bookPageService;
     private final SingleSortPageService singleSortPageService;
+    private final SingleSortAndCategoryPageService singleSortAndCategoryPageService;
     private final BookNewService bookNewService;
     private final ViewService viewService;
 
@@ -90,7 +91,7 @@ public class BookController {
     @Operation(summary = "도서 페이징 조회(카테고리 - 국내도서)", description = "카테고리가 국내도서인 도서 조회 API")
     public ResponseEntity<BookResponse> domesticBook(@ParameterObject @Valid BookPageRequest request) {
         return ResponseEntity.ok()
-                .body(BookResponse.ok(singleSortPageService.pageBooks(
+                .body(BookResponse.ok(singleSortAndCategoryPageService.pageBooks(
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort().get(0),
@@ -101,7 +102,7 @@ public class BookController {
     @Operation(summary = "도서 페이징 조회(카테고리 - 외국도서)", description = "카테고리가 외국도서인 도서 조회 API")
     public ResponseEntity<BookResponse> foreignBook(@ParameterObject @Valid BookPageRequest request) {
         return ResponseEntity.ok()
-                .body(BookResponse.ok(singleSortPageService.pageBooks(
+                .body(BookResponse.ok(singleSortAndCategoryPageService.pageBooks(
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort().get(0),
@@ -113,7 +114,7 @@ public class BookController {
     public ResponseEntity<BookResponse> bookPage(
             @ParameterObject @Valid BookPageRequest request,
             @Parameter @PathVariable(name = "main") String main,
-            @Parameter @PathVariable(name = "sub") String sub
+            @Parameter @PathVariable(name = "sub") Integer sub
     ) {
         return null;
 //        return ResponseEntity.ok()
