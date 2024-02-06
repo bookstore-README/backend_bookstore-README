@@ -3,7 +3,6 @@ package com.bookstore.readme.domain.book.repository;
 import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.dto.SortType;
 import jakarta.persistence.criteria.Expression;
-import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
 public class BookSpecification {
@@ -26,14 +25,16 @@ public class BookSpecification {
         } else if (sortType == SortType.REVIEW) {
             cursorId = book.getReviewCount() * 1000 + book.getId();
         } else if (sortType == SortType.STAR) {
-            cursorId = (long) (book.getAverageRating() * 100000 + book.getId());
+            cursorId = (long) (book.getAverageRating() * 1000 + book.getId());
         } else if (sortType == SortType.ID) {
             cursorId = book.getId();
-        } else if (sortType == SortType.NEW) {
+        } else if (sortType == SortType.NEWEST) {
             Specification<Book> test = newSort(book, sortType, ascending);
             return Specification
                     .where(test)
                     .or(equalId(book.getId()));
+        }else if (sortType == SortType.BESTSELLER) {
+            cursorId = book.getBookmarkCount() * 1000 + book.getId();
         }
 
         return singleSortPagination(sortType, cursorId, ascending);

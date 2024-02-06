@@ -26,7 +26,7 @@ public class BookPageRequest {
     public BookPageRequest(Integer bookId, Integer limit, List<String> sort, Boolean ascending) {
         this.bookId = bookId;
         this.limit = limit == null ? 10 : limit;
-        this.sort = (sort == null || sort.isEmpty()) ? List.of(SortType.ID) : sort.stream().map(s -> SortType.valueOf(s.toUpperCase())).collect(Collectors.toList());;
-        this.ascending = ascending == null || ascending;
+        this.sort = (sort == null || sort.isEmpty()) ? List.of(SortType.VIEW) : sort.stream().map(s -> SortType.valueOf(s.toUpperCase())).collect(Collectors.toList());
+        this.ascending = ascending != null && ascending;
     }
 }

@@ -61,4 +61,15 @@ public class BookExceptionHandler {
                         .data(ex.getMemberId())
                         .build());
     }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<BookResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest()
+                .body(BookResponse.builder()
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .message(ex.getMessage())
+                        .data(false)
+                        .build());
+    }
 }
