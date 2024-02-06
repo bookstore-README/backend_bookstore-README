@@ -3,6 +3,7 @@ package com.bookstore.readme.domain.book.repository;
 import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.dto.SortType;
 import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
 public class BookSpecification {
@@ -28,6 +29,11 @@ public class BookSpecification {
             cursorId = (long) (book.getAverageRating() * 100000 + book.getId());
         } else if (sortType == SortType.ID) {
             cursorId = book.getId();
+        } else if (sortType == SortType.NEW) {
+            Specification<Book> test = newSort(book, sortType, ascending);
+            return Specification
+                    .where(test)
+                    .or(equalId(book.getId()));
         }
 
         return singleSortPagination(sortType, cursorId, ascending);
@@ -38,12 +44,34 @@ public class BookSpecification {
             if (sortType == SortType.ID)
                 return ascending ? criteriaBuilder.greaterThanOrEqualTo(root.get(sortType.getSortType()), cursorId) : criteriaBuilder.lessThanOrEqualTo(root.get(sortType.getSortType()), cursorId);
 
+
             Expression<Long> id = root.get("id");
             Expression<Long> rating = root.get(sortType.getSortType());
             Expression<Long> multipliedValue = criteriaBuilder.prod(rating, 1000L);
             Expression<Long> result = criteriaBuilder.sum(id, multipliedValue);
             return ascending ? criteriaBuilder.greaterThanOrEqualTo(result, cursorId) : criteriaBuilder.lessThanOrEqualTo(result, cursorId);
         };
+    }
+
+    private static Specification<Book> newSort(Book book, SortType sortType, boolean ascending) {
+        return ((root, query, criteriaBuilder) -> {
+            Expression<Long> db = criteriaBuilder.sum(
+                    criteriaBuilder.prod(criteriaBuilder.function("UNIX_TIMESTAMP", Long.class, root.get(sortType.getSortType())), 1000L),
+                    root.get("id")
+            );
+
+            Expression<Long> targetCursorId = criteriaBuilder.sum(
+                    criteriaBuilder.prod(criteriaBuilder.function("UNIX_TIMESTAMP", Long.class, criteriaBuilder.literal(book.getPublishedDate())), 1000L),
+                    book.getId()
+            );
+            return ascending ? criteriaBuilder.greaterThanOrEqualTo(db, targetCursorId) : criteriaBuilder.lessThanOrEqualTo(db, targetCursorId);
+        });
+    }
+
+    private static Specification<Book> equalId(Long cursorId) {
+        return ((root, query, criteriaBuilder) -> {
+            return criteriaBuilder.equal(root.get("id"), cursorId);
+        });
     }
 
 
