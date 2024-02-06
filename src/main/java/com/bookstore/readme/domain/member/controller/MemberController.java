@@ -20,17 +20,18 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/sign-in")
-    @Operation(summary = "로그인", description = "회원 로그인 API")
-    public void login(@RequestBody MemberLoginDto memberLoginDto) {
-        System.out.println("MemberController: sign-in");
-    }
-
     @PostMapping("/member")
     @Operation(summary = "회원 가입", description = "회원을 등록하기 위한 API")
     public ResponseEntity<MemberResponse> save(@Valid @RequestBody MemberSaveDto memberSaveDto) {
         Long memberId = memberService.joinMember(memberSaveDto);
         return ResponseEntity.ok(MemberResponse.ok(memberId));
+    }
+
+    @PostMapping("/member/sign-in")
+    @Operation(summary = "로그인", description = "회원 로그인 API")
+    public ResponseEntity<MemberResponse> login(@RequestBody MemberLoginDto memberLoginDto) {
+        System.out.println("MemberController: sign-in");
+        return ResponseEntity.ok(MemberResponse.ok(memberLoginDto.getEmail()));
     }
 
     @GetMapping("/member/{memberId}")
