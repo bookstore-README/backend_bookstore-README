@@ -8,8 +8,12 @@ import com.bookstore.readme.domain.book.dto.search.BookSearchReviewDto;
 import com.bookstore.readme.domain.book.request.BookPageRequest;
 import com.bookstore.readme.domain.book.request.BookRequest;
 import com.bookstore.readme.domain.book.response.BookResponse;
-//import com.bookstore.readme.domain.book.service.BookPageService;
-import com.bookstore.readme.domain.book.service.*;
+import com.bookstore.readme.domain.book.service.BookNewService;
+import com.bookstore.readme.domain.book.service.BookSaveService;
+import com.bookstore.readme.domain.book.service.BookSearchService;
+import com.bookstore.readme.domain.book.service.ViewService;
+import com.bookstore.readme.domain.book.service.page.SingleSortAndCategoryPageService;
+import com.bookstore.readme.domain.book.service.page.SingleSortPageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +31,8 @@ import org.springframework.web.bind.annotation.*;
 public class BookController {
     private final BookSaveService bookSaveService;
     private final BookSearchService bookSearchService;
-    private final BookPageService bookPageService;
+    private final SingleSortPageService singleSortPageService;
+    private final SingleSortAndCategoryPageService singleSortAndCategoryPageService;
     private final BookNewService bookNewService;
     private final ViewService viewService;
 
@@ -75,10 +80,10 @@ public class BookController {
     @Operation(summary = "도서 페이징 조회", description = "도서 페이징 조회 API")
     public ResponseEntity<BookResponse> bookPage(@ParameterObject @Valid BookPageRequest request) {
         return ResponseEntity.ok()
-                .body(BookResponse.ok(bookPageService.bookList(
+                .body(BookResponse.ok(singleSortPageService.pageBooks(
                         request.getBookId(),
                         request.getLimit(),
-                        request.getSort(),
+                        request.getSort().get(0),
                         request.getAscending())));
     }
 
@@ -86,10 +91,10 @@ public class BookController {
     @Operation(summary = "도서 페이징 조회(카테고리 - 국내도서)", description = "카테고리가 국내도서인 도서 조회 API")
     public ResponseEntity<BookResponse> domesticBook(@ParameterObject @Valid BookPageRequest request) {
         return ResponseEntity.ok()
-                .body(BookResponse.ok(bookPageService.bookList(
+                .body(BookResponse.ok(singleSortAndCategoryPageService.pageBooks(
                         request.getBookId(),
                         request.getLimit(),
-                        request.getSort(),
+                        request.getSort().get(0),
                         request.getAscending(), "국내도서")));
     }
 
@@ -97,10 +102,10 @@ public class BookController {
     @Operation(summary = "도서 페이징 조회(카테고리 - 외국도서)", description = "카테고리가 외국도서인 도서 조회 API")
     public ResponseEntity<BookResponse> foreignBook(@ParameterObject @Valid BookPageRequest request) {
         return ResponseEntity.ok()
-                .body(BookResponse.ok(bookPageService.bookList(
+                .body(BookResponse.ok(singleSortAndCategoryPageService.pageBooks(
                         request.getBookId(),
                         request.getLimit(),
-                        request.getSort(),
+                        request.getSort().get(0),
                         request.getAscending(), "외국도서")));
     }
 
@@ -109,14 +114,15 @@ public class BookController {
     public ResponseEntity<BookResponse> bookPage(
             @ParameterObject @Valid BookPageRequest request,
             @Parameter @PathVariable(name = "main") String main,
-            @Parameter @PathVariable(name = "sub") String sub
+            @Parameter @PathVariable(name = "sub") Integer sub
     ) {
-        return ResponseEntity.ok()
-                .body(BookResponse.ok(bookPageService.bookList(
-                        request.getBookId(),
-                        request.getLimit(),
-                        request.getSort(),
-                        request.getAscending(), main, sub)));
+        return null;
+//        return ResponseEntity.ok()
+//                .body(BookResponse.ok(bookPageService.bookList(
+//                        request.getBookId(),
+//                        request.getLimit(),
+//                        request.getSort(),
+//                        request.getAscending(), main, sub)));
     }
 
     @PostMapping("/book")
@@ -127,7 +133,7 @@ public class BookController {
 
 
     @GetMapping("/book/new")
-    @Operation(summary = "신간 도서 조회", description = "신간 도서를 조회하기 위한 API")
+    @Operation(summary = "신간 도서 조회", description = "신간 도서를 조회하기 위한 API", hidden = true)
     public ResponseEntity<BookResponse> newBook(
             @Parameter(description = "조회할 개수", example = "1")
             @RequestParam(defaultValue = "15") Integer limit

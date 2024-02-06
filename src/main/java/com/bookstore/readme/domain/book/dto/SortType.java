@@ -7,7 +7,7 @@ public enum SortType {
     STAR("averageRating"),
     REVIEW("reviewCount"),
     VIEW("viewCount"),
-    POPULATION("bookmarkCount"),
+    POPULATION("viewCount"),
     PRICE("price"),
     NEW("publishedDate"),
     ID("id");
