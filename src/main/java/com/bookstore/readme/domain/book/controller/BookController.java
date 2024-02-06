@@ -133,7 +133,7 @@ public class BookController {
 
 
     @GetMapping("/book/new")
-    @Operation(summary = "신간 도서 조회", description = "신간 도서를 조회하기 위한 API")
+    @Operation(summary = "신간 도서 조회", description = "신간 도서를 조회하기 위한 API", hidden = true)
     public ResponseEntity<BookResponse> newBook(
             @Parameter(description = "조회할 개수", example = "1")
             @RequestParam(defaultValue = "15") Integer limit
