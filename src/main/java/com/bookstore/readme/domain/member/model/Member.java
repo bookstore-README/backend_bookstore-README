@@ -36,7 +36,7 @@ public class Member {
 
     private String nickname;
 
-    private Long profileImage;
+    private String profileImage;
 
     private String email;
 
@@ -60,7 +60,7 @@ public class Member {
     private LocalDateTime updateDate;
 
     @Builder
-    public Member(Long id, String name, String nickname, Long profileImage, String email, String password, MemberRole role, String refreshToken, SocialId socialId) {
+    public Member(Long id, String name, String nickname, String profileImage, String email, String password, MemberRole role, String refreshToken, SocialId socialId) {
         this.id = id;
         this.name = name;
         this.nickname = nickname;

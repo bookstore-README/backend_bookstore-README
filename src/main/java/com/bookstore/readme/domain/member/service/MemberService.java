@@ -58,19 +58,19 @@ public class MemberService {
         Member member = memberRepository.findById(memberUpdateDto.getMemberId())
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberUpdateDto.getMemberId()));
 
-        Long fileId = null;
+        String fileUrl = null;
 
         // 파일 업로드 전 사용한 프로필 파일 확인
         // fileService.existFileId(member.getProfileImage());
 
         // 파일 업로드
         if(!profileImage.isEmpty())
-            fileId = fileService.saveProfileImage(profileImage);
+            fileUrl = fileService.saveProfileImage(profileImage);
         
         // 닉네임 수정 시 중복 확인
         if(!member.getNickname().equals(memberUpdateDto.getNickname())) {
             if(!memberRepository.existsByNickname(memberUpdateDto.getNickname())) {
-                memberRepository.saveAndFlush(memberUpdateDto.toUpdateEntity(member, fileId));
+                memberRepository.saveAndFlush(memberUpdateDto.toUpdateEntity(member, fileUrl));
             }
         }
 

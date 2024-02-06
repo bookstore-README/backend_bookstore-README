@@ -16,12 +16,12 @@ public class MemberUpdateDto {
     @Schema(description = "회원 닉네임입니다.", example = "ReadMe")
     private String nickname;
 
-    public Member toUpdateEntity(Member member, Long fileId) {
+    public Member toUpdateEntity(Member member, String fileUrl) {
         return Member.builder()
                 .id(member.getId())
                 .name(member.getName())
                 .nickname(nickname)
-                .profileImage(fileId)
+                .profileImage(fileUrl)
                 .email(member.getEmail())
                 .password(member.getPassword())
                 .role(member.getRole())

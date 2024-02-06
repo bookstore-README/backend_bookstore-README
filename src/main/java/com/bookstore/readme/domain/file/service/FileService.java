@@ -23,7 +23,7 @@ public class FileService {
     private final FileRepository fileRepository;
 
     @Transactional(rollbackFor = Exception.class)
-    public Long saveProfileImage(MultipartFile file) {
+    public String saveProfileImage(MultipartFile file) {
         if (!file.getContentType().startsWith("image")) {
             throw new NotEqualFileExt(file.getOriginalFilename());
         }
@@ -42,7 +42,7 @@ public class FileService {
 
         Files saved = fileRepository.save(files);
 
-        return saved.getId();
+        return "";
     }
 
     @Transactional(rollbackFor = Exception.class)
