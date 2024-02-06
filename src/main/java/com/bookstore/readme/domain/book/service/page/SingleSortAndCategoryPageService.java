@@ -21,12 +21,7 @@ public class SingleSortAndCategoryPageService extends BookPage {
 
     public BookPageDto pageBooks(Integer cursorId, Integer limit, SortType sortType, boolean ascending, String... categories) {
         PageRequest pageRequest = PageRequest.of(0, limit + 1, getSort(sortType, ascending));
-
-        StringBuilder fullCategory = new StringBuilder();
-        for (String category : categories) {
-            fullCategory.append(category).append(",");
-        }
-        fullCategory.deleteCharAt(fullCategory.length() - 1);
+        StringBuilder fullCategory = convertCategories(categories);
 
         Book book = null;
         if (cursorId != null) {
@@ -49,4 +44,14 @@ public class SingleSortAndCategoryPageService extends BookPage {
                 .books(results)
                 .build();
     }
+
+    private static StringBuilder convertCategories(String[] categories) {
+        StringBuilder fullCategory = new StringBuilder();
+        for (String category : categories) {
+            fullCategory.append(category).append(",");
+        }
+        fullCategory.deleteCharAt(fullCategory.length() - 1);
+        return fullCategory;
+    }
+
 }
