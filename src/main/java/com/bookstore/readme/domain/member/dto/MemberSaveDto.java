@@ -17,9 +17,6 @@ public class MemberSaveDto {
     @Schema(description = "회원의 닉네임 입니다", example = "익명1")
     private String nickname;
 
-    @Schema(description = "회원의 프로필 이미지입니다.", example = "파일...")
-    private String profileImage;
-
     @NotEmpty(message = "이메일 주소는 필수 입니다.")
     @Schema(description = "이메일 주소입니다.", example = "이메일 주소")
     private String email;
@@ -33,7 +30,6 @@ public class MemberSaveDto {
         return Member.builder()
                 .name(name)
                 .nickname(nickname)
-                .profileImage(profileImage)
                 .email(email)
                 .password(password)
                 .role(MemberRole.USER)

@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 public class Member {
     @Id
     @GeneratedValue
-    @Column(name = "member_id")
+    @Column(name = "memberId")
     private Long id;
 
     private String name;

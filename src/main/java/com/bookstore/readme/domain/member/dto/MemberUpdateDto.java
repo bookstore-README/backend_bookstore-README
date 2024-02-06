@@ -10,21 +10,18 @@ public class MemberUpdateDto {
 
     @NotEmpty(message = "회원 아이디는 필수 입니다.")
     @Schema(description = "회원 아이디입니다.", example = "1")
-    private Long member_id;
+    private Long memberId;
 
     @NotEmpty(message = "회원 닉네임 수정 시 필수 입니다.")
     @Schema(description = "회원 닉네임입니다.", example = "ReadMe")
     private String nickname;
 
-    @Schema(description = "회원 프로필 이미지 URL입니다.", example = "123.jpg")
-    private String profileImage;
-
-    public Member toEntity(Member member) {
+    public Member toUpdateEntity(Member member, String fileUrl) {
         return Member.builder()
                 .id(member.getId())
                 .name(member.getName())
                 .nickname(nickname)
-                .profileImage(profileImage)
+                .profileImage(fileUrl)
                 .email(member.getEmail())
                 .password(member.getPassword())
                 .role(member.getRole())

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class BookPageRequest {
@@ -22,10 +23,10 @@ public class BookPageRequest {
     @Schema(description = "정렬 오름차(true) 내림차(false) 기준입니다.", example = "true")
     private final Boolean ascending;
 
-    public BookPageRequest(Integer bookId, Integer limit, List<SortType> sort, Boolean ascending) {
+    public BookPageRequest(Integer bookId, Integer limit, List<String> sort, Boolean ascending) {
         this.bookId = bookId;
         this.limit = limit == null ? 10 : limit;
-        this.sort = (sort == null || sort.isEmpty()) ? List.of(SortType.ID) : sort;
-        this.ascending = ascending == null || ascending;
+        this.sort = (sort == null || sort.isEmpty()) ? List.of(SortType.VIEW) : sort.stream().map(s -> SortType.valueOf(s.toUpperCase())).collect(Collectors.toList());
+        this.ascending = ascending != null && ascending;
     }
 }

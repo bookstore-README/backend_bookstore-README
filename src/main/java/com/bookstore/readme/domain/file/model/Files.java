@@ -1,4 +1,4 @@
-package com.bookstore.readme.domain.category.domain;
+package com.bookstore.readme.domain.file.model;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -15,20 +15,23 @@ import java.time.LocalDateTime;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Category {
+public class Files {
+
     @Id
     @GeneratedValue
-    @Column(name = "category_id")
+    @Column(name = "fileId")
     private Long id;
 
-    @Column(name = "main_id")
-    private Long mainId;
+    private String fileOriginName;
 
-    @Column(name = "sub_id")
-    private Long subId;
+    private String fileSaveName;
 
-    private String mainName;
-    private String subName;
+    private Long size;
+
+    private String ext;
+
+    @Enumerated(EnumType.STRING)
+    private FileType fileType;
 
     @CreatedDate
     @Column(updatable = false)
@@ -39,10 +42,12 @@ public class Category {
     private LocalDateTime updateDate;
 
     @Builder
-    public Category(Long mainId, Long subId, String mainName, String subName) {
-        this.mainId = mainId;
-        this.subId = subId;
-        this.mainName = mainName;
-        this.subName = subName;
+    public Files(String fileOriginName, String fileSaveName, Long size, String ext, FileType fileType) {
+        this.fileOriginName = fileOriginName;
+        this.fileSaveName = fileSaveName;
+        this.size = size;
+        this.ext = ext;
+        this.fileType = fileType;
     }
+
 }

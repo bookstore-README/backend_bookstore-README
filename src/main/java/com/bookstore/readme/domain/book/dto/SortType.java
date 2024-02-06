@@ -7,9 +7,10 @@ public enum SortType {
     STAR("averageRating"),
     REVIEW("reviewCount"),
     VIEW("viewCount"),
-    POPULATION("bookmarkCount"),
+    POPULATION("viewCount"),
     PRICE("price"),
-    NEW("publishedDate"),
+    NEWEST("publishedDate"),
+    BESTSELLER("bookmarkCount"),
     ID("id");
 
     private final String sortType;

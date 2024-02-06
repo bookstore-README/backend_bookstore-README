@@ -2,18 +2,14 @@ package com.bookstore.readme.domain.book.exception;
 
 import com.bookstore.readme.domain.book.controller.BookController;
 import com.bookstore.readme.domain.book.response.BookResponse;
-import com.bookstore.readme.domain.category.response.CategoryResponse;
 import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -63,6 +59,17 @@ public class BookExceptionHandler {
                         .status(ex.getStatus())
                         .message(ex.getMessage())
                         .data(ex.getMemberId())
+                        .build());
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<BookResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest()
+                .body(BookResponse.builder()
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .message(ex.getMessage())
+                        .data(false)
                         .build());
     }
 }
