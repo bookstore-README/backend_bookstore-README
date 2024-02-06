@@ -1,32 +1,18 @@
 package com.bookstore.readme.domain.category.dto;
 
-import com.bookstore.readme.domain.category.domain.Category;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
-@Data
+@Getter
 public class CategoryDto {
-    private Long id;
-    private String categoryName;
-    private LocalDateTime createDate;
-    private LocalDateTime updateDate;
+    private final List<CategoryInfo> domestic;
+    private final List<CategoryInfo> foreign;
 
     @Builder
-    public CategoryDto(Long id, String categoryName, LocalDateTime createDate, LocalDateTime updateDate) {
-        this.id = id;
-        this.categoryName = categoryName;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
-    }
-
-    public static CategoryDto toCategory(Category category) {
-        return CategoryDto.builder()
-                .id(category.getId())
-                .categoryName(category.getCategoryName())
-                .createDate(category.getCreateDate())
-                .updateDate(category.getUpdateDate())
-                .build();
+    public CategoryDto(List<CategoryInfo> domestic, List<CategoryInfo> foreign) {
+        this.domestic = domestic;
+        this.foreign = foreign;
     }
 }

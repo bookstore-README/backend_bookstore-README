@@ -14,9 +14,8 @@ public class CategoryResponse extends CommonResponse {
         this.data = data;
     }
 
-    public static CategoryResponse ok(Object data) {
-        return CategoryResponse
-                .builder()
+    public static CategoryResponse of(Object data) {
+        return CategoryResponse.builder()
                 .status(200)
                 .message("Success")
                 .data(data)
