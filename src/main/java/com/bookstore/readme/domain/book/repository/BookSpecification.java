@@ -2,6 +2,7 @@ package com.bookstore.readme.domain.book.repository;
 
 import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.dto.SortType;
+import io.jsonwebtoken.lang.Assert;
 import jakarta.persistence.criteria.Expression;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -14,79 +15,36 @@ public class BookSpecification {
     }
 
     public static Specification<Book> pagination(Book book, SortType sortType, boolean ascending) {
-        Specification<Book> query = idPaging(book.getId(), ascending);
+        Long cursorId = null;
 
         if (sortType == SortType.PRICE) {
-            query = pricePaging(book.getPrice() * 1000 + book.getId(), ascending);
+            cursorId = book.getPrice() * 1000 + book.getId();
         } else if (sortType == SortType.POPULATION) {
-            //TODO BOOK 엔티티에 조회수 컬럼 추가 필요
-            query = bookmarkCountPaging(book.getBookmarkCount() * 1000 + book.getId(), ascending);
+            cursorId = book.getBookmarkCount() * 1000 + book.getId();
         } else if (sortType == SortType.VIEW) {
-            //TODO BOOK 엔티티에 조회수 컬럼 추가 필요
-            query = viewCountPaging(book.getReviewCount() * 1000 + book.getId(), ascending);
+            cursorId = book.getViewCount() * 1000 + book.getId();
         } else if (sortType == SortType.REVIEW) {
-            query = reviewCountPaging(book.getReviewCount() * 1000 + book.getId(), ascending);
+            cursorId = book.getReviewCount() * 1000 + book.getId();
         } else if (sortType == SortType.STAR) {
-            query = averageRatingPaging(book.getAverageRating() * 1000 + book.getId(), ascending);
+            cursorId = (long) (book.getAverageRating() * 100000 + book.getId());
         }
 
-        return query;
+        return pagination(sortType, cursorId, ascending);
     }
 
-    private static Specification<Book> idPaging(Long id, boolean ascending) {
-        return (root, query, criteriaBuilder) ->
-                ascending ? criteriaBuilder.greaterThanOrEqualTo(root.get("id"), id) : criteriaBuilder.lessThanOrEqualTo(root.get("id"), id);
-    }
-
-    private static Specification<Book> pricePaging(Long price, boolean ascending) {
+    private static Specification<Book> pagination(SortType sortType, Long cursorId, boolean ascending) {
         return (root, query, criteriaBuilder) -> {
+            if (sortType == SortType.ID)
+                return ascending ? criteriaBuilder.greaterThanOrEqualTo(root.get(sortType.getSortType()), cursorId) : criteriaBuilder.lessThanOrEqualTo(root.get(sortType.getSortType()), cursorId);
+
             Expression<Long> id = root.get("id");
-            Expression<Long> rating = root.get("price");
+            Expression<Long> rating = root.get(sortType.getSortType());
             Expression<Long> multipliedValue = criteriaBuilder.prod(rating, 1000L);
             Expression<Long> result = criteriaBuilder.sum(id, multipliedValue);
-            return ascending ? criteriaBuilder.greaterThanOrEqualTo(result, price) : criteriaBuilder.lessThanOrEqualTo(result, price);
+            return ascending ? criteriaBuilder.greaterThanOrEqualTo(result, cursorId) : criteriaBuilder.lessThanOrEqualTo(result, cursorId);
         };
     }
 
-    private static Specification<Book> bookmarkCountPaging(Long bookmarkCount, boolean ascending) {
-        return (root, query, criteriaBuilder) -> {
-            Expression<Long> id = root.get("id");
-            Expression<Long> rating = root.get("bookmarkCount");
-            Expression<Long> multipliedValue = criteriaBuilder.prod(rating, 1000L);
-            Expression<Long> result = criteriaBuilder.sum(id, multipliedValue);
-            return ascending ? criteriaBuilder.greaterThanOrEqualTo(result, bookmarkCount) : criteriaBuilder.lessThanOrEqualTo(result, bookmarkCount);
-        };
-    }
-
-    private static Specification<Book> reviewCountPaging(Long reviewCount, boolean ascending) {
-        return (root, query, criteriaBuilder) -> {
-            Expression<Long> id = root.get("id");
-            Expression<Long> rating = root.get("reviewCount");
-            Expression<Long> multipliedValue = criteriaBuilder.prod(rating, 1000L);
-            Expression<Long> result = criteriaBuilder.sum(id, multipliedValue);
-            return ascending ? criteriaBuilder.greaterThanOrEqualTo(result, reviewCount) : criteriaBuilder.lessThanOrEqualTo(result, reviewCount);
-        };
-    }
-
-    private static Specification<Book> averageRatingPaging(double averageRating, boolean ascending) {
-        return (root, query, criteriaBuilder) -> {
-            Expression<Double> id = root.get("id");
-            Expression<Double> rating = root.get("averageRating");
-            Expression<Double> multipliedValue = criteriaBuilder.prod(rating, 1000.0);
-            Expression<Double> result = criteriaBuilder.sum(id, multipliedValue);
-            return ascending ? criteriaBuilder.greaterThanOrEqualTo(result, averageRating) : criteriaBuilder.lessThanOrEqualTo(result, averageRating);
-        };
-    }
-
-    private static Specification<Book> viewCountPaging(Long viewCount, boolean ascending) {
-        return (root, query, criteriaBuilder) -> {
-            Expression<Long> id = root.get("id");
-            Expression<Long> rating = root.get("viewCount");
-            Expression<Long> multipliedValue = criteriaBuilder.prod(rating, 1000L);
-            Expression<Long> result = criteriaBuilder.sum(id, multipliedValue);
-            return ascending ? criteriaBuilder.greaterThanOrEqualTo(result, viewCount) : criteriaBuilder.lessThanOrEqualTo(result, viewCount);
-        };
-    }
 
     private static Specification<Book> nameContains(String keyword) {
         return (root, query, criteriaBuilder) ->
