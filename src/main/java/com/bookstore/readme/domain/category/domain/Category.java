@@ -1,6 +1,5 @@
 package com.bookstore.readme.domain.category.domain;
 
-import com.bookstore.readme.domain.book.domain.Book;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,25 +11,24 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-@Getter
 @Entity
-@Table(
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "category_unique",
-                        columnNames = {"category_name"}
-                )
-        }
-)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category {
     @Id
     @GeneratedValue
     @Column(name = "category_id")
     private Long id;
 
-    private String categoryName;
+    @Column(name = "main_id")
+    private Long mainId;
+
+    @Column(name = "sub_id")
+    private Long subId;
+
+    private String mainName;
+    private String subName;
 
     @CreatedDate
     @Column(updatable = false)
@@ -41,11 +39,10 @@ public class Category {
     private LocalDateTime updateDate;
 
     @Builder
-    public Category(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public void changeCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public Category(Long mainId, Long subId, String mainName, String subName) {
+        this.mainId = mainId;
+        this.subId = subId;
+        this.mainName = mainName;
+        this.subName = subName;
     }
 }
