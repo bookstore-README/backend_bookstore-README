@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -29,7 +30,17 @@ public class SingleSortAndCategoryPageService extends BookPage {
                     .orElseThrow(() -> new NotFoundBookByIdException(cursorId.longValue()));
         }
 
-        Page<Book> pageBooks = (book == null) ? bookRepository.findAllByCategoriesStartingWith(fullCategory.toString(), pageRequest) : bookRepository.findAll(BookSpecification.singleSortAndCategoryPagination(book, sortType, ascending, fullCategory.toString(), search), pageRequest);
+//        Page<Book> pageBooks = (book == null) ? bookRepository.findAllByCategoriesStartingWith(fullCategory.toString(), pageRequest) : bookRepository.findAll(BookSpecification.singleSortAndCategoryPagination(book, sortType, ascending, fullCategory.toString(), search), pageRequest);
+
+        Page<Book> pageBooks;
+        if (book == null) {
+            if (StringUtils.hasText(search))
+                pageBooks = bookRepository.findAll(BookSpecification.categoryAndSearch(fullCategory.toString(), search), pageRequest);
+            else
+                pageBooks = bookRepository.findAll(BookSpecification.likeCategory(fullCategory.toString()), pageRequest);
+        } else {
+            pageBooks = bookRepository.findAll(BookSpecification.singleSortPagination(book, sortType, ascending, search), pageRequest);
+        }
         List<Book> contents = pageBooks.getContent();
         List<BookDto> results = contents.stream()
                 .map(BookDto::of)

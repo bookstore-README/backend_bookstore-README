@@ -8,6 +8,14 @@ import org.springframework.util.StringUtils;
 
 public class BookSpecification {
 
+    public static Specification<Book> defaultSearch(String search) {
+        return Specification.where(likeAuthorsAndBookTitle(search));
+    }
+
+    public static Specification<Book> categoryAndSearch(String category, String search) {
+        return Specification.where(likeCategory(category)).and(likeAuthorsAndBookTitle(search));
+    }
+
     public static Specification<Book> singleSortAndCategoryPagination(Book book, SortType sortType, boolean ascending, String category, String search) {
         Specification<Book> pagination = singleSortPagination(book, sortType, ascending, search);
         return Specification.where(pagination)
@@ -41,7 +49,7 @@ public class BookSpecification {
         Specification<Book> bookSpecification = singleSortPagination(sortType, cursorId, ascending);
         if (StringUtils.hasText(search))
             bookSpecification = Specification.where(bookSpecification)
-                    .and(likeSearch(search));
+                    .and(likeAuthorsAndBookTitle(search));
 
         return bookSpecification;
     }
@@ -75,19 +83,25 @@ public class BookSpecification {
         });
     }
 
-    private static Specification<Book> likeSearch(String search) {
+    private static Specification<Book> likeAuthorsAndBookTitle(String search) {
         return Specification.where(likeAuthors(search)).or(likeBookTitle(search));
     }
 
-    private static Specification<Book> likeAuthors(String search) {
+    public static Specification<Book> likeCategory(String category) {
         return ((root, query, criteriaBuilder) -> {
-            return criteriaBuilder.like(root.get("authors"), search);
+            return criteriaBuilder.like(root.get("categories"), category);
         });
     }
 
-    private static Specification<Book> likeBookTitle(String search) {
+    private static Specification<Book> likeAuthors(String authors) {
         return ((root, query, criteriaBuilder) -> {
-            return criteriaBuilder.like(root.get("bookTitle"), search);
+            return criteriaBuilder.like(root.get("authors"), authors);
+        });
+    }
+
+    private static Specification<Book> likeBookTitle(String bookTitle) {
+        return ((root, query, criteriaBuilder) -> {
+            return criteriaBuilder.like(root.get("bookTitle"), bookTitle);
         });
     }
 
@@ -96,7 +110,6 @@ public class BookSpecification {
             return criteriaBuilder.equal(root.get("id"), cursorId);
         });
     }
-
 
     private static Specification<Book> nameContains(String keyword) {
         return (root, query, criteriaBuilder) ->
