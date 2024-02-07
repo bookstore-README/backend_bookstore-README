@@ -1,22 +1,22 @@
 package com.bookstore.readme.domain.file.service;
 
 import com.bookstore.readme.domain.file.exception.NotEqualFileExt;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
-@RequiredArgsConstructor
 public class FileService {
 
     @Value("${upload.path}")
-    private final String filePath;
+    private String filePath;
 
     @Transactional(rollbackFor = Exception.class)
     public String saveProfileImage(MultipartFile file) {
@@ -27,16 +27,22 @@ public class FileService {
         String ext = extractExt(originName);
         String saveName = createFileName(originName) + "." + ext;
 
-        return "";
+        Path savePath = Paths.get(filePath + saveName);
+
+        try {
+            file.transferTo(savePath);
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+
+        return filePath + saveName;
     }
 
     private String createFileName(String originFileName) {
         StringBuilder sb = new StringBuilder();
-
         LocalDateTime date = LocalDateTime.now();
-        date.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-
-        sb.append(date);
+        String formatted = date.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+        sb.append(formatted);
 
         return sb.toString();
     }
