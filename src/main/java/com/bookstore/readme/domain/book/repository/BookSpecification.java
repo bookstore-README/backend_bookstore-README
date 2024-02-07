@@ -110,7 +110,7 @@ public class BookSpecification {
 
     public static Specification<Book> likeCategory(String category) {
         return ((root, query, criteriaBuilder) -> {
-            return criteriaBuilder.like(root.get("categories"), category);
+            return criteriaBuilder.like(root.get("categories"), "%"+category+"%");
         });
     }
 
