@@ -72,7 +72,8 @@ public class SecurityConfig {
                     authorizeRequests.requestMatchers(
                             "/member/**",
                             "/review/**",
-                            "/book/**"
+                            "/book/**",
+                            "/category/**"
                     ).permitAll(); //Permit
                     authorizeRequests.requestMatchers(
                             "/collection/**"

@@ -14,6 +14,9 @@ import com.bookstore.readme.domain.book.service.BookSearchService;
 import com.bookstore.readme.domain.book.service.ViewService;
 import com.bookstore.readme.domain.book.service.page.SingleSortAndCategoryPageService;
 import com.bookstore.readme.domain.book.service.page.SingleSortPageService;
+import com.bookstore.readme.domain.category.dto.CategoryInfo;
+import com.bookstore.readme.domain.category.repository.CategoryRepository;
+import com.bookstore.readme.domain.category.service.CategorySearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,6 +38,8 @@ public class BookController {
     private final SingleSortAndCategoryPageService singleSortAndCategoryPageService;
     private final BookNewService bookNewService;
     private final ViewService viewService;
+    private final CategorySearchService categorySearchService;
+
 
     @GetMapping("/book/{bookId}")
     @Operation(summary = "도서 단일 조회", description = "도서 아이디로 단일 조회하는 API")
@@ -84,7 +89,8 @@ public class BookController {
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort().get(0),
-                        request.getAscending())));
+                        request.getAscending(),
+                        request.getSearch())));
     }
 
     @GetMapping("/book/domestic")
@@ -95,7 +101,7 @@ public class BookController {
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort().get(0),
-                        request.getAscending(), "국내도서")));
+                        request.getAscending(), request.getSearch(), "국내도서")));
     }
 
     @GetMapping("/book/foreign")
@@ -106,7 +112,7 @@ public class BookController {
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort().get(0),
-                        request.getAscending(), "외국도서")));
+                        request.getAscending(), request.getSearch(), "외국도서")));
     }
 
     @GetMapping("/book/{main}/{sub}")
@@ -116,13 +122,13 @@ public class BookController {
             @Parameter @PathVariable(name = "main") String main,
             @Parameter @PathVariable(name = "sub") Integer sub
     ) {
-        return null;
-//        return ResponseEntity.ok()
-//                .body(BookResponse.ok(bookPageService.bookList(
-//                        request.getBookId(),
-//                        request.getLimit(),
-//                        request.getSort(),
-//                        request.getAscending(), main, sub)));
+        CategoryInfo domestic = categorySearchService.searchCategoryInfo(main.equals("domestic") ? 0 : 1, sub);
+        return ResponseEntity.ok()
+                .body(BookResponse.ok(singleSortAndCategoryPageService.pageBooks(
+                        request.getBookId(),
+                        request.getLimit(),
+                        request.getSort().get(0),
+                        request.getAscending(), domestic.getMainName(), domestic.getSubName())));
     }
 
     @PostMapping("/book")
@@ -130,7 +136,6 @@ public class BookController {
     public ResponseEntity<BookResponse> bookSave(@RequestBody BookRequest request) {
         return ResponseEntity.ok(bookSaveService.bookSave(request));
     }
-
 
     @GetMapping("/book/new")
     @Operation(summary = "신간 도서 조회", description = "신간 도서를 조회하기 위한 API", hidden = true)

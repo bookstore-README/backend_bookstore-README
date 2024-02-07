@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ import java.util.List;
 public class SingleSortAndCategoryPageService extends BookPage {
     private final BookRepository bookRepository;
 
-    public BookPageDto pageBooks(Integer cursorId, Integer limit, SortType sortType, boolean ascending, String... categories) {
+    public BookPageDto pageBooks(Integer cursorId, Integer limit, SortType sortType, boolean ascending, String search, String... categories) {
         PageRequest pageRequest = PageRequest.of(0, limit + 1, getSort(sortType, ascending));
         StringBuilder fullCategory = convertCategories(categories);
 
@@ -29,7 +30,14 @@ public class SingleSortAndCategoryPageService extends BookPage {
                     .orElseThrow(() -> new NotFoundBookByIdException(cursorId.longValue()));
         }
 
-        Page<Book> pageBooks = (book == null) ? bookRepository.findAllByCategoriesStartingWith(fullCategory.toString(), pageRequest) : bookRepository.findAll(BookSpecification.singleSortAndCategoryPagination(book, sortType, ascending, fullCategory.toString()), pageRequest);
+//        Page<Book> pageBooks = (book == null) ? bookRepository.findAllByCategoriesStartingWith(fullCategory.toString(), pageRequest) : bookRepository.findAll(BookSpecification.singleSortAndCategoryPagination(book, sortType, ascending, fullCategory.toString(), search), pageRequest);
+
+        Page<Book> pageBooks;
+        if (book == null) {
+            pageBooks = bookRepository.findAll(BookSpecification.categoryAndSearch(fullCategory.toString(), search), pageRequest);
+        } else {
+            pageBooks = bookRepository.findAll(BookSpecification.singleSortAndCategoryPagination(book, sortType, ascending, fullCategory.toString(), search), pageRequest);
+        }
         List<Book> contents = pageBooks.getContent();
         List<BookDto> results = contents.stream()
                 .map(BookDto::of)

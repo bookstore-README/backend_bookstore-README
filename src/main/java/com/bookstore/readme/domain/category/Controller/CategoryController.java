@@ -5,6 +5,7 @@ import com.bookstore.readme.domain.category.response.CategoryResponse;
 import com.bookstore.readme.domain.category.service.CategorySaveService;
 import com.bookstore.readme.domain.category.service.CategorySearchService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,25 @@ public class CategoryController {
         return ResponseEntity.ok(CategoryResponse.of(categorySearchService.searchCategory()));
     }
 
+    @GetMapping("/{categoryId}")
+    @Operation(summary = "카테고리 조회 기능", description = "카테고리를 카테고리 아이디로 조회하는 API")
+    public ResponseEntity<CategoryResponse> searchCategory(
+            @Parameter(description = "카테고리를 조회할 카테고리 아이디", required = true)
+            @PathVariable(name = "categoryId") Integer categoryId
+    ) {
+        return ResponseEntity.ok(CategoryResponse.of(categorySearchService.searchCategoryInfo(categoryId)));
+    }
+
+    @GetMapping("/{mainId}/{subId}")
+    @Operation(summary = "카테고리 조회 기능", description = "카테고리를 대분류 아이디, 중분류 아이디로 조회하는 API")
+    public ResponseEntity<CategoryResponse> searchCategory(
+            @Parameter(description = "카테고리를 조회할 대분류 아이디", required = true)
+            @PathVariable(name = "mainId") Integer mainId,
+            @Parameter(description = "카테고리를 조회할 중분류 아이디", required = true)
+            @PathVariable(name = "subId") Integer subId
+    ) {
+        return ResponseEntity.ok(CategoryResponse.of(categorySearchService.searchCategoryInfo(mainId, subId)));
+    }
 
     @PostMapping
     @Operation(deprecated = true, hidden = true)
