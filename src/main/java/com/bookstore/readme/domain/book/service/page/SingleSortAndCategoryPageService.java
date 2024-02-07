@@ -34,12 +34,9 @@ public class SingleSortAndCategoryPageService extends BookPage {
 
         Page<Book> pageBooks;
         if (book == null) {
-            if (StringUtils.hasText(search))
-                pageBooks = bookRepository.findAll(BookSpecification.categoryAndSearch(fullCategory.toString(), search), pageRequest);
-            else
-                pageBooks = bookRepository.findAll(BookSpecification.likeCategory(fullCategory.toString()), pageRequest);
+            pageBooks = bookRepository.findAll(BookSpecification.categoryAndSearch(fullCategory.toString(), search), pageRequest);
         } else {
-            pageBooks = bookRepository.findAll(BookSpecification.singleSortPagination(book, sortType, ascending, search), pageRequest);
+            pageBooks = bookRepository.findAll(BookSpecification.singleSortAndCategoryPagination(book, sortType, ascending, fullCategory.toString(), search), pageRequest);
         }
         List<Book> contents = pageBooks.getContent();
         List<BookDto> results = contents.stream()

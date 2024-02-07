@@ -13,13 +13,27 @@ public class BookSpecification {
     }
 
     public static Specification<Book> categoryAndSearch(String category, String search) {
-        return Specification.where(likeCategory(category)).and(likeAuthorsAndBookTitle(search));
+        if (StringUtils.hasText(search)) {
+            return Specification.where(likeCategory(category))
+                    .and(likeAuthorsAndBookTitle(search));
+        } else {
+            return likeCategory(category);
+        }
+
     }
 
     public static Specification<Book> singleSortAndCategoryPagination(Book book, SortType sortType, boolean ascending, String category, String search) {
         Specification<Book> pagination = singleSortPagination(book, sortType, ascending, search);
-        return Specification.where(pagination)
-                .and(nameContains(category));
+
+        if (StringUtils.hasText(search)) {
+            return Specification.where(pagination)
+                    .and(nameContains(category))
+                    .and(likeAuthorsAndBookTitle(search));
+        } else {
+            return Specification.where(pagination)
+                    .and(nameContains(category));
+        }
+
     }
 
     public static Specification<Book> singleSortPagination(Book book, SortType sortType, boolean ascending, String search) {
