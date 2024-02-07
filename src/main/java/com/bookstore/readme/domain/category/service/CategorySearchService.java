@@ -3,6 +3,8 @@ package com.bookstore.readme.domain.category.service;
 import com.bookstore.readme.domain.category.domain.Category;
 import com.bookstore.readme.domain.category.dto.CategoryDto;
 import com.bookstore.readme.domain.category.dto.CategoryInfo;
+import com.bookstore.readme.domain.category.exception.NotFoundCategoryByIdException;
+import com.bookstore.readme.domain.category.exception.NotFoundCategoryByMainSubIdException;
 import com.bookstore.readme.domain.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,5 +34,19 @@ public class CategorySearchService {
                 .domestic(domestic)
                 .foreign(foreign)
                 .build();
+    }
+
+    public CategoryInfo searchCategoryInfo(Integer categoryId) {
+        Category category = categoryRepository.findById(categoryId.longValue())
+                .orElseThrow(() -> new NotFoundCategoryByIdException(categoryId.longValue()));
+
+        return CategoryInfo.of(category);
+    }
+
+    public CategoryInfo searchCategoryInfo(Integer mainId, Integer subId) {
+        Category category = categoryRepository.findByMainIdAndSubId(mainId.longValue(), subId.longValue())
+                .orElseThrow(() -> new NotFoundCategoryByMainSubIdException(mainId.longValue(), subId.longValue()));
+
+        return CategoryInfo.of(category);
     }
 }
