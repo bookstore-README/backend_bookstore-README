@@ -21,7 +21,7 @@ public class SingleSortPageService extends BookPage {
     private final BookRepository bookRepository;
 
     @Transactional
-    public BookPageDto pageBooks(Integer cursorId, Integer limit, SortType sortType, boolean ascending) {
+    public BookPageDto pageBooks(Integer cursorId, Integer limit, SortType sortType, boolean ascending, String search) {
         PageRequest pageRequest = PageRequest.of(0, limit + 1, getSort(sortType, ascending));
 
         Book book = null;
@@ -30,7 +30,7 @@ public class SingleSortPageService extends BookPage {
                     .orElseThrow(() -> new NotFoundBookByIdException(cursorId.longValue()));
         }
 
-        Page<Book> pageBooks = (book == null) ? bookRepository.findAll(pageRequest) : bookRepository.findAll(BookSpecification.singleSortPagination(book, sortType, ascending), pageRequest);
+        Page<Book> pageBooks = (book == null) ? bookRepository.findAll(pageRequest) : bookRepository.findAll(BookSpecification.singleSortPagination(book, sortType, ascending, search), pageRequest);
         List<Book> contents = pageBooks.getContent();
         List<BookDto> results = contents.stream()
                 .map(BookDto::of)

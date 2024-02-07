@@ -4,16 +4,17 @@ import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.dto.SortType;
 import jakarta.persistence.criteria.Expression;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.StringUtils;
 
 public class BookSpecification {
 
-    public static Specification<Book> singleSortAndCategoryPagination(Book book, SortType sortType, boolean ascending, String category) {
-        Specification<Book> pagination = singleSortPagination(book, sortType, ascending);
+    public static Specification<Book> singleSortAndCategoryPagination(Book book, SortType sortType, boolean ascending, String category, String search) {
+        Specification<Book> pagination = singleSortPagination(book, sortType, ascending, search);
         return Specification.where(pagination)
                 .and(nameContains(category));
     }
 
-    public static Specification<Book> singleSortPagination(Book book, SortType sortType, boolean ascending) {
+    public static Specification<Book> singleSortPagination(Book book, SortType sortType, boolean ascending, String search) {
         Long cursorId = null;
 
         if (sortType == SortType.PRICE) {
@@ -33,11 +34,16 @@ public class BookSpecification {
             return Specification
                     .where(test)
                     .or(equalId(book.getId()));
-        }else if (sortType == SortType.BESTSELLER) {
+        } else if (sortType == SortType.BESTSELLER) {
             cursorId = book.getBookmarkCount() * 1000 + book.getId();
         }
 
-        return singleSortPagination(sortType, cursorId, ascending);
+        Specification<Book> bookSpecification = singleSortPagination(sortType, cursorId, ascending);
+        if (StringUtils.hasText(search))
+            bookSpecification = Specification.where(bookSpecification)
+                    .and(likeSearch(search));
+
+        return bookSpecification;
     }
 
     private static Specification<Book> singleSortPagination(SortType sortType, Long cursorId, boolean ascending) {
@@ -66,6 +72,22 @@ public class BookSpecification {
                     book.getId()
             );
             return ascending ? criteriaBuilder.greaterThanOrEqualTo(db, targetCursorId) : criteriaBuilder.lessThanOrEqualTo(db, targetCursorId);
+        });
+    }
+
+    private static Specification<Book> likeSearch(String search) {
+        return Specification.where(likeAuthors(search)).or(likeBookTitle(search));
+    }
+
+    private static Specification<Book> likeAuthors(String search) {
+        return ((root, query, criteriaBuilder) -> {
+            return criteriaBuilder.like(root.get("authors"), search);
+        });
+    }
+
+    private static Specification<Book> likeBookTitle(String search) {
+        return ((root, query, criteriaBuilder) -> {
+            return criteriaBuilder.like(root.get("bookTitle"), search);
         });
     }
 
