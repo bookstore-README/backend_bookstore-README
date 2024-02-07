@@ -33,10 +33,7 @@ public class SingleSortPageService extends BookPage {
 
         Page<Book> pageBooks;
         if (book == null) {
-            if (StringUtils.hasText(search))
                 pageBooks = bookRepository.findAll(BookSpecification.defaultSearch(search), pageRequest);
-            else
-                pageBooks = bookRepository.findAll(pageRequest);
         } else {
             pageBooks = bookRepository.findAll(BookSpecification.singleSortPagination(book, sortType, ascending, search), pageRequest);
         }

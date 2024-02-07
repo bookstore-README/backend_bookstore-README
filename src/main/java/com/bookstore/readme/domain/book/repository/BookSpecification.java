@@ -9,7 +9,13 @@ import org.springframework.util.StringUtils;
 public class BookSpecification {
 
     public static Specification<Book> defaultSearch(String search) {
-        return Specification.where(likeAuthorsAndBookTitle(search));
+        return (root, query, criteriaBuilder) -> {
+            if (search != null) {
+                return likeAuthorsAndBookTitle(search).toPredicate(root, query, criteriaBuilder);
+            } else {
+                return null;
+            }
+        };
     }
 
     public static Specification<Book> categoryAndSearch(String category, String search) {
@@ -97,6 +103,7 @@ public class BookSpecification {
         });
     }
 
+    //
     private static Specification<Book> likeAuthorsAndBookTitle(String search) {
         return Specification.where(likeAuthors(search)).or(likeBookTitle(search));
     }
