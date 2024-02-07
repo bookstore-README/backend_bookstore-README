@@ -60,9 +60,6 @@ public class MemberService {
 
         String fileUrl = null;
 
-        // 파일 업로드 전 사용한 프로필 파일 확인
-        // fileService.existFileId(member.getProfileImage());
-
         // 파일 업로드
         if(!profileImage.isEmpty())
             fileUrl = fileService.saveProfileImage(profileImage);
