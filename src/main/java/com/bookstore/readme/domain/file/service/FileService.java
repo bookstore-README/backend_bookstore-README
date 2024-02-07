@@ -1,9 +1,6 @@
 package com.bookstore.readme.domain.file.service;
 
 import com.bookstore.readme.domain.file.exception.NotEqualFileExt;
-import com.bookstore.readme.domain.file.model.FileType;
-import com.bookstore.readme.domain.file.model.Files;
-import com.bookstore.readme.domain.file.repository.FileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,40 +15,19 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class FileService {
 
-    private final String rootPath = System.getProperty("user.dir");
-
-    private final FileRepository fileRepository;
+    @Value("${upload.path}")
+    private final String filePath;
 
     @Transactional(rollbackFor = Exception.class)
     public String saveProfileImage(MultipartFile file) {
-        if (!file.getContentType().startsWith("image")) {
+        if (!file.getContentType().startsWith("image"))
             throw new NotEqualFileExt(file.getOriginalFilename());
-        }
 
         String originName = file.getOriginalFilename();
         String ext = extractExt(originName);
         String saveName = createFileName(originName) + "." + ext;
 
-        Files files = Files.builder()
-                .fileOriginName(originName)
-                .fileSaveName(saveName)
-                .ext(ext)
-                .fileType(FileType.PROFILE)
-                .size(file.getSize())
-                .build();
-
-        Files saved = fileRepository.save(files);
-
         return "";
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void existFileId(Long fileId) {
-        Files file = fileRepository.findById(fileId).orElse(null);
-
-        if(null != file)
-            fileRepository.deleteById(file.getId());
-
     }
 
     private String createFileName(String originFileName) {
