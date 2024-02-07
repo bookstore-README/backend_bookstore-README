@@ -84,7 +84,8 @@ public class BookController {
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort().get(0),
-                        request.getAscending())));
+                        request.getAscending(),
+                        request.getSearch())));
     }
 
     @GetMapping("/book/domestic")
@@ -95,7 +96,7 @@ public class BookController {
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort().get(0),
-                        request.getAscending(), "국내도서")));
+                        request.getAscending(), request.getSearch(), "국내도서")));
     }
 
     @GetMapping("/book/foreign")
@@ -106,7 +107,7 @@ public class BookController {
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort().get(0),
-                        request.getAscending(), "외국도서")));
+                        request.getAscending(), request.getSearch(), "외국도서")));
     }
 
     @GetMapping("/book/{main}/{sub}")
