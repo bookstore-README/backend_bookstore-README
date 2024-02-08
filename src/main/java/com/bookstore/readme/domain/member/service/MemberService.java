@@ -6,6 +6,7 @@ import com.bookstore.readme.domain.member.dto.MemberSaveDto;
 import com.bookstore.readme.domain.member.dto.MemberPasswordUpdateDto;
 import com.bookstore.readme.domain.member.dto.MemberUpdateDto;
 import com.bookstore.readme.domain.member.exception.DuplicationMemberEmailException;
+import com.bookstore.readme.domain.member.exception.DuplicationNicknameException;
 import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
 import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
@@ -68,7 +69,11 @@ public class MemberService {
         if(!member.getNickname().equals(memberUpdateDto.getNickname())) {
             if(!memberRepository.existsByNickname(memberUpdateDto.getNickname())) {
                 memberRepository.saveAndFlush(memberUpdateDto.toUpdateEntity(member, fileUrl));
+            } else {
+                throw new DuplicationNicknameException(memberUpdateDto.getNickname());
             }
+        } else {
+            memberRepository.saveAndFlush(memberUpdateDto.toUpdateEntity(member, fileUrl));
         }
 
         return true;
