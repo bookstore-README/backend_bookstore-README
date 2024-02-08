@@ -7,6 +7,8 @@ import com.bookstore.readme.domain.book.dto.page.BookPageDto;
 import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
 import com.bookstore.readme.domain.book.repository.BookRepository;
 import com.bookstore.readme.domain.book.repository.BookSpecification;
+import com.bookstore.readme.domain.category.dto.CategoryInfo;
+import com.bookstore.readme.domain.category.service.CategorySearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,24 +21,54 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SingleSortAndCategoryPageService extends BookPage {
     private final BookRepository bookRepository;
+    private final CategorySearchService categorySearchService;
 
-    public BookPageDto pageBooks(Integer cursorId, Integer limit, SortType sortType, boolean ascending, String search, String... categories) {
+    public BookPageDto mainBook(Integer cursorId, Integer limit, SortType sortType, boolean ascending, String search, Integer categoryId) {
         PageRequest pageRequest = PageRequest.of(0, limit + 1, getSort(sortType, ascending));
-        StringBuilder fullCategory = convertCategories(categories);
-
+        String mainName = categoryId == 0 ? "국내도서" : "외국도서";
         Book book = null;
         if (cursorId != null) {
             book = bookRepository.findById(cursorId.longValue())
                     .orElseThrow(() -> new NotFoundBookByIdException(cursorId.longValue()));
         }
 
-//        Page<Book> pageBooks = (book == null) ? bookRepository.findAllByCategoriesStartingWith(fullCategory.toString(), pageRequest) : bookRepository.findAll(BookSpecification.singleSortAndCategoryPagination(book, sortType, ascending, fullCategory.toString(), search), pageRequest);
+        Page<Book> pageBooks;
+        if (book == null) {
+            pageBooks = bookRepository.findAll(BookSpecification.categoryAndSearch(mainName, search), pageRequest);
+        } else {
+            pageBooks = bookRepository.findAll(BookSpecification.singleSortAndCategoryPagination(book, sortType, ascending, mainName, search), pageRequest);
+        }
+
+        List<Book> contents = pageBooks.getContent();
+        List<BookDto> results = contents.stream()
+                .map(BookDto::of)
+                .limit(limit)
+                .toList();
+
+        int nextCursorId = pageBooks.hasNext() ? contents.get(contents.size() - 1).getId().intValue() : -1;
+        return BookPageDto.builder()
+                .total(results.size())
+                .limit(limit)
+                .cursorId(nextCursorId)
+                .books(results)
+                .build();
+    }
+
+    public BookPageDto subBook(Integer cursorId, Integer limit, SortType sortType, boolean ascending, String search, Integer categoryId) {
+        PageRequest pageRequest = PageRequest.of(0, limit + 1, getSort(sortType, ascending));
+        CategoryInfo categoryInfo = categorySearchService.searchCategoryInfo(categoryId);
+        String categoryName = categoryInfo.getMainName() + "," + categoryInfo.getSubName();
+        Book book = null;
+        if (cursorId != null) {
+            book = bookRepository.findById(cursorId.longValue())
+                    .orElseThrow(() -> new NotFoundBookByIdException(cursorId.longValue()));
+        }
 
         Page<Book> pageBooks;
         if (book == null) {
-            pageBooks = bookRepository.findAll(BookSpecification.categoryAndSearch(fullCategory.toString(), search), pageRequest);
+            pageBooks = bookRepository.findAll(BookSpecification.categoryAndSearch(categoryName, search), pageRequest);
         } else {
-            pageBooks = bookRepository.findAll(BookSpecification.singleSortAndCategoryPagination(book, sortType, ascending, fullCategory.toString(), search), pageRequest);
+            pageBooks = bookRepository.findAll(BookSpecification.singleSortAndCategoryPagination(book, sortType, ascending, categoryName, search), pageRequest);
         }
         List<Book> contents = pageBooks.getContent();
         List<BookDto> results = contents.stream()
@@ -53,13 +85,45 @@ public class SingleSortAndCategoryPageService extends BookPage {
                 .build();
     }
 
-    private static StringBuilder convertCategories(String[] categories) {
-        StringBuilder fullCategory = new StringBuilder();
-        for (String category : categories) {
-            fullCategory.append(category).append(",");
-        }
-        fullCategory.deleteCharAt(fullCategory.length() - 1);
-        return fullCategory;
-    }
+//    public BookPageDto pageBooks(Integer cursorId, Integer limit, SortType sortType, boolean ascending, String search, Integer categoryId) {
+//        PageRequest pageRequest = PageRequest.of(0, limit + 1, getSort(sortType, ascending));
+//        CategoryInfo categoryInfo = categorySearchService.searchCategoryInfo(categoryId);
+//        Book book = null;
+//        if (cursorId != null) {
+//            book = bookRepository.findById(cursorId.longValue())
+//                    .orElseThrow(() -> new NotFoundBookByIdException(cursorId.longValue()));
+//        }
+//
+////        Page<Book> pageBooks = (book == null) ? bookRepository.findAllByCategoriesStartingWith(fullCategory.toString(), pageRequest) : bookRepository.findAll(BookSpecification.singleSortAndCategoryPagination(book, sortType, ascending, fullCategory.toString(), search), pageRequest);
+//
+//        Page<Book> pageBooks;
+//        if (book == null) {
+//            pageBooks = bookRepository.findAll(BookSpecification.categoryAndSearch(fullCategory.toString(), search), pageRequest);
+//        } else {
+//            pageBooks = bookRepository.findAll(BookSpecification.singleSortAndCategoryPagination(book, sortType, ascending, fullCategory.toString(), search), pageRequest);
+//        }
+//        List<Book> contents = pageBooks.getContent();
+//        List<BookDto> results = contents.stream()
+//                .map(BookDto::of)
+//                .limit(limit)
+//                .toList();
+//
+//        int nextCursorId = pageBooks.hasNext() ? contents.get(contents.size() - 1).getId().intValue() : -1;
+//        return BookPageDto.builder()
+//                .total(results.size())
+//                .limit(limit)
+//                .cursorId(nextCursorId)
+//                .books(results)
+//                .build();
+//    }
+
+//    private static StringBuilder convertCategories(String[] categories) {
+//        StringBuilder fullCategory = new StringBuilder();
+//        for (String category : categories) {
+//            fullCategory.append(category).append(",");
+//        }
+//        fullCategory.deleteCharAt(fullCategory.length() - 1);
+//        return fullCategory;
+//    }
 
 }
