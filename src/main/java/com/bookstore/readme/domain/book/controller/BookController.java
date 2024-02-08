@@ -1,6 +1,5 @@
 package com.bookstore.readme.domain.book.controller;
 
-import com.bookstore.readme.domain.book.dto.page.BookPageDto;
 import com.bookstore.readme.domain.book.dto.search.BookDto;
 import com.bookstore.readme.domain.book.dto.search.BookSearchDetailDto;
 import com.bookstore.readme.domain.book.dto.search.BookSearchDto;
@@ -8,7 +7,6 @@ import com.bookstore.readme.domain.book.dto.search.BookSearchReviewDto;
 import com.bookstore.readme.domain.book.request.BookPageRequest;
 import com.bookstore.readme.domain.book.request.BookRequest;
 import com.bookstore.readme.domain.book.response.BookResponse;
-import com.bookstore.readme.domain.book.service.BookNewService;
 import com.bookstore.readme.domain.book.service.BookSaveService;
 import com.bookstore.readme.domain.book.service.BookSearchService;
 import com.bookstore.readme.domain.book.service.ViewService;
@@ -35,7 +33,6 @@ public class BookController {
     private final BookSearchService bookSearchService;
     private final SingleSortPageService singleSortPageService;
     private final SingleSortAndCategoryPageService singleSortAndCategoryPageService;
-    private final BookNewService bookNewService;
     private final ViewService viewService;
     private final CategorySearchService categorySearchService;
 
@@ -134,16 +131,6 @@ public class BookController {
     @Operation(summary = "도서 저장", description = "도서를 저장하기 위한 API", deprecated = true, hidden = true)
     public ResponseEntity<BookResponse> bookSave(@RequestBody BookRequest request) {
         return ResponseEntity.ok(bookSaveService.bookSave(request));
-    }
-
-    @GetMapping("/book/new")
-    @Operation(summary = "신간 도서 조회", description = "신간 도서를 조회하기 위한 API", hidden = true)
-    public ResponseEntity<BookResponse> newBook(
-            @Parameter(description = "조회할 개수", example = "1")
-            @RequestParam(defaultValue = "15") Integer limit
-    ) {
-        BookPageDto bookPageDto = bookNewService.newBooks(limit);
-        return ResponseEntity.ok(BookResponse.ok(bookPageDto));
     }
 
     @PutMapping("/book/{bookId}/{memberId}/view")
