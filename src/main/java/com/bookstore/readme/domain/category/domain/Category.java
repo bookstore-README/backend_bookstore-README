@@ -29,6 +29,7 @@ public class Category {
 
     private String mainName;
     private String subName;
+    private String link;
 
     @CreatedDate
     @Column(updatable = false)
@@ -39,10 +40,11 @@ public class Category {
     private LocalDateTime updateDate;
 
     @Builder
-    public Category(Long mainId, Long subId, String mainName, String subName) {
+    public Category(Long mainId, Long subId, String mainName, String subName, String link) {
         this.mainId = mainId;
         this.subId = subId;
         this.mainName = mainName;
         this.subName = subName;
+        this.link = link;
     }
 }
