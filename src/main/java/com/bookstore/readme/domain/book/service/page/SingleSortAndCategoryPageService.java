@@ -5,14 +5,13 @@ import com.bookstore.readme.domain.book.dto.SortType;
 import com.bookstore.readme.domain.book.dto.page.BookDto;
 import com.bookstore.readme.domain.book.dto.page.BookPageDto;
 import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
-import com.bookstore.readme.domain.book.repository.BookFavoriteSpecification;
-import com.bookstore.readme.domain.book.repository.BookRepository;
-import com.bookstore.readme.domain.book.repository.BookSpecification;
+import com.bookstore.readme.domain.book.repository.*;
 import com.bookstore.readme.domain.category.dto.CategoryInfo;
 import com.bookstore.readme.domain.category.service.CategorySearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -90,14 +89,31 @@ public class SingleSortAndCategoryPageService extends BookPage {
      * 100권을 조회할 것이고 커서 기반 페이징이 들어가야 합니다.
      * 카테고리는 여러개 입력을 할 수 있습니다.
      */
-    public BookPageDto categories(Integer cursorId, Integer limit, SortType sortType, boolean ascending, String search, List<Integer> categoryId) {
-        PageRequest pageRequest = PageRequest.of(0, limit + 1, getSort(sortType, ascending));
+    public BookPageDto categories(Integer cursorId, Integer limit, SortType sortType, boolean ascending, List<Integer> categoryId) {
+        PageRequest pageRequest = PageRequest.of(0, 100, getSort(sortType, ascending));
         List<CategoryInfo> categoryInfos = categorySearchService.categoryInfos(categoryId);
         List<String> categoryName = categoryInfos.stream()
                 .map(categoryInfo -> categoryInfo.getMainName() + "," + categoryInfo.getSubName())
                 .toList();
 
-        BookFavoriteSpecification.
+        Specification<Book> bookSpecification;
+        if (cursorId == null) {
+            bookSpecification = BookLikeSpecification.likeCategories(categoryName);
+        } else {
+            Book book = bookRepository.findById(cursorId.longValue())
+                    .orElseThrow(() -> new NotFoundBookByIdException(cursorId.longValue()));
+            bookSpecification = BookPageSpecification.of(book, sortType, ascending, categoryName);
+        }
+
+        Page<Book> pages = bookRepository.findAll(bookSpecification, pageRequest);
+        List<Book> content = pages.getContent();
+        List<BookDto> list = content.stream()
+                .map(BookDto::of)
+                .toList();
+
+        return BookPageDto.builder()
+                .books(list)
+                .build();
     }
 
     private static StringBuilder convertCategories(List<String> categories) {

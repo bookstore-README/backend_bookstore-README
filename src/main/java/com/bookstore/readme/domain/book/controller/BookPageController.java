@@ -77,7 +77,7 @@ public class BookPageController {
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort().get(0),
-                        request.getAscending(), request.getSearch(), request.getCategories())));
+                        request.getAscending(), request.getCategories())));
     }
 
     @PostMapping("/book")
