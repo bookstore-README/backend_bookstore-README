@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -57,6 +58,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // csrf 공격 옵션 X
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeRequests) -> {
+                    authorizeRequests.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // Option 메서드 허용
                     authorizeRequests.requestMatchers(
                             "/member/**",
                             "/review/**",
