@@ -20,11 +20,13 @@ public class CategorySaveService {
         List<String> categories = request.getCategories();
         for (int i = 1; i <= categories.size(); i++) {
             String subName = categories.get(i - 1);
+            String[] split = subName.split(",");
             Category category = Category.builder()
                     .mainId(mainId)
                     .mainName(mainId == 0 ? "국내도서" : "외국도서")
                     .subId((long) i)
-                    .subName(subName)
+                    .subName(split[0])
+                    .link(split[1])
                     .build();
             categoryRepository.save(category);
         }
