@@ -15,7 +15,6 @@ import com.bookstore.readme.domain.book.service.ViewService;
 import com.bookstore.readme.domain.book.service.page.SingleSortAndCategoryPageService;
 import com.bookstore.readme.domain.book.service.page.SingleSortPageService;
 import com.bookstore.readme.domain.category.dto.CategoryInfo;
-import com.bookstore.readme.domain.category.repository.CategoryRepository;
 import com.bookstore.readme.domain.category.service.CategorySearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -128,11 +127,11 @@ public class BookController {
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort().get(0),
-                        request.getAscending(), domestic.getMainName(), domestic.getSubName())));
+                        request.getAscending(), request.getSearch(), domestic.getMainName(), domestic.getSubName())));
     }
 
     @PostMapping("/book")
-    @Operation(summary = "도서 저장", description = "도서를 저장하기 위한 API")
+    @Operation(summary = "도서 저장", description = "도서를 저장하기 위한 API", deprecated = true, hidden = true)
     public ResponseEntity<BookResponse> bookSave(@RequestBody BookRequest request) {
         return ResponseEntity.ok(bookSaveService.bookSave(request));
     }
