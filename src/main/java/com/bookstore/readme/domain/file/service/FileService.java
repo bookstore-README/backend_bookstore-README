@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,6 +31,11 @@ public class FileService {
         Path savePath = Paths.get(filePath + saveName);
 
         try {
+            File existFolder = new File(filePath);
+
+            if(!existFolder.exists())
+                existFolder.mkdirs();
+
             file.transferTo(savePath);
         } catch(IOException e) {
             e.printStackTrace();
