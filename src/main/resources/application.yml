@@ -88,5 +88,5 @@ jwt:
   secretKey: ${JWT_SECRET_KEY}
 
 upload:
-  path: /local/readme
+  path: file:///home/ec2-user/docker/image/
 
