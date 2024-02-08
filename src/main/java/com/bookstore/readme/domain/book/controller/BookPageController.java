@@ -1,5 +1,6 @@
 package com.bookstore.readme.domain.book.controller;
 
+import com.bookstore.readme.domain.book.request.BookCategoryRequest;
 import com.bookstore.readme.domain.book.request.BookPageRequest;
 import com.bookstore.readme.domain.book.request.BookRequest;
 import com.bookstore.readme.domain.book.response.BookResponse;
@@ -67,6 +68,17 @@ public class BookPageController {
                         request.getAscending(), request.getSearch(), categoryId)));
     }
 
+    @GetMapping("/book/favorite")
+    @Operation(summary = "도서 페이징 조회(카테고리 - 대분류, 중분류)", description = "카테고리가 국내도서인 도서 조회 API")
+    public ResponseEntity<BookResponse> favoriteBook(
+            @ParameterObject @Valid BookCategoryRequest request) {
+        return ResponseEntity.ok()
+                .body(BookResponse.ok(singleSortAndCategoryPageService.categories(
+                        request.getBookId(),
+                        request.getLimit(),
+                        request.getSort().get(0),
+                        request.getAscending(), request.getSearch(), request.getCategories())));
+    }
 
     @PostMapping("/book")
     @Operation(summary = "도서 저장", description = "도서를 저장하기 위한 API", deprecated = true, hidden = true)
