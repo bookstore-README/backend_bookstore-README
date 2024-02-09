@@ -7,14 +7,11 @@ import com.bookstore.readme.domain.book.dto.page.BookPageDto;
 import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
 import com.bookstore.readme.domain.book.repository.BookPageSpecification;
 import com.bookstore.readme.domain.book.repository.BookRepository;
-import com.bookstore.readme.domain.book.repository.BookSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -36,7 +33,7 @@ public class SingleSortPageService extends BookPage {
         } else {
             Book book = bookRepository.findById(cursorId.longValue())
                     .orElseThrow(() -> new NotFoundBookByIdException(cursorId.longValue()));
-            
+
             pages = bookRepository.findAll(BookPageSpecification.of(book, sortType, ascending, search), pageRequest);
         }
 

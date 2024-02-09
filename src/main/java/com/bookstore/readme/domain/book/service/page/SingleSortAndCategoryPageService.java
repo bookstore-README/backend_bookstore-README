@@ -33,7 +33,7 @@ public class SingleSortAndCategoryPageService extends BookPage {
 
         Page<Book> pageBooks;
         if (book == null) {
-            pageBooks = bookRepository.findAll(BookSpecification.categoryAndSearch(mainName, search), pageRequest);
+            pageBooks = bookRepository.findAll(BookPageSpecification.of(search, mainName), pageRequest);
         } else {
             pageBooks = bookRepository.findAll(BookPageSpecification.of(book, sortType, ascending, search, mainName), pageRequest);
         }
@@ -65,9 +65,9 @@ public class SingleSortAndCategoryPageService extends BookPage {
 
         Page<Book> pageBooks;
         if (book == null) {
-            pageBooks = bookRepository.findAll(BookSpecification.categoryAndSearch(categoryName, search), pageRequest);
+            pageBooks = bookRepository.findAll(BookPageSpecification.of(search, categoryName), pageRequest);
         } else {
-            pageBooks = bookRepository.findAll(BookSpecification.singleSortAndCategoryPagination(book, sortType, ascending, categoryName, search), pageRequest);
+            pageBooks = bookRepository.findAll(BookPageSpecification.of(book, sortType, ascending, categoryName, search), pageRequest);
         }
         List<Book> contents = pageBooks.getContent();
         List<BookDto> results = contents.stream()
@@ -84,13 +84,8 @@ public class SingleSortAndCategoryPageService extends BookPage {
                 .build();
     }
 
-    /**
-     * 여기는 맞춤형 도서 조회 입니다.
-     * 100권을 조회할 것이고 커서 기반 페이징이 들어가야 합니다.
-     * 카테고리는 여러개 입력을 할 수 있습니다.
-     */
     public BookPageDto categories(Integer cursorId, Integer limit, SortType sortType, boolean ascending, List<Integer> categoryId) {
-        PageRequest pageRequest = PageRequest.of(0, 100, getSort(sortType, ascending));
+        PageRequest pageRequest = PageRequest.of(0, limit, getSort(sortType, ascending));
         List<CategoryInfo> categoryInfos = categorySearchService.categoryInfos(categoryId);
         List<String> categoryName = categoryInfos.stream()
                 .map(categoryInfo -> categoryInfo.getMainName() + "," + categoryInfo.getSubName())

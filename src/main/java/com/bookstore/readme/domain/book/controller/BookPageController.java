@@ -69,7 +69,7 @@ public class BookPageController {
     }
 
     @GetMapping("/book/favorite")
-    @Operation(summary = "도서 페이징 조회(카테고리 - 대분류, 중분류)", description = "카테고리가 국내도서인 도서 조회 API")
+    @Operation(summary = "맞춤 도서 조회", description = "사용자 맞춤 도서를 위한 도서 조회 API", hidden = true)
     public ResponseEntity<BookResponse> favoriteBook(
             @ParameterObject @Valid BookCategoryRequest request) {
         return ResponseEntity.ok()

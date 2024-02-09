@@ -7,13 +7,26 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static com.bookstore.readme.domain.book.repository.BookLikeSpecification.likeAuthorsAndBookTitle;
+import static com.bookstore.readme.domain.book.repository.BookLikeSpecification.likeCategory;
+
 public class BookPageSpecification {
+
     public static Specification<Book> of(String search) {
         if (StringUtils.hasText(search)) {
             return Specification.where(BookLikeSpecification.likeAuthorsAndBookTitle(search));
         }
 
         return null;
+    }
+
+    public static Specification<Book> of(String search, String category) {
+        if (StringUtils.hasText(search)) {
+            return Specification.where(likeCategory(category))
+                    .and(likeAuthorsAndBookTitle(search));
+        } else {
+            return likeCategory(category);
+        }
     }
 
     public static Specification<Book> of(Book book, SortType sortType, boolean ascending) {
