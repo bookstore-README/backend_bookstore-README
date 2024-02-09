@@ -50,6 +50,7 @@ jwt:
 
 upload:
   path: ${LOCAL_UPLOAD_PATH}
+  handler: /uploadImage/**
 ---
 spring:
   config:
