@@ -38,6 +38,8 @@ public class Book {
     private Integer reviewCount;
     private Integer bookmarkCount;
     private Integer viewCount;
+    private Integer quantityCount;
+
     private String publisher;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
@@ -58,7 +60,7 @@ public class Book {
     private LocalDateTime updateDate;
 
     @Builder
-    public Book(String bookTitle, LocalDateTime publishedDate, String bookImgUrl, String authors, String description, String categories, Double averageRating, Integer price, Integer reviewCount, Integer bookmarkCount, Integer viewCount, String publisher) {
+    public Book(String bookTitle, Integer quantityCount, LocalDateTime publishedDate, String bookImgUrl, String authors, String description, String categories, Double averageRating, Integer price, Integer reviewCount, Integer bookmarkCount, Integer viewCount, String publisher) {
         this.bookTitle = bookTitle;
         this.publishedDate = publishedDate;
         this.bookImgUrl = bookImgUrl;
@@ -71,6 +73,7 @@ public class Book {
         this.bookmarkCount = bookmarkCount;
         this.viewCount = viewCount;
         this.publisher = publisher;
+        this.quantityCount = quantityCount;
     }
 
     public void changeBookmarkCount(int bookmarkCount) {
