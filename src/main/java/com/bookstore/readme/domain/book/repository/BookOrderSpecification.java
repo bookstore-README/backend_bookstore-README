@@ -12,12 +12,12 @@ public class BookOrderSpecification {
     public static Specification<Book> newestCursor(Long cursorId, LocalDateTime publishDate, boolean ascending) {
         return ((root, query, criteriaBuilder) -> {
             Expression<Long> db = criteriaBuilder.sum(
-                    criteriaBuilder.prod(criteriaBuilder.function("UNIX_TIMESTAMP", Long.class, root.get("publishedDate")), 1000L),
+                    criteriaBuilder.prod(criteriaBuilder.function("UNIX_TIMESTAMP", Long.class, root.get("publishedDate")), 10000L),
                     root.get("id")
             );
 
             Expression<Long> targetCursorId = criteriaBuilder.sum(
-                    criteriaBuilder.prod(criteriaBuilder.function("UNIX_TIMESTAMP", Long.class, criteriaBuilder.literal(publishDate)), 1000L),
+                    criteriaBuilder.prod(criteriaBuilder.function("UNIX_TIMESTAMP", Long.class, criteriaBuilder.literal(publishDate)), 10000L),
                     cursorId
             );
 
@@ -28,11 +28,11 @@ public class BookOrderSpecification {
     //조회수
     public static Specification<Book> viewCursor(Long cursorId, Integer view, boolean ascending) {
         return (root, query, criteriaBuilder) -> {
-            Long compareValue = view * 1000 + cursorId;
+            Long compareValue = view.longValue() * 10000L + cursorId;
 
             Expression<Long> entityId = root.get("id");
             Expression<Long> entityPrice = root.get("viewCount");
-            Expression<Long> entityValue = criteriaBuilder.prod(entityPrice, 1000L);
+            Expression<Long> entityValue = criteriaBuilder.prod(entityPrice, 10000L);
             Expression<Long> entityResult = criteriaBuilder.sum(entityId, entityValue);
             return ascending ? criteriaBuilder.greaterThanOrEqualTo(entityResult, compareValue) : criteriaBuilder.lessThanOrEqualTo(entityResult, compareValue);
         };
@@ -41,10 +41,10 @@ public class BookOrderSpecification {
     //북마크, 찜개수
     public static Specification<Book> bookmarkCursor(Long cursorId, Integer bookmark, boolean ascending) {
         return (root, query, criteriaBuilder) -> {
-            Long compareValue = bookmark * 1000 + cursorId;
+            Long compareValue = bookmark.longValue() * 100000L + cursorId;
             Expression<Long> entityId = root.get("id");
             Expression<Long> entityBookmark = root.get("bookmarkCount");
-            Expression<Long> entityValue = criteriaBuilder.prod(entityBookmark, 1000L);
+            Expression<Long> entityValue = criteriaBuilder.prod(entityBookmark, 100000L);
             Expression<Long> entityResult = criteriaBuilder.sum(entityId, entityValue);
             return ascending ? criteriaBuilder.greaterThanOrEqualTo(entityResult, compareValue) : criteriaBuilder.lessThanOrEqualTo(entityResult, compareValue);
         };
@@ -54,11 +54,11 @@ public class BookOrderSpecification {
     //가격
     public static Specification<Book> priceCursor(Long cursorId, Integer price, boolean ascending) {
         return (root, query, criteriaBuilder) -> {
-            Long compareValue = price * 1000 + cursorId;
+            Long compareValue = price.longValue() * 100000L + cursorId;
 
             Expression<Long> entityId = root.get("id");
             Expression<Long> entityPrice = root.get("price");
-            Expression<Long> entityValue = criteriaBuilder.prod(entityPrice, 1000L);
+            Expression<Long> entityValue = criteriaBuilder.prod(entityPrice, 100000L);
             Expression<Long> entityResult = criteriaBuilder.sum(entityId, entityValue);
             return ascending ? criteriaBuilder.greaterThanOrEqualTo(entityResult, compareValue) : criteriaBuilder.lessThanOrEqualTo(entityResult, compareValue);
         };
@@ -67,10 +67,10 @@ public class BookOrderSpecification {
     //별점
     public static Specification<Book> ratingCursor(Long cursorId, Double rating, boolean ascending) {
         return (root, query, criteriaBuilder) -> {
-            Long compareValue = (long) (rating * 1000 + cursorId);
+            Long compareValue = rating.longValue() * 100000L + cursorId;
             Expression<Long> entityId = root.get("id");
             Expression<Long> entityRating = root.get("averageRating");
-            Expression<Long> entityValue = criteriaBuilder.prod(entityRating, 1000L);
+            Expression<Long> entityValue = criteriaBuilder.prod(entityRating, 100000L);
             Expression<Long> entityResult = criteriaBuilder.sum(entityId, entityValue);
             return ascending ? criteriaBuilder.greaterThanOrEqualTo(entityResult, compareValue) : criteriaBuilder.lessThanOrEqualTo(entityResult, compareValue);
         };
@@ -79,11 +79,11 @@ public class BookOrderSpecification {
     //리뷰 개수
     public static Specification<Book> reviewCursor(Long cursorId, Integer review, boolean ascending) {
         return (root, query, criteriaBuilder) -> {
-            Long compareValue = review * 1000 + cursorId;
+            Long compareValue = review.longValue() * 100000L + cursorId;
 
             Expression<Long> entityId = root.get("id");
             Expression<Long> entityReview = root.get("reviewCount");
-            Expression<Long> entityValue = criteriaBuilder.prod(entityReview, 1000L);
+            Expression<Long> entityValue = criteriaBuilder.prod(entityReview, 100000L);
             Expression<Long> entityResult = criteriaBuilder.sum(entityId, entityValue);
             return ascending ? criteriaBuilder.greaterThanOrEqualTo(entityResult, compareValue) : criteriaBuilder.lessThanOrEqualTo(entityResult, compareValue);
         };

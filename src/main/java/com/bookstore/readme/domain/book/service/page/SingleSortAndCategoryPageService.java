@@ -35,7 +35,7 @@ public class SingleSortAndCategoryPageService extends BookPage {
         if (book == null) {
             pageBooks = bookRepository.findAll(BookSpecification.categoryAndSearch(mainName, search), pageRequest);
         } else {
-            pageBooks = bookRepository.findAll(BookSpecification.singleSortAndCategoryPagination(book, sortType, ascending, mainName, search), pageRequest);
+            pageBooks = bookRepository.findAll(BookPageSpecification.of(book, sortType, ascending, search, mainName), pageRequest);
         }
 
         List<Book> contents = pageBooks.getContent();
@@ -114,14 +114,5 @@ public class SingleSortAndCategoryPageService extends BookPage {
         return BookPageDto.builder()
                 .books(list)
                 .build();
-    }
-
-    private static StringBuilder convertCategories(List<String> categories) {
-        StringBuilder fullCategory = new StringBuilder();
-        for (String category : categories) {
-            fullCategory.append(category).append(",");
-        }
-        fullCategory.deleteCharAt(fullCategory.length() - 1);
-        return fullCategory;
     }
 }
