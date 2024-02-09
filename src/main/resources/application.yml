@@ -49,7 +49,9 @@ jwt:
   secretKey: ${JWT_SECRET_KEY}
 
 upload:
+  locations: ${LOCAL_UPLOAD_LOCATIONS}
   path: ${LOCAL_UPLOAD_PATH}
+  handler: /uploadImage/**
 ---
 spring:
   config:
@@ -88,5 +90,6 @@ jwt:
   secretKey: ${JWT_SECRET_KEY}
 
 upload:
-  path: file:///home/ec2-user/docker/image/
-
+  locations: file:///readme/image/
+  path: /readme/image/
+  handler: /uploadImage/**
