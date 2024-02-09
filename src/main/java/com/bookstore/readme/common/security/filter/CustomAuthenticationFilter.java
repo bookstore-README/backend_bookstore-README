@@ -41,12 +41,10 @@ public class CustomAuthenticationFilter extends AbstractAuthenticationProcessing
         try{
             ServletInputStream inputStream = request.getInputStream();
 
-            memberLoginDto = new ObjectMapper().readValue(inputStream, MemberLoginDto.class);
+            memberLoginDto = objectMapper.readValue(inputStream, MemberLoginDto.class);
         } catch(IOException e) {
             throw new RuntimeException();
         }
-
-        log.info("member : {}", memberLoginDto);
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(memberLoginDto.getEmail(), memberLoginDto.getPassword());
 

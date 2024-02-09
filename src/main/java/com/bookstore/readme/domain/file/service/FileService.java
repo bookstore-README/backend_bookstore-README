@@ -1,6 +1,7 @@
 package com.bookstore.readme.domain.file.service;
 
 import com.bookstore.readme.domain.file.exception.NotEqualFileExt;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Slf4j
 @Service
 public class FileService {
 
@@ -28,12 +30,23 @@ public class FileService {
         String ext = extractExt(originName);
         String saveName = createFileName(originName) + "." + ext;
 
+        String devPath1 = System.getProperty("user.dir");
+        Path curPath = Paths.get("");
+        String devPath2 = curPath.toAbsolutePath().toString();
+
+        log.info("filePath : {}", filePath);
+        log.info("devPath1 : {}", devPath1);
+        log.info("devPath2 : {}", devPath2);
+
         Path savePath = Paths.get(filePath + saveName);
 
         try {
             File existFolder = new File(filePath);
 
+            log.info("existFolder : {}", existFolder);
+
             if(!existFolder.exists())
+                log.info("디렉토리 생성 완료");
                 existFolder.mkdirs();
 
             file.transferTo(savePath);

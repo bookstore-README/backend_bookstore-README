@@ -54,7 +54,7 @@ public class SecurityConfig {
     @Profile(value = "dev")
     public SecurityFilterChain filterChain1(HttpSecurity http) throws Exception {
         http
-                .cors(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(request -> corsFilter()))
                 .csrf(AbstractHttpConfigurer::disable) // csrf 공격 옵션 X
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeRequests) -> {
@@ -111,6 +111,17 @@ public class SecurityConfig {
 
         return http
                 .build();
+    }
+
+    @Bean
+    public CorsConfiguration corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+        config.setAllowedMethods(Collections.singletonList(""));
+        config.setAllowCredentials(true);
+        config.setAllowedHeaders(Collections.singletonList(""));
+        config.setMaxAge(3600L);
+        return config;
     }
 
     @Bean
