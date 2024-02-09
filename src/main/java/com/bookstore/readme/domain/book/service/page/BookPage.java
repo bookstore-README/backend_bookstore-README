@@ -13,8 +13,8 @@ public abstract class BookPage {
         Sort orders = ascending ? Sort.by(Sort.Order.asc(sortType.getSortType())) : Sort.by(Sort.Order.desc(sortType.getSortType()));
 
         if (sortType != SortType.ID) {
-            orders = ascending ? Sort.by(Sort.Order.asc(sortType.getSortType()), Sort.Order.asc(SortType.ID.getSortType())) : Sort.by(Sort.Order.desc(sortType.getSortType()), Sort.Order.desc(SortType.ID.getSortType()));
-//            orders.and(Sort.by(ascending ? Sort.Order.asc(SortType.ID.getSortType()) : Sort.Order.desc(SortType.ID.getSortType())));
+            orders = ascending ? Sort.by(Sort.Order.asc(sortType.getSortType()), Sort.Order.asc(SortType.ID.getSortType()))
+                    : Sort.by(Sort.Order.desc(sortType.getSortType()), Sort.Order.desc(SortType.ID.getSortType()));
         }
 
         return orders;
