@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,5 +49,13 @@ public class CategorySearchService {
                 .orElseThrow(() -> new NotFoundCategoryByMainSubIdException(mainId.longValue(), subId.longValue()));
 
         return CategoryInfo.of(category);
+    }
+
+    public List<CategoryInfo> categoryInfos(List<Integer> categories) {
+        List<Category> categoryList = categoryRepository.findAllByIdIn(categories);
+
+        return categoryList.stream()
+                .map(CategoryInfo::of)
+                .toList();
     }
 }

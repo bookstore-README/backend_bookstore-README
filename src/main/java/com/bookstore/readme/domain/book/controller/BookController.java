@@ -1,44 +1,34 @@
 package com.bookstore.readme.domain.book.controller;
 
-import com.bookstore.readme.domain.book.dto.page.BookPageDto;
 import com.bookstore.readme.domain.book.dto.search.BookDto;
 import com.bookstore.readme.domain.book.dto.search.BookSearchDetailDto;
 import com.bookstore.readme.domain.book.dto.search.BookSearchDto;
 import com.bookstore.readme.domain.book.dto.search.BookSearchReviewDto;
-import com.bookstore.readme.domain.book.request.BookPageRequest;
-import com.bookstore.readme.domain.book.request.BookRequest;
 import com.bookstore.readme.domain.book.response.BookResponse;
-import com.bookstore.readme.domain.book.service.BookNewService;
 import com.bookstore.readme.domain.book.service.BookSaveService;
 import com.bookstore.readme.domain.book.service.BookSearchService;
 import com.bookstore.readme.domain.book.service.ViewService;
 import com.bookstore.readme.domain.book.service.page.SingleSortAndCategoryPageService;
 import com.bookstore.readme.domain.book.service.page.SingleSortPageService;
-import com.bookstore.readme.domain.category.dto.CategoryInfo;
-import com.bookstore.readme.domain.category.repository.CategoryRepository;
 import com.bookstore.readme.domain.category.service.CategorySearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "도서 API")
 public class BookController {
-    private final BookSaveService bookSaveService;
     private final BookSearchService bookSearchService;
-    private final SingleSortPageService singleSortPageService;
-    private final SingleSortAndCategoryPageService singleSortAndCategoryPageService;
-    private final BookNewService bookNewService;
     private final ViewService viewService;
-    private final CategorySearchService categorySearchService;
 
 
     @GetMapping("/book/{bookId}")
@@ -81,71 +71,6 @@ public class BookController {
         return ResponseEntity.ok(BookResponse.ok(bookSearchDetailDto));
     }
 
-    @GetMapping("/book")
-    @Operation(summary = "도서 페이징 조회", description = "도서 페이징 조회 API")
-    public ResponseEntity<BookResponse> bookPage(@ParameterObject @Valid BookPageRequest request) {
-        return ResponseEntity.ok()
-                .body(BookResponse.ok(singleSortPageService.pageBooks(
-                        request.getBookId(),
-                        request.getLimit(),
-                        request.getSort().get(0),
-                        request.getAscending(),
-                        request.getSearch())));
-    }
-
-    @GetMapping("/book/domestic")
-    @Operation(summary = "도서 페이징 조회(카테고리 - 국내도서)", description = "카테고리가 국내도서인 도서 조회 API")
-    public ResponseEntity<BookResponse> domesticBook(@ParameterObject @Valid BookPageRequest request) {
-        return ResponseEntity.ok()
-                .body(BookResponse.ok(singleSortAndCategoryPageService.pageBooks(
-                        request.getBookId(),
-                        request.getLimit(),
-                        request.getSort().get(0),
-                        request.getAscending(), request.getSearch(), "국내도서")));
-    }
-
-    @GetMapping("/book/foreign")
-    @Operation(summary = "도서 페이징 조회(카테고리 - 외국도서)", description = "카테고리가 외국도서인 도서 조회 API")
-    public ResponseEntity<BookResponse> foreignBook(@ParameterObject @Valid BookPageRequest request) {
-        return ResponseEntity.ok()
-                .body(BookResponse.ok(singleSortAndCategoryPageService.pageBooks(
-                        request.getBookId(),
-                        request.getLimit(),
-                        request.getSort().get(0),
-                        request.getAscending(), request.getSearch(), "외국도서")));
-    }
-
-    @GetMapping("/book/{main}/{sub}")
-    @Operation(summary = "도서 전체 조회(대분류, 중분류)", description = "도서 페이징 조회(대분류, 중분류) API")
-    public ResponseEntity<BookResponse> bookPage(
-            @ParameterObject @Valid BookPageRequest request,
-            @Parameter @PathVariable(name = "main") String main,
-            @Parameter @PathVariable(name = "sub") Integer sub
-    ) {
-        CategoryInfo domestic = categorySearchService.searchCategoryInfo(main.equals("domestic") ? 0 : 1, sub);
-        return ResponseEntity.ok()
-                .body(BookResponse.ok(singleSortAndCategoryPageService.pageBooks(
-                        request.getBookId(),
-                        request.getLimit(),
-                        request.getSort().get(0),
-                        request.getAscending(), domestic.getMainName(), domestic.getSubName())));
-    }
-
-    @PostMapping("/book")
-    @Operation(summary = "도서 저장", description = "도서를 저장하기 위한 API")
-    public ResponseEntity<BookResponse> bookSave(@RequestBody BookRequest request) {
-        return ResponseEntity.ok(bookSaveService.bookSave(request));
-    }
-
-    @GetMapping("/book/new")
-    @Operation(summary = "신간 도서 조회", description = "신간 도서를 조회하기 위한 API", hidden = true)
-    public ResponseEntity<BookResponse> newBook(
-            @Parameter(description = "조회할 개수", example = "1")
-            @RequestParam(defaultValue = "15") Integer limit
-    ) {
-        BookPageDto bookPageDto = bookNewService.newBooks(limit);
-        return ResponseEntity.ok(BookResponse.ok(bookPageDto));
-    }
 
     @PutMapping("/book/{bookId}/{memberId}/view")
     @Operation(summary = "조회수 증가", description = "조회 수를 증가하기 위한 API")
