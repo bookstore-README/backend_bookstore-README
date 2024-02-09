@@ -1,5 +1,6 @@
 package com.bookstore.readme.common.jwt;
 
+import com.bookstore.readme.common.jwt.exception.JwtErrorException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
@@ -131,15 +132,18 @@ public class JwtTokenService {
 
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
+            // log.info("잘못된 JWT 서명입니다.");
+            throw new JwtErrorException(JwtErrorStatus.MALFORMED_JWT);
         } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰입니다.");
+            // log.info("만료된 JWT 토큰입니다.");
+            throw new JwtErrorException(JwtErrorStatus.EXPIRED_JWT);
         } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.");
+            // log.info("지원되지 않는 JWT 토큰입니다.");
+            throw new JwtErrorException(JwtErrorStatus.UNSUPPORTED_JWT);
         } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
+            // log.info("JWT 토큰이 잘못되었습니다.");
+            throw new JwtErrorException(JwtErrorStatus.ILLEGAL_ARGUMENT);
         }
-        return false;
     }
 
     /**
