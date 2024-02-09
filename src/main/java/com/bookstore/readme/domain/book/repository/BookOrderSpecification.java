@@ -48,7 +48,18 @@ public class BookOrderSpecification {
             Expression<Long> entityResult = criteriaBuilder.sum(entityId, entityValue);
             return ascending ? criteriaBuilder.greaterThanOrEqualTo(entityResult, compareValue) : criteriaBuilder.lessThanOrEqualTo(entityResult, compareValue);
         };
+    }
 
+    //판매량
+    public static Specification<Book> quantityCursor(Long cursorId, Integer quantity, boolean ascending) {
+        return (root, query, criteriaBuilder) -> {
+            Long compareValue = quantity.longValue() * 100000L + cursorId;
+            Expression<Long> entityId = root.get("id");
+            Expression<Long> entityQuantity = root.get("quantityCount");
+            Expression<Long> entityValue = criteriaBuilder.prod(entityQuantity, 100000L);
+            Expression<Long> entityResult = criteriaBuilder.sum(entityId, entityValue);
+            return ascending ? criteriaBuilder.greaterThanOrEqualTo(entityResult, compareValue) : criteriaBuilder.lessThanOrEqualTo(entityResult, compareValue);
+        };
     }
 
     //가격

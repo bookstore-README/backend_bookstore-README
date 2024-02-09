@@ -24,10 +24,11 @@ public class BookDto {
     private final Integer reviewCount;
     private final Integer viewCount;
     private final String publisher;
+    private final Integer quantityCount;
     private final LocalDateTime createDate;
     private final LocalDateTime updateDate;
 
-    public BookDto(Long bookId, String bookTitle, LocalDateTime publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Double averageRating, Integer price, Integer bookmarkCount, Integer reviewCount, Integer viewCount, String publisher, LocalDateTime createDate, LocalDateTime updateDate) {
+    public BookDto(Long bookId, String bookTitle, LocalDateTime publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Double averageRating, Integer price, Integer bookmarkCount, Integer reviewCount, Integer viewCount, String publisher, Integer quantityCount, LocalDateTime createDate, LocalDateTime updateDate) {
         this.bookId = bookId;
         this.bookTitle = bookTitle;
         this.publishedDate = publishedDate;
@@ -41,6 +42,7 @@ public class BookDto {
         this.reviewCount = reviewCount;
         this.viewCount = viewCount;
         this.publisher = publisher;
+        this.quantityCount = quantityCount;
         this.createDate = createDate;
         this.updateDate = updateDate;
     }
@@ -59,6 +61,7 @@ public class BookDto {
                 .bookmarkCount(book.getBookmarkCount())
                 .reviewCount(book.getReviewCount())
                 .viewCount(book.getViewCount())
+                .quantityCount(book.getQuantityCount())
                 .publisher(book.getPublisher())
                 .createDate(book.getCreateDate())
                 .updateDate(book.getUpdateDate())
