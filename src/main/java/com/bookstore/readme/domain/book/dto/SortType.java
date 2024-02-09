@@ -10,7 +10,7 @@ public enum SortType {
     POPULATION("viewCount"),
     PRICE("price"),
     NEWEST("publishedDate"),
-    BESTSELLER("bookmarkCount"),
+    BESTSELLER("quantityCount"),
     ID("id");
 
     private final String sortType;

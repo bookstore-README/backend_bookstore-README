@@ -44,7 +44,7 @@ public class BookPageSpecification {
             return BookOrderSpecification.newestCursor(book.getId(), book.getPublishedDate(), ascending)
                     .or(BookEqualSpecification.equalId(book.getId()));
         } else if (sortType == SortType.BESTSELLER) {
-            return BookOrderSpecification.bookmarkCursor(book.getId(), book.getBookmarkCount(), ascending);
+            return BookOrderSpecification.quantityCursor(book.getId(), book.getQuantityCount(), ascending);
         } else {
             return BookOrderSpecification.idCursor(book.getId(), ascending);
         }
