@@ -1,5 +1,6 @@
 package com.bookstore.readme.domain.member.model;
 
+import com.bookstore.readme.domain.review.domain.Review;
 import com.bookstore.readme.domain.social.domain.SocialId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -11,6 +12,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -50,6 +53,9 @@ public class Member {
 
     @Embedded
     private SocialId socialId;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    private List<Review> reviews = new ArrayList<>();
 
     @CreatedDate
     @Column(updatable = false)
