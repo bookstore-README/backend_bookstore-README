@@ -1,6 +1,7 @@
 package com.bookstore.readme.domain.review.domain;
 
 import com.bookstore.readme.domain.book.domain.Book;
+import com.bookstore.readme.domain.member.model.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,6 +29,10 @@ public class Review {
     @JoinColumn(name = "book_id")
     private Book book;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createDate;
@@ -45,6 +50,11 @@ public class Review {
     public void changeBook(Book book) {
         this.book = book;
         book.getReviews().add(this);
+    }
+
+    public void changeMember(Member member) {
+        this.member = member;
+        member.getReviews().add(this);
     }
 
     public void changeTitle(String title) {
