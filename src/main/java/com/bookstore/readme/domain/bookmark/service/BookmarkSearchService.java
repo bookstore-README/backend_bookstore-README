@@ -2,6 +2,7 @@ package com.bookstore.readme.domain.bookmark.service;
 
 import com.bookstore.readme.domain.book.repository.BookRepository;
 import com.bookstore.readme.domain.bookmark.domain.Bookmark;
+import com.bookstore.readme.domain.bookmark.dto.SortType;
 import com.bookstore.readme.domain.bookmark.dto.page.BookmarkInfoDto;
 import com.bookstore.readme.domain.bookmark.dto.page.BookmarkPageDto;
 import com.bookstore.readme.domain.bookmark.repository.BookmarkRepository;
@@ -23,15 +24,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookmarkSearchService {
     private final BookmarkRepository bookmarkRepository;
-    private final BookRepository bookRepository;
-    private final MemberRepository memberRepository;
 
     @Transactional
-    public BookmarkPageDto searchBookmarkAndBookByMember(Integer memberId, Integer offset, Integer limit) {
-        if (offset == null)
-            offset = 0;
-
-        PageRequest pageRequest = PageRequest.of(offset, limit, Sort.by(Sort.Order.desc("id")));
+    public BookmarkPageDto searchBookmarkAndBookByMember(Integer memberId, Integer offset, Integer limit, SortType sortType) {
+        PageRequest pageRequest = PageRequest.of(offset, limit, Sort.by(Sort.Order.desc(sortType.getSortType())));
         Page<Bookmark> bookmarks = bookmarkRepository.findAll(equalMemberId(memberId.longValue()).and(equalMarked()), pageRequest);
         List<Bookmark> content = bookmarks.getContent();
         List<BookmarkInfoDto> list = content.stream()
@@ -49,8 +45,6 @@ public class BookmarkSearchService {
 
     private static Specification<Bookmark> equalMarked() {
         return (root, query, criteriaBuilder) -> criteriaBuilder.isTrue(root.get("isMarked"));
-
-
     }
 
     private static Specification<Bookmark> equalMemberId(Long memberId) {
