@@ -17,10 +17,10 @@ public class BookmarkPageRequest {
     @Schema(description = "조회할 정렬 조건입니다.", example = "price")
     private final SortType sort;
 
-    public BookmarkPageRequest(Integer memberId, Integer offset, Integer limit, SortType sort) {
+    public BookmarkPageRequest(Integer memberId, Integer offset, Integer limit, String sort) {
         this.memberId = memberId;
         this.offset = offset == null ? 0 : offset;
         this.limit = limit == null ? 10 : limit;
-        this.sort = sort == null ? SortType.ID : sort;
+        this.sort = sort == null ? SortType.ID : SortType.valueOf(sort.toUpperCase());
     }
 }

@@ -52,11 +52,6 @@ public class BookmarkService {
                 .build();
     }
 
-
-
-
-
-
     private Bookmark createBookmark(Member member, Book book, boolean isMarked) {
         return Bookmark.builder()
                 .member(member)
