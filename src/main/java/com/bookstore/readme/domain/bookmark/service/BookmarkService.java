@@ -52,58 +52,9 @@ public class BookmarkService {
                 .build();
     }
 
-//    @Transactional
-//    public BookmarkCountDto searchBookmarkCountByBook(Long bookId) {
-//        List<Bookmark> bookmarks = bookmarkRepository.findByBookId(bookId);
-//        List<Bookmark> filterBookmarks = bookmarks.stream()
-//                .filter(Bookmark::getIsMarked)
-//                .toList();
-//
-//        return BookmarkCountDto.builder()
-//                .bookId(bookId)
-//                .bookmarkCount(filterBookmarks.size())
-//                .build();
-//    }
 
-//    @Transactional
-//    public BookmarkCountDto searchBookmarkCountByMember(Long memberId) {
-//        List<Bookmark> bookmarks = bookmarkRepository.findByMemberId(memberId);
-//        List<Bookmark> filterBookmarks = bookmarks.stream()
-//                .filter(Bookmark::getIsMarked)
-//                .toList();
-//
-//        return BookmarkCountDto.builder()
-//                .id(memberId)
-//                .bookmarkCount(filterBookmarks.size())
-//                .build();
-//    }
 
-    @Transactional
-    public BookmarkAndBookDto searchBookmarkAndBookByMember(Long memberId) {
-        List<Bookmark> bookmarks = bookmarkRepository.findByMemberId(memberId);
-        List<BookmarkDetailDto> books = bookmarks.stream()
-                .filter(Bookmark::getIsMarked)
-                .map(bookmark -> BookmarkDetailDto.of(bookmark.getBook(), bookmark.getId()))
-                .toList();
 
-        return BookmarkAndBookDto.builder()
-                .memberId(memberId)
-                .bookmarkCount(books.size())
-                .books(books)
-                .build();
-    }
-
-    @Transactional
-    public Long deleteBookmark(Long bookmarkId) {
-        Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
-                .orElseThrow(() -> new IllegalArgumentException("북마크 아이디와 일치하는 정보가 없습니다."));
-
-        Book book = bookmark.getBook();
-        book.getBookmarks().remove(bookmark);
-
-        bookmarkRepository.deleteById(bookmarkId);
-        return bookmarkId;
-    }
 
 
     private Bookmark createBookmark(Member member, Book book, boolean isMarked) {
