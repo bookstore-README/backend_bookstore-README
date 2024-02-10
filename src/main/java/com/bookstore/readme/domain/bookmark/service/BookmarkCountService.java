@@ -23,7 +23,7 @@ public class BookmarkCountService {
     public BookmarkCountByBookIdDto bookmarkCountByBookId(Long bookId) {
         List<Bookmark> books = bookmarkRepository.findByBookId(bookId);
         long result = books.stream()
-                .map(Bookmark::getIsMarked)
+                .filter(Bookmark::getIsMarked)
                 .count();
 
 
@@ -37,7 +37,7 @@ public class BookmarkCountService {
     public BookmarkCountByMemberIdDto bookmarkCountByMemberId(Long memberId) {
         List<Bookmark> books = bookmarkRepository.findByMemberId(memberId);
         long result = books.stream()
-                .map(Bookmark::getIsMarked)
+                .filter(Bookmark::getIsMarked)
                 .count();
         
         return BookmarkCountByMemberIdDto.builder()
