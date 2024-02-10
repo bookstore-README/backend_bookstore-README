@@ -1,7 +1,7 @@
 package com.bookstore.readme.domain.bookmark.dto.page;
 
 import com.bookstore.readme.domain.book.domain.Book;
-import com.bookstore.readme.domain.book.dto.search.BookDto;
+import com.bookstore.readme.domain.bookmark.dto.BookDto;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
