@@ -2,18 +2,25 @@ package com.bookstore.readme.domain.bookmark.controller;
 
 import com.bookstore.readme.domain.bookmark.dto.BookmarkAndBookDto;
 import com.bookstore.readme.domain.bookmark.dto.BookmarkCountDto;
+import com.bookstore.readme.domain.bookmark.dto.BookmarkDetailDto;
 import com.bookstore.readme.domain.bookmark.dto.BookmarkDto;
 import com.bookstore.readme.domain.bookmark.dto.count.BookmarkCountByBookIdDto;
 import com.bookstore.readme.domain.bookmark.dto.count.BookmarkCountByMemberIdDto;
+import com.bookstore.readme.domain.bookmark.request.BookmarkDeleteDto;
 import com.bookstore.readme.domain.bookmark.response.BookmarkResponse;
 import com.bookstore.readme.domain.bookmark.service.BookmarkCountService;
+import com.bookstore.readme.domain.bookmark.service.BookmarkDeleteService;
 import com.bookstore.readme.domain.bookmark.service.BookmarkService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +29,7 @@ public class BookmarkController {
 
     private final BookmarkService bookmarkService;
     private final BookmarkCountService bookmarkCountService;
+    private final BookmarkDeleteService bookmarkDeleteService;
 
     @PostMapping("/bookmark/{bookId}/{memberId}")
     @Operation(summary = "찜하기", description = "회원 아이디와 도서 아이디로 찜하는 API")
@@ -42,13 +50,12 @@ public class BookmarkController {
         return ResponseEntity.ok(BookmarkResponse.ok(bookmarkAndBookDto));
     }
 
-    @DeleteMapping("/bookmark/{id}")
-    @Operation(summary = "회원의 찜목록 조회", description = "회원 아이디로 찜목록 조회 API")
+    @DeleteMapping("/bookmark")
+    @Operation(summary = "찜 아이디 리스트로 삭제", description = "찜 아이디 리스트로 삭제 하는 API")
     public ResponseEntity<BookmarkResponse> deleteBookmark(
-            @Parameter(description = "삭제할 찜 아이디", required = true)
-            @PathVariable(name = "id") Integer bookmarkId
+            @ParameterObject @Valid BookmarkDeleteDto request
     ) {
-        return ResponseEntity.ok(BookmarkResponse.ok(bookmarkService.deleteBookmark(bookmarkId.longValue())));
+        return ResponseEntity.ok(BookmarkResponse.ok(bookmarkDeleteService.deleteAllByBookmarkId(request.getBookmarkIds())));
     }
 
     @GetMapping("/bookmark/{id}/book")
