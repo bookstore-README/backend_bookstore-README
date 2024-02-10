@@ -8,12 +8,14 @@ import java.util.List;
 
 @Getter
 public class BookmarkAndBookDto {
+    private final Long bookmarkId;
     private final Long memberId;
     private final Integer bookmarkCount;
-    private final List<BookDto> books;
+    private final List<BookmarkDetailDto> books;
 
     @Builder
-    public BookmarkAndBookDto(Long memberId, Integer bookmarkCount, List<BookDto> books) {
+    public BookmarkAndBookDto(Long bookmarkId, Long memberId, Integer bookmarkCount, List<BookmarkDetailDto> books) {
+        this.bookmarkId = bookmarkId;
         this.memberId = memberId;
         this.bookmarkCount = bookmarkCount;
         this.books = books;
