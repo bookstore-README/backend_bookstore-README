@@ -1,20 +1,20 @@
 package com.bookstore.readme.domain.member.service;
 
 import com.bookstore.readme.domain.file.service.FileService;
-import com.bookstore.readme.domain.member.dto.MemberDto;
-import com.bookstore.readme.domain.member.dto.MemberSaveDto;
-import com.bookstore.readme.domain.member.dto.MemberPasswordUpdateDto;
-import com.bookstore.readme.domain.member.dto.MemberUpdateDto;
+import com.bookstore.readme.domain.member.dto.*;
 import com.bookstore.readme.domain.member.exception.DuplicationMemberEmailException;
 import com.bookstore.readme.domain.member.exception.DuplicationNicknameException;
 import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
 import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
+import com.bookstore.readme.domain.review.domain.Review;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -79,13 +79,13 @@ public class MemberService {
         return true;
     }
 
-//    public MemberResponse memberLogin(MemberLoginDto memberLoginDto) {
-//        Member member = memberQueryService.login(memberLoginDto);
-//        return MemberResponse
-//                .builder()
-//                .status(200)
-//                .message("Login Success")
-//                .data(member)
-//                .build();
-//    }
+    @Transactional
+    public List<MemberReviewsDto> myReviews(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
+
+        List<Review> reviews = member.getReviews();
+
+        return MemberReviewsDto.ofs(reviews);
+    }
 }
