@@ -1,7 +1,6 @@
 package com.bookstore.readme.domain.bookmark.dto;
 
 import com.bookstore.readme.domain.book.domain.Book;
-import com.bookstore.readme.domain.book.dto.search.BookDto;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
@@ -12,12 +11,6 @@ import java.util.List;
 @SuperBuilder
 public class BookmarkDetailDto extends BookDto {
     private final Long bookmarkId;
-
-
-    public BookmarkDetailDto(Long bookId, String bookTitle, LocalDateTime publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Double averageRating, Integer price, Integer bookmarkCount, Integer reviewCount, Integer viewCount, String publisher, LocalDateTime createDate, LocalDateTime updateDate, Long bookmarkId) {
-        super(bookId, bookTitle, publishedDate, bookImgUrl, authors, description, categories, averageRating, price, bookmarkCount, reviewCount, viewCount, publisher, createDate, updateDate);
-        this.bookmarkId = bookmarkId;
-    }
 
     public static BookmarkDetailDto of(Book book, Long bookmarkId) {
         return BookmarkDetailDto.builder()
