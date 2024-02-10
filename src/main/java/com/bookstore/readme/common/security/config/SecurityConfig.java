@@ -44,7 +44,7 @@ public class SecurityConfig {
     private final CustomUserDetailService customUserDetailService;
 
     private final String[] permitUrl = new String[]{"/swagger", "/swagger-ui.html", "/swagger-ui/**"
-            , "/api-docs", "/api-docs/**", "/v3/api-docs/**"
+            , "/api-docs", "/api-docs/**", "/v3/api-docs/**", "/uploadImage/**"
     };
 
     @Bean
@@ -71,7 +71,6 @@ public class SecurityConfig {
                             "/collection/**"
                     ).authenticated(); //Authenticate
                     authorizeRequests.requestMatchers(permitUrl).permitAll();
-                    authorizeRequests.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll();
                     
 //                    authorizeRequests.anyRequest().authenticated();
                 })

@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,6 +41,10 @@ public class SignInSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 () -> new UsernameNotFoundException("해당 유저가 존재하지 않습니다.")
         );
 
+        Map<String, Object> mem = new HashMap<>();
+        mem.put("email", member.getEmail());
+        mem.put("id", member.getId());
+
         // refresh token update
         member.updateRefreshToken(refreshToken);
 
@@ -53,7 +59,7 @@ public class SignInSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        objectMapper.writeValue(response.getWriter(), MemberResponse.ok(member.getEmail()));
+        objectMapper.writeValue(response.getWriter(), MemberResponse.ok(mem));
 
         log.info("로그인 성공. 이메일: {}", email);
         log.info("로그인 성공. AccessToken : {}", accessToken);
