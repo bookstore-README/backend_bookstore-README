@@ -1,6 +1,7 @@
 package com.bookstore.readme.common.config;
 
 import com.bookstore.readme.domain.social.infra.google.GoogleApiClient;
+import com.bookstore.readme.domain.social.infra.kakao.KakaoApiClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -13,6 +14,11 @@ public class HttpInterfaceConfig {
     @Bean
     public GoogleApiClient googleApiClient() {
         return createHttpInterface(GoogleApiClient.class);
+    }
+
+    @Bean
+    public KakaoApiClient kakaoApiClient() {
+        return createHttpInterface(KakaoApiClient.class);
     }
 
     private <T> T createHttpInterface(Class<T> clazz) {

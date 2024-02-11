@@ -44,6 +44,12 @@ oauth2:
       client_secret: ${GOOGLE_CLIENT_SECRET}
       scope: ${GOOGLE_SCOPE}
       redirect_uri: ${GOOGLE_REDIRECT_URI}
+    kakao:
+      client_id: ${KAKAO_CLIENT_ID}
+      client_secret: ${KAKAO_CLIENT_SECRET}
+      scope: ${KAKAO_SCOPE}
+      redirect_uri: ${KAKAO_REDIRECT_URI}
+
 
 jwt:
   secretKey: ${JWT_SECRET_KEY}
