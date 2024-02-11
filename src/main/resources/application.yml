@@ -49,6 +49,11 @@ oauth2:
       client_secret: ${KAKAO_CLIENT_SECRET}
       scope: ${KAKAO_SCOPE}
       redirect_uri: ${KAKAO_REDIRECT_URI}
+    naver:
+      client_id: ${NAVER_CLIENT_ID}
+      client-secret: ${NAVER_CLIENT_SECRET}
+      scope: ${NAVER_SCOPE}
+      redirect_uri: ${NAVER_REDIRECT_URI}
 
 
 jwt:
