@@ -62,7 +62,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeRequests) -> {
                     authorizeRequests.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // Option 메서드 허용
                     authorizeRequests.requestMatchers(
-                            "/member/**",
+                            "/member", "/member/sign-in",
+                            "/social/**",
                             "/review/**",
                             "/book/**",
                             "/category/**"
@@ -119,9 +120,9 @@ public class SecurityConfig {
     public CorsConfiguration corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-        config.setAllowedMethods(Collections.singletonList(""));
+        config.setAllowedMethods(Collections.singletonList("*"));
         config.setAllowCredentials(true);
-        config.setAllowedHeaders(Collections.singletonList(""));
+        config.setAllowedHeaders(Collections.singletonList("*"));
         config.setMaxAge(3600L);
         return config;
     }
