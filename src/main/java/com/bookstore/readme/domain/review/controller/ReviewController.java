@@ -25,7 +25,7 @@ public class ReviewController {
     private final ReviewDeleteService reviewDeleteService;
     private final ReviewUpdateService reviewUpdateService;
 
-    @GetMapping("/search/{reviewId}")
+    @GetMapping("/{reviewId}")
     @Operation(summary = "리뷰 단일 조회", description = "리뷰 아이디로 단일 조회하는 API")
     public ResponseEntity<ReviewResponse> searchReview(
             @Parameter(description = "조회할 리뷰 아이디", example = "1", required = true)
@@ -35,21 +35,21 @@ public class ReviewController {
         return ResponseEntity.ok(ReviewResponse.ok(reviewSearchDto));
     }
 
-    @PostMapping("/save")
+    @PostMapping
     @Operation(summary = "리뷰 등록", description = "리뷰를 등록하는 API")
     public ResponseEntity<ReviewResponse> saveReview(@Valid @RequestBody ReviewSaveRequest request) {
         Long reviewId = reviewSaveService.save(request);
         return ResponseEntity.ok(ReviewResponse.ok(reviewId));
     }
 
-    @PostMapping("/update")
+    @PutMapping
     @Operation(summary = "리뷰 수정", description = "리뷰를 수정하는 API")
     public ResponseEntity<ReviewResponse> updateReview(@Valid @RequestBody ReviewUpdateRequest request) {
         ReviewDto update = reviewUpdateService.update(request);
         return ResponseEntity.ok(ReviewResponse.ok(update));
     }
 
-    @PostMapping("/delete/{reviewId}")
+    @DeleteMapping("/{reviewId}")
     @Operation(summary = "리뷰 삭제", description = "리뷰 아이디로 삭제하는 API")
     public ResponseEntity<ReviewResponse> deleteReview(
             @Parameter(description = "삭제할 리뷰 아이디", example = "1", required = true)
