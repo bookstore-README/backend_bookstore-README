@@ -12,15 +12,12 @@ import java.util.List;
 @Getter
 @SuperBuilder
 public class ReviewSearchDto extends ReviewDto {
-    public ReviewSearchDto(Long id, String title, String content, LocalDateTime createDate, LocalDateTime updateDate) {
-        super(id, title, content, createDate, updateDate);
-    }
-
     public static ReviewSearchDto of(Review review) {
         return ReviewSearchDto.builder()
-                .id(review.getId())
+                .reviewId(review.getId())
                 .title(review.getTitle())
                 .content(review.getContent())
+                .reviewRating(review.getReviewRating())
                 .createDate(review.getCreateDate())
                 .updateDate(review.getUpdateDate())
                 .build();

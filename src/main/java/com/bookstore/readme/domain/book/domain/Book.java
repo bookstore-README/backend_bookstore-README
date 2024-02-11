@@ -83,4 +83,16 @@ public class Book {
     public void addViewCount() {
         this.viewCount += 1;
     }
+
+    public void changeRating(Double rating) {
+        this.averageRating = rating;
+    }
+
+    public void subReviewCount() {
+        this.reviewCount -= 1;
+    }
+
+    public void addReviewCount() {
+        this.reviewCount += 1;
+    }
 }

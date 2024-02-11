@@ -30,21 +30,9 @@ public class BookApplicationRunner implements ApplicationRunner {
     @Transactional
     public void run(ApplicationArguments args) {
         for (int i = 1; i <= 1000; i++) {
-
             Book book = createBook(i);
             bookRepository.save(book);
-
-            Review review = createReview(i);
-            review.changeBook(book);
-            reviewRepository.save(review);
         }
-    }
-
-    private static Review createReview(int i) {
-        return Review.builder()
-                .title("리뷰 제목 " + i)
-                .content("리뷰 내용 " + i)
-                .build();
     }
 
     private static Book createBook(int i) {

@@ -11,7 +11,10 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.sql.Array;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -24,6 +27,7 @@ public class Review {
     private Long id;
     private String title;
     private String content;
+    private Double reviewRating;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
@@ -42,9 +46,10 @@ public class Review {
     private LocalDateTime updateDate;
 
     @Builder
-    public Review(String title, String content) {
+    public Review(String title, String content, Double reviewRating) {
         this.title = title;
         this.content = content;
+        this.reviewRating = reviewRating;
     }
 
     public void changeBook(Book book) {
@@ -63,5 +68,9 @@ public class Review {
 
     public void changeContent(String content) {
         this.content = content;
+    }
+
+    public void changeReviewRating(Double reviewRating) {
+        this.reviewRating = reviewRating;
     }
 }
