@@ -30,6 +30,7 @@ public class ReviewSaveService {
             //Review Save
             review.changeBook(book);
             review.changeMember(member);
+            book.addReviewCount();
         } else {
             //리뷰 새로운 값으로 변경
             Review newReview = ReviewSaveRequest.toReview(request);

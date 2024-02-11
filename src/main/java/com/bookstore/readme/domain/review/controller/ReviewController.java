@@ -73,6 +73,4 @@ public class ReviewController {
         Long deleteReviewId = reviewDeleteService.delete(reviewId.longValue());
         return ResponseEntity.ok(ReviewResponse.ok(deleteReviewId));
     }
-
-
 }

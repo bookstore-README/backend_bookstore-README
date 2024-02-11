@@ -21,6 +21,7 @@ public class ReviewDeleteService {
 
         Book book = review.getBook();
         book.getReviews().remove(review);
+        book.subReviewCount();
         reviewRepository.delete(review);
         return reviewId;
     }
