@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ReviewSaveService {
@@ -38,6 +40,18 @@ public class ReviewSaveService {
             review.changeContent(newReview.getContent());
             review.changeReviewRating(newReview.getReviewRating());
         }
+
+
+        //도서 별점 수정
+        List<Review> reviews = book.getReviews();
+        Double newRating = 0D;
+        for (Review ratingReview : reviews) {
+            Double reviewRating = ratingReview.getReviewRating();
+            newRating += reviewRating;
+        }
+
+        newRating = reviews.isEmpty() ? 0D : newRating / reviews.size();
+        book.changeRating(newRating);
 
         reviewRepository.save(review);
         return review.getId();

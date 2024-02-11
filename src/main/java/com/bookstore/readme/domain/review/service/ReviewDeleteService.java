@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ReviewDeleteService {
@@ -22,6 +24,19 @@ public class ReviewDeleteService {
         Book book = review.getBook();
         book.getReviews().remove(review);
         book.subReviewCount();
+
+        //도서 별점 수정
+        List<Review> reviews = book.getReviews();
+        Double newRating = 0D;
+        for (Review ratingReview : reviews) {
+            Double reviewRating = ratingReview.getReviewRating();
+            newRating += reviewRating;
+        }
+
+        newRating = reviews.isEmpty() ? 0D : newRating / reviews.size();
+        book.changeRating(newRating);
+
+
         reviewRepository.delete(review);
         return reviewId;
     }
