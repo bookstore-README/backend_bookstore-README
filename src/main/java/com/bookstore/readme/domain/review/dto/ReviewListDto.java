@@ -2,21 +2,18 @@ package com.bookstore.readme.domain.review.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
+@Getter
 public class ReviewListDto {
-    private Integer total;
-    private Integer limit;
-    private Integer page;
-    private List<ReviewDto> reviews;
+    private final Long memberId;
+    private final List<ReviewSearchDto> reviews;
 
     @Builder
-    public ReviewListDto(Integer total, Integer limit, Integer page, List<ReviewDto> reviews) {
-        this.total = total;
-        this.limit = limit;
-        this.page = page;
+    public ReviewListDto(Long memberId, List<ReviewSearchDto> reviews) {
+        this.memberId = memberId;
         this.reviews = reviews;
     }
 }

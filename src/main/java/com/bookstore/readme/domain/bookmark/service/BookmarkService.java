@@ -1,12 +1,12 @@
 package com.bookstore.readme.domain.bookmark.service;
 
 import com.bookstore.readme.domain.book.domain.Book;
-import com.bookstore.readme.domain.book.dto.page.BookDto;
 import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
 import com.bookstore.readme.domain.book.repository.BookRepository;
 import com.bookstore.readme.domain.bookmark.domain.Bookmark;
 import com.bookstore.readme.domain.bookmark.dto.BookmarkAndBookDto;
 import com.bookstore.readme.domain.bookmark.dto.BookmarkCountDto;
+import com.bookstore.readme.domain.bookmark.dto.BookmarkDetailDto;
 import com.bookstore.readme.domain.bookmark.dto.BookmarkDto;
 import com.bookstore.readme.domain.bookmark.repository.BookmarkRepository;
 import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
@@ -45,51 +45,10 @@ public class BookmarkService {
         bookmarkRepository.save(bookmark);
 
         return BookmarkDto.builder()
+                .bookmarkId(bookmark.getId())
                 .bookId(bookId)
                 .memberId(memberId)
                 .isMarked(bookmark.getIsMarked())
-                .build();
-    }
-
-    @Transactional
-    public BookmarkCountDto searchBookmarkCountByBook(Long bookId) {
-        List<Bookmark> bookmarks = bookmarkRepository.findByBookId(bookId);
-        List<Bookmark> filterBookmarks = bookmarks.stream()
-                .filter(Bookmark::getIsMarked)
-                .toList();
-
-        return BookmarkCountDto.builder()
-                .id(bookId)
-                .bookmarkCount(filterBookmarks.size())
-                .build();
-    }
-
-    @Transactional
-    public BookmarkCountDto searchBookmarkCountByMember(Long memberId) {
-        List<Bookmark> bookmarks = bookmarkRepository.findByMemberId(memberId);
-        List<Bookmark> filterBookmarks = bookmarks.stream()
-                .filter(Bookmark::getIsMarked)
-                .toList();
-
-        return BookmarkCountDto.builder()
-                .id(memberId)
-                .bookmarkCount(filterBookmarks.size())
-                .build();
-    }
-
-    @Transactional
-    public BookmarkAndBookDto searchBookmarkAndBookByMember(Long memberId) {
-        List<Bookmark> bookmarks = bookmarkRepository.findByMemberId(memberId);
-        List<BookDto> books = bookmarks.stream()
-                .filter(Bookmark::getIsMarked)
-                .map(Bookmark::getBook)
-                .map(BookDto::of)
-                .toList();
-
-        return BookmarkAndBookDto.builder()
-                .memberId(memberId)
-                .bookmarkCount(books.size())
-                .books(books)
                 .build();
     }
 
@@ -100,4 +59,6 @@ public class BookmarkService {
                 .isMarked(isMarked)
                 .build();
     }
+
+
 }

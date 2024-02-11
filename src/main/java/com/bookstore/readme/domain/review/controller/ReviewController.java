@@ -1,6 +1,7 @@
 package com.bookstore.readme.domain.review.controller;
 
 import com.bookstore.readme.domain.review.dto.ReviewDto;
+import com.bookstore.readme.domain.review.dto.ReviewListDto;
 import com.bookstore.readme.domain.review.dto.ReviewSearchDto;
 import com.bookstore.readme.domain.review.request.ReviewRequest;
 import com.bookstore.readme.domain.review.request.ReviewSaveRequest;
@@ -15,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/review")
@@ -25,7 +28,7 @@ public class ReviewController {
     private final ReviewDeleteService reviewDeleteService;
     private final ReviewUpdateService reviewUpdateService;
 
-    @GetMapping("/search/{reviewId}")
+    @GetMapping("/{reviewId}")
     @Operation(summary = "리뷰 단일 조회", description = "리뷰 아이디로 단일 조회하는 API")
     public ResponseEntity<ReviewResponse> searchReview(
             @Parameter(description = "조회할 리뷰 아이디", example = "1", required = true)
@@ -35,21 +38,33 @@ public class ReviewController {
         return ResponseEntity.ok(ReviewResponse.ok(reviewSearchDto));
     }
 
-    @PostMapping("/save")
+    @GetMapping("/{memberId}/member")
+    @Operation(summary = "회원 아이디로 리뷰 조회", description = "회원 아이디로 리뷰 목록 조회하는 API")
+    public ResponseEntity<ReviewResponse> searchReviewByMemberId(
+            @Parameter(description = "조회할 회원 아이디", example = "1", required = true)
+            @PathVariable("memberId") Integer reviewId
+    ) {
+        ReviewListDto result = reviewSearchService.searchReviewByMemberId(reviewId.longValue());
+        return ResponseEntity.ok(ReviewResponse.ok(result));
+    }
+
+    @PostMapping
     @Operation(summary = "리뷰 등록", description = "리뷰를 등록하는 API")
     public ResponseEntity<ReviewResponse> saveReview(@Valid @RequestBody ReviewSaveRequest request) {
         Long reviewId = reviewSaveService.save(request);
         return ResponseEntity.ok(ReviewResponse.ok(reviewId));
     }
 
-    @PostMapping("/update")
+    @PutMapping("/{reviewId}")
     @Operation(summary = "리뷰 수정", description = "리뷰를 수정하는 API")
-    public ResponseEntity<ReviewResponse> updateReview(@Valid @RequestBody ReviewUpdateRequest request) {
-        ReviewDto update = reviewUpdateService.update(request);
+    public ResponseEntity<ReviewResponse> updateReview(
+            @Parameter(description = "수정할 리뷰 아이디", required = true) @PathVariable(name = "reviewId") Integer reviewId,
+            @Valid @RequestBody ReviewUpdateRequest request) {
+        ReviewDto update = reviewUpdateService.update(reviewId, request);
         return ResponseEntity.ok(ReviewResponse.ok(update));
     }
 
-    @PostMapping("/delete/{reviewId}")
+    @DeleteMapping("/{reviewId}")
     @Operation(summary = "리뷰 삭제", description = "리뷰 아이디로 삭제하는 API")
     public ResponseEntity<ReviewResponse> deleteReview(
             @Parameter(description = "삭제할 리뷰 아이디", example = "1", required = true)

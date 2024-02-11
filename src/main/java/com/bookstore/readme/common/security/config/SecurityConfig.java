@@ -44,7 +44,7 @@ public class SecurityConfig {
     private final CustomUserDetailService customUserDetailService;
 
     private final String[] permitUrl = new String[]{"/swagger", "/swagger-ui.html", "/swagger-ui/**"
-            , "/api-docs", "/api-docs/**", "/v3/api-docs/**"
+            , "/api-docs", "/api-docs/**", "/v3/api-docs/**", "/uploadImage/**"
     };
 
     @Bean
@@ -62,7 +62,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeRequests) -> {
                     authorizeRequests.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // Option 메서드 허용
                     authorizeRequests.requestMatchers(
-                            "/member/**",
+                            "/member", "/member/sign-in",
+                            "/social/**",
                             "/review/**",
                             "/book/**",
                             "/category/**"
@@ -71,7 +72,6 @@ public class SecurityConfig {
                             "/collection/**"
                     ).authenticated(); //Authenticate
                     authorizeRequests.requestMatchers(permitUrl).permitAll();
-                    authorizeRequests.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll();
                     
 //                    authorizeRequests.anyRequest().authenticated();
                 })
@@ -120,9 +120,9 @@ public class SecurityConfig {
     public CorsConfiguration corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-        config.setAllowedMethods(Collections.singletonList(""));
+        config.setAllowedMethods(Collections.singletonList("*"));
         config.setAllowCredentials(true);
-        config.setAllowedHeaders(Collections.singletonList(""));
+        config.setAllowedHeaders(Collections.singletonList("*"));
         config.setMaxAge(3600L);
         return config;
     }

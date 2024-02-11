@@ -15,10 +15,9 @@ public class ReviewUpdateService {
     private final ReviewRepository reviewRepository;
 
     @Transactional
-    public ReviewDto update(ReviewUpdateRequest request) {
-        Long reviewId = request.getReviewId();
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new NotFoundReviewByIdException(reviewId));
+    public ReviewDto update(Integer reviewId, ReviewUpdateRequest request) {
+        Review review = reviewRepository.findById(reviewId.longValue())
+                .orElseThrow(() -> new NotFoundReviewByIdException(reviewId.longValue()));
 
         review.changeTitle(request.getTitle());
         review.changeContent(request.getContent());

@@ -18,16 +18,20 @@ public class ReviewSaveRequest extends ReviewRequest {
     @Schema(example = "1")
     private Long bookId;
 
-    public ReviewSaveRequest(String title, String content, Long memberId, Long bookId) {
+    private Double reviewRating;
+
+    public ReviewSaveRequest(String title, String content, Long memberId, Long bookId, Double reviewRating) {
         super(title, content);
         this.memberId = memberId;
         this.bookId = bookId;
+        this.reviewRating = reviewRating;
     }
 
-    public static Review toReview(ReviewRequest request) {
+    public static Review toReview(ReviewSaveRequest request) {
         return Review.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
+                .reviewRating(request.getReviewRating())
                 .build();
     }
 }
