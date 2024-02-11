@@ -11,7 +11,10 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.sql.Array;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,6 +35,9 @@ public class Review {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "review")
+    private ReviewRating reviewRating;
 
     @CreatedDate
     @Column(updatable = false)
@@ -63,5 +69,9 @@ public class Review {
 
     public void changeContent(String content) {
         this.content = content;
+    }
+
+    public void changeReviewRating(ReviewRating reviewRating) {
+        this.reviewRating = reviewRating;
     }
 }
