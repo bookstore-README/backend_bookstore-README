@@ -17,6 +17,7 @@ public class ReviewSearchDto extends ReviewDto {
                 .reviewId(review.getId())
                 .title(review.getTitle())
                 .content(review.getContent())
+                .reviewRating(review.getReviewRating())
                 .createDate(review.getCreateDate())
                 .updateDate(review.getUpdateDate())
                 .build();

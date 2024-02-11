@@ -12,6 +12,7 @@ public class ReviewDto {
     private Long reviewId;
     private String title;
     private String content;
+    private Double reviewRating;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 
@@ -19,6 +20,7 @@ public class ReviewDto {
         return ReviewDto.builder()
                 .reviewId(review.getId())
                 .title(review.getTitle())
+                .reviewRating(review.getReviewRating())
                 .createDate(review.getCreateDate())
                 .updateDate(review.getUpdateDate())
                 .content(review.getContent())

@@ -5,6 +5,7 @@ import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
 import com.bookstore.readme.domain.review.domain.Review;
 import com.bookstore.readme.domain.review.dto.ReviewDto;
+import com.bookstore.readme.domain.review.dto.ReviewListDto;
 import com.bookstore.readme.domain.review.dto.ReviewSearchDto;
 import com.bookstore.readme.domain.review.exception.NotFoundReviewByIdException;
 import com.bookstore.readme.domain.review.repository.ReviewRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,13 +31,14 @@ public class ReviewSearchService {
     }
 
     @Transactional
-    public List<ReviewSearchDto> searchReviewByMemberId(Long memberId) {
+    public ReviewListDto searchReviewByMemberId(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
-        List<Review> reviews = member.getReviews();
 
-        return reviews.stream()
-                .map(ReviewSearchDto::of)
-                .toList();
+        List<Review> reviews = member.getReviews();
+        return ReviewListDto.builder()
+                .memberId(memberId)
+                .reviews(ReviewSearchDto.ofs(reviews))
+                .build();
     }
 }

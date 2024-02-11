@@ -1,6 +1,7 @@
 package com.bookstore.readme.domain.review.controller;
 
 import com.bookstore.readme.domain.review.dto.ReviewDto;
+import com.bookstore.readme.domain.review.dto.ReviewListDto;
 import com.bookstore.readme.domain.review.dto.ReviewSearchDto;
 import com.bookstore.readme.domain.review.request.ReviewRequest;
 import com.bookstore.readme.domain.review.request.ReviewSaveRequest;
@@ -14,6 +15,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,8 +44,8 @@ public class ReviewController {
             @Parameter(description = "조회할 회원 아이디", example = "1", required = true)
             @PathVariable("memberId") Integer reviewId
     ) {
-        ReviewSearchDto reviewSearchDto = reviewSearchService.searchReview(reviewId.longValue());
-        return ResponseEntity.ok(ReviewResponse.ok(reviewSearchDto));
+        ReviewListDto result = reviewSearchService.searchReviewByMemberId(reviewId.longValue());
+        return ResponseEntity.ok(ReviewResponse.ok(result));
     }
 
     @PostMapping
