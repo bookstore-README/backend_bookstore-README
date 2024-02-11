@@ -27,6 +27,7 @@ public class Review {
     private Long id;
     private String title;
     private String content;
+    private Double reviewRating;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
@@ -35,9 +36,6 @@ public class Review {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "review")
-    private ReviewRating reviewRating;
 
     @CreatedDate
     @Column(updatable = false)
@@ -48,9 +46,10 @@ public class Review {
     private LocalDateTime updateDate;
 
     @Builder
-    public Review(String title, String content) {
+    public Review(String title, String content, Double reviewRating) {
         this.title = title;
         this.content = content;
+        this.reviewRating = reviewRating;
     }
 
     public void changeBook(Book book) {
@@ -71,7 +70,7 @@ public class Review {
         this.content = content;
     }
 
-    public void changeReviewRating(ReviewRating reviewRating) {
+    public void changeReviewRating(Double reviewRating) {
         this.reviewRating = reviewRating;
     }
 }
