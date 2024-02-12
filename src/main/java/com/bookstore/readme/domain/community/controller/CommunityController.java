@@ -2,12 +2,15 @@ package com.bookstore.readme.domain.community.controller;
 
 import com.bookstore.readme.domain.community.dto.CommunityPageDto;
 import com.bookstore.readme.domain.community.dto.CommunitySaveDto;
+import com.bookstore.readme.domain.community.dto.CommunityUpdateDto;
 import com.bookstore.readme.domain.community.request.CommunityPageRequest;
 import com.bookstore.readme.domain.community.request.CommunitySaveRequest;
+import com.bookstore.readme.domain.community.request.CommunityUpdateRequest;
 import com.bookstore.readme.domain.community.response.CommunityResponse;
 import com.bookstore.readme.domain.community.service.CommunityDeleteService;
 import com.bookstore.readme.domain.community.service.CommunitySaveService;
 import com.bookstore.readme.domain.community.service.CommunitySearchService;
+import com.bookstore.readme.domain.community.service.CommunityUpdateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,6 +33,7 @@ public class CommunityController {
     private final CommunitySaveService communitySaveService;
     private final CommunitySearchService communitySearchService;
     private final CommunityDeleteService communityDeleteService;
+    private final CommunityUpdateService communityUpdateService;
 
     @Operation(description = "커뮤니티 글 등록 API")
     @PostMapping
@@ -68,6 +72,15 @@ public class CommunityController {
     public ResponseEntity<CommunityResponse> deleteByCommunityId(
             @Parameter(name = "삭제할 커뮤니티 아이디", required = true) @PathVariable(name = "communityId") Integer communityId) {
         Long result = communityDeleteService.deleteByCommunityId(communityId.longValue());
+        return ResponseEntity.ok(CommunityResponse.ok(result));
+    }
+
+    @Operation(description = "커뮤니티 아이디로 글 수정 API")
+    @PutMapping("/{communityId}")
+    public ResponseEntity<CommunityResponse> updateByCommunityId(
+            @RequestBody @Valid CommunityUpdateRequest request,
+            @Parameter(name = "업데이트 할 커뮤니티 아이디", required = true) @PathVariable(name = "communityId") Integer communityId) {
+        CommunityUpdateDto result = communityUpdateService.updateByCommunityId(communityId.longValue(), request);
         return ResponseEntity.ok(CommunityResponse.ok(result));
     }
 }

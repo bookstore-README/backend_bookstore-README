@@ -14,11 +14,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice(basePackageClasses = CommunityController.class)
-public class NoticeExceptionHandler {
+public class CommunityExceptionHandler {
 
-    @ExceptionHandler(value = {NotFoundNoticeByIdException.class})
+    @ExceptionHandler(value = {NotFoundCommunityByIdException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<CommunityResponse> handlerNotFoundNoticeByIdException(NotFoundNoticeByIdException ex) {
+    public ResponseEntity<CommunityResponse> handlerNotFoundNoticeByIdException(NotFoundCommunityByIdException ex) {
         int status = ex.getStatus();
         String message = ex.getMessage();
         CommunityResponse response = CommunityResponse.builder()

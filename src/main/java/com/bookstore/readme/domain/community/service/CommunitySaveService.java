@@ -49,6 +49,8 @@ public class CommunitySaveService {
         CommunityBookDto communityBookDto = CommunityBookDto.of(book);
         return CommunitySaveDto.builder()
                 .communityId(community.getId())
+                .title(community.getTitle())
+                .content(community.getContent())
                 .writer(communityMemberDto)
                 .bookInfo(communityBookDto)
                 .createDate(community.getCreateDate())

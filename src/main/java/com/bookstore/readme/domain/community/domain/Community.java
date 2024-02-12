@@ -52,4 +52,12 @@ public class Community {
     public void changeMember(Member member) {
         this.member = member;
     }
+
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
 }
