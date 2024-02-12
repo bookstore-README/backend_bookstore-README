@@ -5,6 +5,9 @@ import com.bookstore.readme.domain.social.domain.SocialType;
 import com.bookstore.readme.domain.social.dto.SocialLoginResponseDto;
 import com.bookstore.readme.domain.social.service.SocialService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "소셜 API")
 @RequestMapping("/social")
 public class SocialController {
 
@@ -30,16 +34,23 @@ public class SocialController {
 
     @SneakyThrows
     @GetMapping("/auth/{socialType}")
-    ResponseEntity<Void> redirectAuthCodeRequestUrl(@PathVariable SocialType socialType,
-                                                    HttpServletResponse response) {
+    @Operation(summary = "소셜 로그인 리다이렉트", description = "소셜 로그인 실행 시 로그인 창 리다이렉트")
+    ResponseEntity<Void> redirectAuthCodeRequestUrl(
+            @Parameter(description = "소셜타입", example = "google", required = true)
+            @PathVariable SocialType socialType,
+            HttpServletResponse response) {
         String redirectUrl = socialService.getAuthCodeRequestUrl(socialType);
         response.sendRedirect(redirectUrl);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/login/{socialType}")
-    ResponseEntity<Void> login(@PathVariable SocialType socialType,
-                               @RequestParam("code") String code,
+    @Operation(summary = "소셜 로그인 진행", description = "소셜 로그인 진행 후 서비스")
+    ResponseEntity<Void> login(
+            @Parameter(description = "소셜타입", example = "google", required = true)
+            @PathVariable SocialType socialType,
+            @Parameter(description = "로그인 진행 후 인증 코드", example = "sampleX", required = true)
+            @RequestParam("code") String code,
                                  HttpServletResponse response) throws IOException {
         SocialLoginResponseDto socialLoginResponseDto = socialService.login(socialType, code);
 
