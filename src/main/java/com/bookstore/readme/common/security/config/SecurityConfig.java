@@ -47,6 +47,10 @@ public class SecurityConfig {
             , "/api-docs", "/api-docs/**", "/v3/api-docs/**", "/uploadImage/**"
     };
 
+    private final String[] apiPermit = new String[]{
+            "/review/**", "/book/**", "/category/**", "/basket/**", "/community/**"
+    };
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -62,12 +66,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeRequests) -> {
                     authorizeRequests.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // Option 메서드 허용
                     authorizeRequests.requestMatchers(
-                            "/member", "/member/sign-in",
-                            "/social/**", "/basket/**",
-                            "/review/**",
-                            "/book/**",
-                            "/category/**"
+                            "/member", "/member/sign-in", "/social/**"
                     ).permitAll(); //Permit
+                    authorizeRequests.requestMatchers(apiPermit).permitAll(); //Permit
                     authorizeRequests.requestMatchers(permitUrl).permitAll();
                     authorizeRequests.anyRequest().authenticated();
                 })
@@ -93,6 +94,7 @@ public class SecurityConfig {
                         -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorizeRequests) -> {
                     authorizeRequests.requestMatchers("/member", "/member/sign-in", "/social/**").permitAll();
+                    authorizeRequests.requestMatchers(apiPermit).permitAll();
                     authorizeRequests.requestMatchers(PathRequest.toH2Console()).permitAll();
                     authorizeRequests.requestMatchers(permitUrl).permitAll();
                     authorizeRequests.anyRequest().authenticated();
