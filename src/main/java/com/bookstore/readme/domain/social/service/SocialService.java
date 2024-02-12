@@ -37,6 +37,8 @@ public class SocialService {
         String refreshToken = jwtTokenService.createRefreshToken(member.getEmail());
 
         return SocialLoginResponseDto.builder()
+                .memberId(member.getId())
+                .email(member.getEmail())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
