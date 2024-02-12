@@ -2,13 +2,17 @@ package com.bookstore.readme.common.config;
 
 import io.swagger.v3.oas.annotations.OpenAPI31;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 
 import java.util.List;
 
@@ -64,11 +68,37 @@ public class SwaggerConfig {
                 createTag("소셜 API", "소셜 관련 API")
         );
 
-        return new OpenAPI().info(
+        String key = "Access Token (Bearer)";
+        String refreshKey = "Refresh Token";
+
+        SecurityRequirement securityRequirement = new SecurityRequirement()
+                .addList(key)
+                .addList(refreshKey);
+
+        SecurityScheme accessTokenSecurityScheme = new SecurityScheme()
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("Bearer")
+                .bearerFormat("JWT")
+                .in(SecurityScheme.In.HEADER)
+                .name(HttpHeaders.AUTHORIZATION);
+
+        SecurityScheme refreshTokenSecurityScheme = new SecurityScheme()
+                .type(SecurityScheme.Type.APIKEY)
+                .in(SecurityScheme.In.HEADER)
+                .name("Refresh Token");
+
+        Components components = new Components()
+                .addSecuritySchemes(key, accessTokenSecurityScheme)
+                .addSecuritySchemes(refreshKey, refreshTokenSecurityScheme);
+
+        return new OpenAPI()
+                .info(
                 new Info().title("README WEB")
                         .description("README 웹 프로젝트 API 명세")
-                        .version("v1.0.6")
-        ).tags(tagList);
+                        .version("v1.0.6"))
+                .tags(tagList)
+                .addSecurityItem(securityRequirement)
+                .components(components);
     }
 
     private Tag createTag(String name, String description) {
