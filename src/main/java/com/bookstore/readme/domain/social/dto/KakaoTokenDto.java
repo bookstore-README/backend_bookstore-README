@@ -7,7 +7,6 @@ import lombok.ToString;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
 public class KakaoTokenDto {
 
     private String token_type;

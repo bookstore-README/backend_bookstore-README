@@ -17,7 +17,7 @@ public interface KakaoApiClient {
     @PostExchange(url = "https://kauth.kakao.com/oauth/token", contentType = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     KakaoTokenDto fetchToken(@RequestParam MultiValueMap<String, String> params);
 
-    @GetExchange("https://kapi.kako.com/v2/user/me")
+    @GetExchange("https://kapi.kakao.com/v2/user/me")
     KakaoMemberResponseDto fetchMember(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String accessToken);
 
 }

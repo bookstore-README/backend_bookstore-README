@@ -70,9 +70,15 @@ spring:
       on-profile: dev
   h2:
     console:
-      enabled: false
+      enabled: true
+      path: /h2-console
       settings:
-        web-allow-others: false
+        web-allow-others: true
+  datasource:
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.h2.Driver}
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:/website}
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
   jpa:
     hibernate:
       ddl-auto: update
@@ -96,6 +102,16 @@ oauth2:
       client_secret: ${GOOGLE_CLIENT_SECRET}
       scope: ${GOOGLE_SCOPE}
       redirect_uri: ${GOOGLE_REDIRECT_URI}
+    kakao:
+      client_id: ${KAKAO_CLIENT_ID}
+      client_secret: ${KAKAO_CLIENT_SECRET}
+      scope: ${KAKAO_SCOPE}
+      redirect_uri: ${KAKAO_REDIRECT_URI}
+    naver:
+      client_id: ${NAVER_CLIENT_ID}
+      client-secret: ${NAVER_CLIENT_SECRET}
+      scope: ${NAVER_SCOPE}
+      redirect_uri: ${NAVER_REDIRECT_URI}
 
 jwt:
   secretKey: ${JWT_SECRET_KEY}

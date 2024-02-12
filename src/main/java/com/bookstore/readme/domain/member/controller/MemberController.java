@@ -41,7 +41,7 @@ public class MemberController {
 
     @GetMapping("/{memberId}")
     @Operation(summary = "회원 단일 조회", description = "회원을 단일 조회 하기위한 API")
-    public ResponseEntity<MemberResponse> save(
+    public ResponseEntity<MemberResponse> searchMemberOne(
             @Parameter(description = "조회할 회원 아이디", example = "1", required = true)
             @PathVariable(name = "memberId") Integer memberId) {
         MemberDto memberDto = memberService.searchMember(memberId.longValue());
