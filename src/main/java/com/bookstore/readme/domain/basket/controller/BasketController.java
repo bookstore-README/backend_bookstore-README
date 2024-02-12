@@ -1,8 +1,10 @@
 package com.bookstore.readme.domain.basket.controller;
 
+import com.bookstore.readme.domain.basket.dto.BasketSearchDto;
 import com.bookstore.readme.domain.basket.request.BasketDeleteRequest;
 import com.bookstore.readme.domain.basket.response.BasketResponse;
 import com.bookstore.readme.domain.basket.service.BasketSaveService;
+import com.bookstore.readme.domain.basket.service.BasketSearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +14,8 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/basket")
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class BasketController {
 
     private final BasketSaveService basketSaveService;
+    private final BasketSearchService basketSearchService;
 
     @Operation(description = "도서 아이디와 회원 아이디로 장바구니를 등록하는 API")
     @PostMapping("/{bookId}/{memberId}")
@@ -35,7 +40,8 @@ public class BasketController {
     public ResponseEntity<Object> searchBasketByMemberId(
             @Parameter(description = "조회할 회원 아이디", required = true) @PathVariable(name = "memberId") Integer memberId
     ) {
-        return ResponseEntity.ok(null);
+        List<BasketSearchDto> result = basketSearchService.searchBasketByMemberId(memberId.longValue());
+        return ResponseEntity.ok(BasketResponse.of(result));
     }
 
     @Operation(description = "장바구니 아이디로 삭제하는 API")
