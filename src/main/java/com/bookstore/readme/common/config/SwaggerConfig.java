@@ -29,10 +29,10 @@ public class SwaggerConfig {
                 "/category/**",
                 "/member/**",
                 "/book/**",
-                "/notice/**",
+                "/community/**",
                 "/review/**",
                 "/basket/**",
-                "/social/**"
+                "/social/**",
         };
 
         return GroupedOpenApi.builder()

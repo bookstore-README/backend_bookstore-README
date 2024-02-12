@@ -1,5 +1,7 @@
-package com.bookstore.readme.domain.notice.domain;
+package com.bookstore.readme.domain.community.domain;
 
+import com.bookstore.readme.domain.book.domain.Book;
+import com.bookstore.readme.domain.member.model.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -12,34 +14,50 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class Notice {
+public class Community {
     @Id
     @GeneratedValue
-    @Column(name = "notice_id")
+    @Column(name = "community_id")
     private Long id;
 
     private String title;
     private String content;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id")
+    private Book book;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createDate;
-    @LastModifiedDate
 
+    @LastModifiedDate
     @Column(updatable = true)
     private LocalDateTime updateDate;
 
     @Builder
-    public Notice(String title, String content) {
+    public Community(String title, String content) {
         this.title = title;
         this.content = content;
     }
 
-    public void updateTitle(String title) {
+    public void changeBook(Book book) {
+        this.book = book;
+    }
+
+    public void changeMember(Member member) {
+        this.member = member;
+    }
+
+    public void changeTitle(String title) {
         this.title = title;
     }
 
-    public void updateContent(String content) {
+    public void changeContent(String content) {
         this.content = content;
     }
 }
