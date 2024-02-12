@@ -1,4 +1,4 @@
-package com.bookstore.readme.domain.notice.exception;
+package com.bookstore.readme.domain.community.exception;
 
 import lombok.Getter;
 

@@ -1,12 +1,9 @@
 package com.bookstore.readme.domain.review.dto;
 
-import com.bookstore.readme.domain.notice.domain.Notice;
-import com.bookstore.readme.domain.notice.dto.NoticeSearchDto;
 import com.bookstore.readme.domain.review.domain.Review;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter

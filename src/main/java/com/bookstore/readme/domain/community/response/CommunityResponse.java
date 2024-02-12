@@ -1,22 +1,22 @@
-package com.bookstore.readme.domain.notice.response;
+package com.bookstore.readme.domain.community.response;
 
 import com.bookstore.readme.common.response.CommonResponse;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class NoticeResponse extends CommonResponse {
+public class CommunityResponse extends CommonResponse {
 
     private final Object data;
 
     @Builder
-    public NoticeResponse(int status, String message, Object data) {
+    public CommunityResponse(int status, String message, Object data) {
         super(status, message);
         this.data = data;
     }
 
-    public static NoticeResponse ok(Object data) {
-        return NoticeResponse
+    public static CommunityResponse ok(Object data) {
+        return CommunityResponse
                 .builder()
                 .status(200)
                 .message("Success")
@@ -24,8 +24,8 @@ public class NoticeResponse extends CommonResponse {
                 .build();
     }
 
-    public static NoticeResponse empty(Object data) {
-        return NoticeResponse
+    public static CommunityResponse empty(Object data) {
+        return CommunityResponse
                 .builder()
                 .status(204)
                 .message("Success")
