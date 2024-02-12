@@ -3,6 +3,7 @@ package com.bookstore.readme.domain.basket.controller;
 import com.bookstore.readme.domain.basket.dto.BasketSearchDto;
 import com.bookstore.readme.domain.basket.request.BasketDeleteRequest;
 import com.bookstore.readme.domain.basket.response.BasketResponse;
+import com.bookstore.readme.domain.basket.service.BasketDeleteService;
 import com.bookstore.readme.domain.basket.service.BasketSaveService;
 import com.bookstore.readme.domain.basket.service.BasketSearchService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,6 +25,7 @@ public class BasketController {
 
     private final BasketSaveService basketSaveService;
     private final BasketSearchService basketSearchService;
+    private final BasketDeleteService basketDeleteService;
 
     @Operation(description = "도서 아이디와 회원 아이디로 장바구니를 등록하는 API")
     @PostMapping("/{bookId}/{memberId}")
@@ -44,19 +46,20 @@ public class BasketController {
         return ResponseEntity.ok(BasketResponse.of(result));
     }
 
-    @Operation(description = "장바구니 아이디로 삭제하는 API")
-    @DeleteMapping("/{basketId}")
-    public ResponseEntity<Object> deleteBasketByBasketId(
-            @Parameter(description = "삭제할 장바구니 아이디", required = true) @PathVariable(name = "basketId") Integer basketId
-    ) {
-        return ResponseEntity.ok(null);
-    }
+//    @Operation(description = "장바구니 아이디로 삭제하는 API")
+//    @DeleteMapping("/{basketId}")
+//    public ResponseEntity<Object> deleteBasketByBasketId(
+//            @Parameter(description = "삭제할 장바구니 아이디", required = true) @PathVariable(name = "basketId") Integer basketId
+//    ) {
+//        return ResponseEntity.ok(null);
+//    }
 
     @Operation(description = "장바구니 아이디 리스트로 삭제하는 API")
     @DeleteMapping
     public ResponseEntity<Object> deleteAllBasketByBasketId(
             @ParameterObject @Valid BasketDeleteRequest request
     ) {
-        return ResponseEntity.ok(null);
+        List<Integer> result = basketDeleteService.deleteAllByBasketId(request.getBasketIds());
+        return ResponseEntity.ok(BasketResponse.of(result));
     }
 }
