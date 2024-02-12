@@ -43,7 +43,8 @@ public class SignInSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         Map<String, Object> mem = new HashMap<>();
         mem.put("email", member.getEmail());
-        mem.put("id", member.getId());
+        mem.put("memberId", member.getId());
+        mem.put(AUTHENTICATION, PREFIX_BEARER + accessToken);
 
         // refresh token update
         member.updateRefreshToken(refreshToken);
@@ -54,7 +55,7 @@ public class SignInSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        response.setHeader(AUTHENTICATION, PREFIX_BEARER + accessToken);
+        // response.setHeader(AUTHENTICATION, PREFIX_BEARER + accessToken);
         response.addCookie(cookie);
 
         response.setCharacterEncoding("UTF-8");

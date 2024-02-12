@@ -7,6 +7,8 @@ import lombok.Getter;
 @Builder
 public class SocialLoginResponseDto {
 
+    Long memberId;
+    String email;
     String accessToken;
     String refreshToken;
 
