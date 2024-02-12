@@ -34,8 +34,8 @@ public class Community {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createDate;
-    @LastModifiedDate
 
+    @LastModifiedDate
     @Column(updatable = true)
     private LocalDateTime updateDate;
 
