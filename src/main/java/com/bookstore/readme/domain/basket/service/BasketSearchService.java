@@ -21,7 +21,7 @@ public class BasketSearchService {
     public List<BasketSearchDto> searchBasketByMemberId(Long memberId) {
         List<Basket> baskets = basketRepository.findAllByMemberId(memberId);
         return baskets.stream()
-                .map(basket -> BasketSearchDto.of(basket.getBook()))
+                .map(basket -> BasketSearchDto.of(basket.getBook(), basket.getId()))
                 .toList();
     }
 }
