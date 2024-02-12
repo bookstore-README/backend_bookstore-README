@@ -63,7 +63,7 @@ public class SecurityConfig {
                     authorizeRequests.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // Option 메서드 허용
                     authorizeRequests.requestMatchers(
                             "/member", "/member/sign-in",
-                            "/social/**",
+                            "/social/**", "/basket/**",
                             "/review/**",
                             "/book/**",
                             "/category/**"
@@ -72,7 +72,7 @@ public class SecurityConfig {
                             "/collection/**"
                     ).authenticated(); //Authenticate
                     authorizeRequests.requestMatchers(permitUrl).permitAll();
-                    
+
 //                    authorizeRequests.anyRequest().authenticated();
                 })
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
@@ -96,10 +96,6 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagementConfigurer
                         -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorizeRequests) -> {
-                    authorizeRequests.requestMatchers("/member", "/member/sign-in", "/social/**").permitAll();
-                    authorizeRequests.requestMatchers(PathRequest.toH2Console()).permitAll();
-                    authorizeRequests.requestMatchers(permitUrl).permitAll();
-                    authorizeRequests.requestMatchers("/collection/**").denyAll();
                     authorizeRequests.anyRequest().permitAll();
                 })
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
