@@ -27,7 +27,6 @@ public class CommunityUpdateService {
         community.changeTitle(title);
         community.changeContent(content);
         communityRepository.flush();
-        
         CommunityBookDto communityBookDto = CommunityBookDto.of(community.getBook());
         CommunityMemberDto communityMemberDto = CommunityMemberDto.of(community.getMember());
 
