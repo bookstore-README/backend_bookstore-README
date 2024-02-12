@@ -3,6 +3,7 @@ package com.bookstore.readme.domain.community.response;
 import com.bookstore.readme.common.response.CommonResponse;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 public class CommunityResponse extends CommonResponse {
@@ -18,7 +19,7 @@ public class CommunityResponse extends CommonResponse {
     public static CommunityResponse ok(Object data) {
         return CommunityResponse
                 .builder()
-                .status(200)
+                .status(HttpStatus.OK.value())
                 .message("Success")
                 .data(data)
                 .build();
@@ -27,7 +28,7 @@ public class CommunityResponse extends CommonResponse {
     public static CommunityResponse empty(Object data) {
         return CommunityResponse
                 .builder()
-                .status(204)
+                .status(HttpStatus.NO_CONTENT.value())
                 .message("Success")
                 .data(data)
                 .build();

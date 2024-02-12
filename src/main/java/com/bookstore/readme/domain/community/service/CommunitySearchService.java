@@ -55,4 +55,37 @@ public class CommunitySearchService {
                 .cards(pageInfos)
                 .build();
     }
+
+    @Transactional
+    public CommunityPageDto searchCommunityPage(Integer cursorId, Integer limit, Integer memberId) {
+        PageRequest pageRequest = PageRequest.of(cursorId, limit, Sort.by(Sort.Order.desc("createDate")));
+        Page<Community> pages = communityRepository.findAllByMemberId(memberId.longValue(), pageRequest);
+        List<Community> content = pages.getContent();
+        List<CommunityPageInfoDto> pageInfos = new ArrayList<>();
+        for (int i = 0; i < content.size(); i++) {
+            Community community = content.get(i);
+            Book book = community.getBook();
+            Member member = community.getMember();
+
+            CommunityBookDto communityBookDto = CommunityBookDto.of(book);
+            CommunityMemberDto communityMemberDto = CommunityMemberDto.of(member);
+
+            CommunityPageInfoDto pageInfo = CommunityPageInfoDto.builder()
+                    .communityId(community.getId())
+                    .writer(communityMemberDto)
+                    .bookInfo(communityBookDto)
+                    .createDate(community.getCreateDate())
+                    .updateDate(community.getUpdateDate())
+                    .build();
+
+            pageInfos.add(pageInfo);
+        }
+
+        return CommunityPageDto.builder()
+                .total(content.size())
+                .limit(limit)
+                .cursorId(pages.hasNext() ? cursorId + 1 : -1)
+                .cards(pageInfos)
+                .build();
+    }
 }

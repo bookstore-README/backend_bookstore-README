@@ -1,5 +1,6 @@
 package com.bookstore.readme.domain.community.controller;
 
+import com.bookstore.readme.domain.community.dto.CommunityPageDto;
 import com.bookstore.readme.domain.community.dto.CommunitySaveDto;
 import com.bookstore.readme.domain.community.request.CommunityPageRequest;
 import com.bookstore.readme.domain.community.request.CommunitySaveRequest;
@@ -35,13 +36,28 @@ public class CommunityController {
         return ResponseEntity.ok(CommunityResponse.ok(result));
     }
 
-    @Operation(description = "커뮤니티 글 등록 API")
+    @Operation(description = "커뮤니티 글 페이징 전체 조회 API")
     @GetMapping
     public ResponseEntity<CommunityResponse> searchCommunityPage(
             @ParameterObject CommunityPageRequest request) {
-        return ResponseEntity.ok(CommunityResponse.ok(communitySearchService.searchCommunityPage(
-                request.getCursorId(),
-                request.getLimit()
-        )));
+
+        CommunityPageDto result = communitySearchService.searchCommunityPage(request.getCursorId(), request.getLimit());
+        if (result.getCards().isEmpty())
+            return ResponseEntity.ok(CommunityResponse.empty(result));
+        else
+            return ResponseEntity.ok(CommunityResponse.ok(result));
+    }
+
+    @Operation(description = "커뮤니티 글 페이징 회원 아이디 전체 조회 API")
+    @GetMapping("/{memberId}")
+    public ResponseEntity<CommunityResponse> searchCommunityPageByMemberId(
+            @ParameterObject CommunityPageRequest request,
+            @Parameter(name = "커뮤니티 글을 조회할 회원 아이디", required = true) @PathVariable(name = "memberId") Integer memberId) {
+
+        CommunityPageDto result = communitySearchService.searchCommunityPage(request.getCursorId(), request.getLimit(), memberId);
+        if (result.getCards().isEmpty())
+            return ResponseEntity.ok(CommunityResponse.empty(result));
+        else
+            return ResponseEntity.ok(CommunityResponse.ok(result));
     }
 }
