@@ -4,8 +4,6 @@ package com.bookstore.readme.domain.basket.service;
 import com.bookstore.readme.domain.basket.domain.Basket;
 import com.bookstore.readme.domain.basket.dto.BasketSearchDto;
 import com.bookstore.readme.domain.basket.repository.BasketRepository;
-import com.bookstore.readme.domain.book.domain.Book;
-import com.bookstore.readme.domain.book.dto.search.BookSearchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

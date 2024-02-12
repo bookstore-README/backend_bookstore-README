@@ -46,14 +46,6 @@ public class BasketController {
         return ResponseEntity.ok(BasketResponse.of(result));
     }
 
-//    @Operation(description = "장바구니 아이디로 삭제하는 API")
-//    @DeleteMapping("/{basketId}")
-//    public ResponseEntity<Object> deleteBasketByBasketId(
-//            @Parameter(description = "삭제할 장바구니 아이디", required = true) @PathVariable(name = "basketId") Integer basketId
-//    ) {
-//        return ResponseEntity.ok(null);
-//    }
-
     @Operation(description = "장바구니 아이디 리스트로 삭제하는 API")
     @DeleteMapping
     public ResponseEntity<Object> deleteAllBasketByBasketId(
