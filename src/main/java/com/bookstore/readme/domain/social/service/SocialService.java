@@ -34,15 +34,17 @@ public class SocialService {
                 .orElseGet(() -> this.socialSave(socialMember));
 
         String accessToken = jwtTokenService.createAccessToken(member.getEmail());
-        String refreshToken = jwtTokenService.createRefreshToken(member.getEmail());
 
         return SocialLoginResponseDto.builder()
+                .memberId(member.getId())
+                .email(member.getEmail())
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .refreshToken(member.getRefreshToken())
                 .build();
     }
 
     private Member socialSave(Member socialMember) {
+        String refreshToken = jwtTokenService.createRefreshToken(socialMember.getEmail());
 
         Member saved = Member.builder()
                 .name(socialMember.getName())
@@ -51,6 +53,7 @@ public class SocialService {
                 .email(socialMember.getEmail())
                 .role(MemberRole.USER)
                 .socialId(socialMember.getSocialId())
+                .refreshToken(refreshToken)
                 .build();
 
         return memberRepository.save(saved);

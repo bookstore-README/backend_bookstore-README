@@ -32,6 +32,7 @@ public class SwaggerConfig {
                 "/notice/**",
                 "/review/**",
                 "/basket/**"
+                "/social/**"
         };
 
         return GroupedOpenApi.builder()
@@ -60,6 +61,7 @@ public class SwaggerConfig {
                 createTag("리뷰 API", "리뷰 관련 API"),
                 createTag("카테고리 API", "카테고리 관련 API"),
                 createTag("장바구니 API", "장바구니 관련 API")
+                createTag("소셜 API", "소셜 관련 API")
         );
 
         return new OpenAPI().info(

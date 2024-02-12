@@ -25,7 +25,7 @@ public class NaverAuthCodeRequestUrlProvider implements AuthCodeRequestUrlProvid
                 .queryParam("response_type", "code")
                 .queryParam("client_id", naverOauthConfig.clientId())
                 .queryParam("redirect_uri", naverOauthConfig.redirectUri())
-                .queryParam("scope", String.join(" ", naverOauthConfig.scope()))
+                .queryParam("scope", String.join(",", naverOauthConfig.scope()))
                 .queryParam("state", "samplestate") // 나중에 수정 작업(인코딩?)
                 .toUriString();
     }
