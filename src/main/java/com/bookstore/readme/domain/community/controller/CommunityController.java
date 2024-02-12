@@ -5,6 +5,7 @@ import com.bookstore.readme.domain.community.dto.CommunitySaveDto;
 import com.bookstore.readme.domain.community.request.CommunityPageRequest;
 import com.bookstore.readme.domain.community.request.CommunitySaveRequest;
 import com.bookstore.readme.domain.community.response.CommunityResponse;
+import com.bookstore.readme.domain.community.service.CommunityDeleteService;
 import com.bookstore.readme.domain.community.service.CommunitySaveService;
 import com.bookstore.readme.domain.community.service.CommunitySearchService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,6 +29,7 @@ public class CommunityController {
 
     private final CommunitySaveService communitySaveService;
     private final CommunitySearchService communitySearchService;
+    private final CommunityDeleteService communityDeleteService;
 
     @Operation(description = "커뮤니티 글 등록 API")
     @PostMapping
@@ -59,5 +61,13 @@ public class CommunityController {
             return ResponseEntity.ok(CommunityResponse.empty(result));
         else
             return ResponseEntity.ok(CommunityResponse.ok(result));
+    }
+
+    @Operation(description = "커뮤니티 아이디로 글 삭제 API")
+    @DeleteMapping("/{communityId}")
+    public ResponseEntity<CommunityResponse> deleteByCommunityId(
+            @Parameter(name = "삭제할 커뮤니티 아이디", required = true) @PathVariable(name = "communityId") Integer communityId) {
+        Long result = communityDeleteService.deleteByCommunityId(communityId.longValue());
+        return ResponseEntity.ok(CommunityResponse.ok(result));
     }
 }
