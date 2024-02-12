@@ -68,12 +68,8 @@ public class SecurityConfig {
                             "/book/**",
                             "/category/**"
                     ).permitAll(); //Permit
-                    authorizeRequests.requestMatchers(
-                            "/collection/**"
-                    ).authenticated(); //Authenticate
                     authorizeRequests.requestMatchers(permitUrl).permitAll();
-
-//                    authorizeRequests.anyRequest().authenticated();
+                    authorizeRequests.anyRequest().authenticated();
                 })
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
@@ -96,7 +92,10 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagementConfigurer
                         -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorizeRequests) -> {
-                    authorizeRequests.anyRequest().permitAll();
+                    authorizeRequests.requestMatchers("/member", "/member/sign-in", "/social/**").permitAll();
+                    authorizeRequests.requestMatchers(PathRequest.toH2Console()).permitAll();
+                    authorizeRequests.requestMatchers(permitUrl).permitAll();
+                    authorizeRequests.anyRequest().authenticated();
                 })
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
