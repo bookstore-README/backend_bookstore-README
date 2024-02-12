@@ -4,7 +4,9 @@ import com.bookstore.readme.domain.book.domain.Book;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class BasketSearchDto {
@@ -26,6 +28,12 @@ public class BasketSearchDto {
                 .bookImgUrl(book.getBookImgUrl())
                 .bookTitle(book.getBookTitle())
                 .price(book.getPrice())
+                .authors(convertAuthors(book.getAuthors()))
                 .build();
+    }
+
+    private static List<String> convertAuthors(String authors) {
+        String[] split = authors.split(",");
+        return Arrays.stream(split).toList();
     }
 }
