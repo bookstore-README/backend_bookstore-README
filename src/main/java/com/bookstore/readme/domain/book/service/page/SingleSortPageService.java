@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,11 +21,12 @@ import java.util.List;
 public class SingleSortPageService extends BookPage {
     private final BookRepository bookRepository;
 
+    @Transactional
     public BookPageDto pageBooks(Integer cursorId, Integer limit, SortType sortType, boolean ascending, String search) {
         PageRequest pageRequest = PageRequest.of(0, limit + 1, getSort(sortType, ascending));
         Page<Book> pages;
 
-        if (cursorId == null) {
+        if (cursorId == 0) {
             Specification<Book> specification = BookPageSpecification.of(search);
             if (specification == null)
                 pages = bookRepository.findAll(pageRequest);
@@ -51,36 +53,4 @@ public class SingleSortPageService extends BookPage {
                 .books(results)
                 .build();
     }
-
-//    @Transactional
-//    public BookPageDto pageBooks(Integer cursorId, Integer limit, SortType sortType, boolean ascending, String search) {
-//        PageRequest pageRequest = PageRequest.of(0, limit + 1, getSort(sortType, ascending));
-//
-//        Book book = null;
-//        if (cursorId != null) {
-//            book = bookRepository.findById(cursorId.longValue())
-//                    .orElseThrow(() -> new NotFoundBookByIdException(cursorId.longValue()));
-//        }
-//
-//        Page<Book> pageBooks;
-//        if (book == null) {
-//                pageBooks = bookRepository.findAll(BookSpecification.defaultSearch(search), pageRequest);
-//        } else {
-//            pageBooks = bookRepository.findAll(BookSpecification.singleSortPagination(book, sortType, ascending, search), pageRequest);
-//        }
-//
-//        List<Book> contents = pageBooks.getContent();
-//        List<BookDto> results = contents.stream()
-//                .map(BookDto::of)
-//                .limit(limit)
-//                .toList();
-//
-//        int nextCursorId = pageBooks.hasNext() ? contents.get(contents.size() - 1).getId().intValue() : -1;
-//        return BookPageDto.builder()
-//                .total(results.size())
-//                .limit(limit)
-//                .cursorId(nextCursorId)
-//                .books(results)
-//                .build();
-//    }
 }
