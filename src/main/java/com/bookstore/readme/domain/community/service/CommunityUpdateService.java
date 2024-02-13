@@ -18,13 +18,11 @@ public class CommunityUpdateService {
 
     @Transactional
     public CommunityUpdateDto updateByCommunityId(Long communityId, CommunityUpdateRequest request) {
-        String title = request.getTitle();
         String content = request.getContent();
 
         Community community = communityRepository.findById(communityId)
                 .orElseThrow(() -> new NotFoundCommunityByIdException(communityId));
 
-        community.changeTitle(title);
         community.changeContent(content);
         communityRepository.flush();
         CommunityBookDto communityBookDto = CommunityBookDto.of(community.getBook());
@@ -32,7 +30,6 @@ public class CommunityUpdateService {
 
         return CommunityUpdateDto.builder()
                 .communityId(community.getId())
-                .title(community.getTitle())
                 .content(community.getContent())
                 .writer(communityMemberDto)
                 .bookInfo(communityBookDto)

@@ -24,7 +24,6 @@ public class CommunitySaveService {
     private final MemberRepository memberRepository;
 
     public CommunitySaveDto save(CommunitySaveRequest request) {
-        String title = request.getTitle();
         String content = request.getContent();
         Long bookId = request.getBookId();
         Long memberId = request.getMemberId();
@@ -36,7 +35,6 @@ public class CommunitySaveService {
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
 
         Community community = Community.builder()
-                .title(title)
                 .content(content)
                 .build();
 
@@ -49,7 +47,6 @@ public class CommunitySaveService {
         CommunityBookDto communityBookDto = CommunityBookDto.of(book);
         return CommunitySaveDto.builder()
                 .communityId(community.getId())
-                .title(community.getTitle())
                 .content(community.getContent())
                 .writer(communityMemberDto)
                 .bookInfo(communityBookDto)

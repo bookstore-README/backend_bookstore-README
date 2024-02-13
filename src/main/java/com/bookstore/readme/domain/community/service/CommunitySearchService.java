@@ -39,7 +39,6 @@ public class CommunitySearchService {
 
             CommunityPageInfoDto pageInfo = CommunityPageInfoDto.builder()
                     .communityId(community.getId())
-                    .title(community.getTitle())
                     .content(community.getContent())
                     .writer(communityMemberDto)
                     .bookInfo(communityBookDto)
@@ -74,7 +73,6 @@ public class CommunitySearchService {
 
             CommunityPageInfoDto pageInfo = CommunityPageInfoDto.builder()
                     .communityId(community.getId())
-                    .title(community.getTitle())
                     .content(community.getContent())
                     .writer(communityMemberDto)
                     .bookInfo(communityBookDto)
