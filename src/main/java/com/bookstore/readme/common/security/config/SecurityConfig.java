@@ -150,7 +150,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthorizationFilter getCustomAuthorizationFilter() throws Exception {
-        return new JwtAuthorizationFilter(jwtTokenService, memberRepository, passwordEncoder());
+        return new JwtAuthorizationFilter(jwtTokenService, memberRepository);
     }
 
     @Bean

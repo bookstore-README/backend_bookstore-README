@@ -2,10 +2,10 @@ package com.bookstore.readme.common.security.filter;
 
 import com.bookstore.readme.common.jwt.JwtTokenService;
 import com.bookstore.readme.domain.member.model.Member;
+import com.bookstore.readme.domain.member.model.MemberDetails;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -28,7 +26,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtTokenService jwtTokenService;
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
 
     private final static String AUTHORIZATION = "Authorization";
     private final static String TOKEN_PREFIX = "Bearer ";
@@ -107,19 +104,23 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
      *
      */
     public void saveAuthentication(Member member) {
-        String password = member.getPassword();
+        // String password = member.getPassword();
+        //
+        // if(null == password)
+        //     password = passwordEncoder.encode(UUID.randomUUID().toString());
 
-        if(null == password)
-            password = passwordEncoder.encode(UUID.randomUUID().toString());
+        // UserDetails userDetailsUser = User.builder()
+        //         .username(member.getEmail())
+        //         .password(password)
+        //         .roles(member.getRole().name())
+        //         .build();
 
-        UserDetails userDetailsUser = User.builder()
-                .username(member.getEmail())
-                .password(password)
-                .roles(member.getRole().name())
+        MemberDetails memberDetails = MemberDetails.builder()
+                .member(member)
                 .build();
 
         Authentication authentication =
-                new UsernamePasswordAuthenticationToken(userDetailsUser, null, userDetailsUser.getAuthorities());
+                new UsernamePasswordAuthenticationToken(memberDetails, null, memberDetails.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }

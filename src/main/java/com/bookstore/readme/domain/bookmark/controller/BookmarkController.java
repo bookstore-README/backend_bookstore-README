@@ -12,6 +12,7 @@ import com.bookstore.readme.domain.bookmark.service.BookmarkCountService;
 import com.bookstore.readme.domain.bookmark.service.BookmarkDeleteService;
 import com.bookstore.readme.domain.bookmark.service.BookmarkSearchService;
 import com.bookstore.readme.domain.bookmark.service.BookmarkService;
+import com.bookstore.readme.domain.member.model.MemberDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,6 +20,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,13 +36,13 @@ public class BookmarkController {
     private final BookmarkDeleteService bookmarkDeleteService;
     private final BookmarkSearchService bookmarkSearchService;
 
-    @PostMapping("/bookmark/{bookId}/{memberId}")
+    @PostMapping("/bookmark/{bookId}")
     @Operation(summary = "찜하기", description = "회원 아이디와 도서 아이디로 찜하는 API")
     public ResponseEntity<BookmarkResponse> addBookmark(
             @Parameter(description = "찜하기를 저장할 도서 아이디", required = true) @PathVariable(name = "bookId") Integer bookId,
-            @Parameter(description = "찜하기를 저장할 회원 아이디", required = true) @PathVariable(name = "memberId") Integer memberId
-    ) {
-        BookmarkDto bookmarkDto = bookmarkService.addBookmark(bookId.longValue(), memberId.longValue());
+            @AuthenticationPrincipal MemberDetails memberDetails
+            ) {
+        BookmarkDto bookmarkDto = bookmarkService.addBookmark(bookId.longValue(), memberDetails.getMemberId());
         return ResponseEntity.ok(BookmarkResponse.ok(bookmarkDto));
     }
 
