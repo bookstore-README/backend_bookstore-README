@@ -1,5 +1,6 @@
 package com.bookstore.readme.domain.review.controller;
 
+import com.bookstore.readme.domain.member.model.MemberDetails;
 import com.bookstore.readme.domain.review.dto.ReviewDto;
 import com.bookstore.readme.domain.review.dto.ReviewListDto;
 import com.bookstore.readme.domain.review.dto.ReviewSearchDto;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,7 +40,7 @@ public class ReviewController {
         return ResponseEntity.ok(ReviewResponse.ok(reviewSearchDto));
     }
 
-    @GetMapping("/{memberId}/member")
+    @GetMapping("/member/{memberId}")
     @Operation(summary = "회원 아이디로 리뷰 조회", description = "회원 아이디로 리뷰 목록 조회하는 API")
     public ResponseEntity<ReviewResponse> searchReviewByMemberId(
             @Parameter(description = "조회할 회원 아이디", example = "1", required = true)
@@ -50,8 +52,10 @@ public class ReviewController {
 
     @PostMapping
     @Operation(summary = "리뷰 등록", description = "리뷰를 등록하는 API")
-    public ResponseEntity<ReviewResponse> saveReview(@Valid @RequestBody ReviewSaveRequest request) {
-        Long reviewId = reviewSaveService.save(request);
+    public ResponseEntity<ReviewResponse> saveReview(
+            @AuthenticationPrincipal MemberDetails memberDetails,
+            @Valid @RequestBody ReviewSaveRequest request) {
+        Long reviewId = reviewSaveService.save(memberDetails, request);
         return ResponseEntity.ok(ReviewResponse.ok(reviewId));
     }
 

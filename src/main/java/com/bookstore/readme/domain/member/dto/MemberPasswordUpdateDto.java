@@ -8,10 +8,6 @@ import lombok.Getter;
 @Getter
 public class MemberPasswordUpdateDto {
 
-    @NotNull(message = "회원 아이디는 필수 입니다.")
-    @Schema(description = "회원 아이디입니다.", example = "1")
-    private Long memberId;
-
     @NotEmpty(message = "새로운 비밀번호 값은 필수 입니다.")
     @Schema(description = "새로운 비밀번호 입력값입니다.", example = "1234")
     private String newPassword;
