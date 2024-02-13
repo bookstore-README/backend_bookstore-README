@@ -62,9 +62,9 @@ public class SignInSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.setContentType("application/json");
         objectMapper.writeValue(response.getWriter(), MemberResponse.ok(mem));
 
-        log.info("로그인 성공. 이메일: {}", email);
-        log.info("로그인 성공. AccessToken : {}", accessToken);
-        log.info("로그인 성공. RefreshToken : {}", refreshToken);
+        // log.info("로그인 성공. 이메일: {}", email);
+        // log.info("로그인 성공. AccessToken : {}", accessToken);
+        // log.info("로그인 성공. RefreshToken : {}", refreshToken);
     }
 
     private String extractUsername(Authentication authentication) {
