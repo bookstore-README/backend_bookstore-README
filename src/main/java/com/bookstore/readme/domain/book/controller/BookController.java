@@ -11,12 +11,14 @@ import com.bookstore.readme.domain.book.service.ViewService;
 import com.bookstore.readme.domain.book.service.page.SingleSortAndCategoryPageService;
 import com.bookstore.readme.domain.book.service.page.SingleSortPageService;
 import com.bookstore.readme.domain.category.service.CategorySearchService;
+import com.bookstore.readme.domain.member.model.MemberDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -72,12 +74,12 @@ public class BookController {
     }
 
 
-    @PutMapping("/book/{bookId}/{memberId}/view")
+    @PutMapping("/book/{bookId}/view")
     @Operation(summary = "조회수 증가", description = "조회 수를 증가하기 위한 API")
     public ResponseEntity<BookResponse> bookView(
-            @Parameter(description = "조회된 도서 아이디", required = true) @PathVariable(name = "bookId") Integer bookId,
-            @Parameter(description = "도서를 조회한 회원 아이디", required = true) @PathVariable(name = "memberId") Integer memberId
+            @AuthenticationPrincipal MemberDetails memberDetails,
+            @Parameter(description = "조회된 도서 아이디", required = true) @PathVariable(name = "bookId") Integer bookId
     ) {
-        return ResponseEntity.ok(BookResponse.ok(viewService.addViewCount(memberId.longValue(), bookId.longValue())));
+        return ResponseEntity.ok(BookResponse.ok(viewService.addViewCount(memberDetails.getMemberId(), bookId.longValue())));
     }
 }
