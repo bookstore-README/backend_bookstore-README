@@ -72,8 +72,8 @@ public class SocialController {
         response.setContentType("application/json");
         objectMapper.writeValue(response.getWriter(), MemberResponse.ok(mem));
 
-        log.info("로그인 성공. AccessToken : {}", socialLoginResponseDto.getRefreshToken());
-        log.info("로그인 성공. RefreshToken : {}", socialLoginResponseDto.getAccessToken());
+        // log.info("로그인 성공. AccessToken : {}", socialLoginResponseDto.getRefreshToken());
+        // log.info("로그인 성공. RefreshToken : {}", socialLoginResponseDto.getAccessToken());
 
         return ResponseEntity.ok().build();
     }

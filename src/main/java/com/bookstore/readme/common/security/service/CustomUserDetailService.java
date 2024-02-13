@@ -5,7 +5,6 @@ import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.model.MemberDetails;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,10 +24,8 @@ public class CustomUserDetailService implements UserDetailsService {
                         () -> new NotFoundMemberByEmailException(email)
                 );
 
-        return User.builder()
-                .username(byLoginMember.getEmail())
-                .password(byLoginMember.getPassword())
-                .roles(byLoginMember.getRole().name())
+        return MemberDetails.builder()
+                .member(byLoginMember)
                 .build();
     }
 }
