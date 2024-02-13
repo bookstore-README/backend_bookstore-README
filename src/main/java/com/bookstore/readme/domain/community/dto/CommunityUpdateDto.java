@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 @Getter
 public class CommunityUpdateDto {
     private final Long communityId;
-    private final String title;
     private final String content;
     private final CommunityMemberDto writer;
     private final CommunityBookDto bookInfo;
@@ -16,9 +15,8 @@ public class CommunityUpdateDto {
     private final LocalDateTime updateDate;
 
     @Builder
-    public CommunityUpdateDto(Long communityId, String title, String content, CommunityMemberDto writer, CommunityBookDto bookInfo, LocalDateTime createDate, LocalDateTime updateDate) {
+    public CommunityUpdateDto(Long communityId, String content, CommunityMemberDto writer, CommunityBookDto bookInfo, LocalDateTime createDate, LocalDateTime updateDate) {
         this.communityId = communityId;
-        this.title = title;
         this.content = content;
         this.writer = writer;
         this.bookInfo = bookInfo;
