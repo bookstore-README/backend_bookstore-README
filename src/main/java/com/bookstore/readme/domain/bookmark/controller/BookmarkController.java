@@ -45,9 +45,10 @@ public class BookmarkController {
     @GetMapping("/bookmark")
     @Operation(summary = "회원의 찜목록 조회", description = "회원 아이디로 찜목록 조회 API")
     public ResponseEntity<BookmarkResponse> searchBookmarkAndBookByMember(
-            @ParameterObject @Valid BookmarkPageRequest request
+            @ParameterObject @Valid BookmarkPageRequest request,
+            @AuthenticationPrincipal MemberDetails memberDetails
     ) {
-        BookmarkPageDto bookmarks = bookmarkSearchService.searchBookmarkAndBookByMember(request.getMemberId(), request.getOffset(), request.getLimit(), request.getSort());
+        BookmarkPageDto bookmarks = bookmarkSearchService.searchBookmarkAndBookByMember(memberDetails.getMemberId(), request.getOffset(), request.getLimit(), request.getSort());
         return ResponseEntity.ok(BookmarkResponse.ok(bookmarks));
     }
 
