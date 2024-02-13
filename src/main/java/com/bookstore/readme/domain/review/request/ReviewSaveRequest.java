@@ -10,19 +10,14 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class ReviewSaveRequest extends ReviewRequest {
 
-    @NotNull(message = "회원 아이디는 필수 입니다.")
-    @Schema(example = "1")
-    private Long memberId;
-
     @NotNull(message = "책 아이디는 필수 입니다.")
     @Schema(example = "1")
     private Long bookId;
 
     private Double reviewRating;
 
-    public ReviewSaveRequest(String title, String content, Long memberId, Long bookId, Double reviewRating) {
+    public ReviewSaveRequest(String title, String content, Long bookId, Double reviewRating) {
         super(title, content);
-        this.memberId = memberId;
         this.bookId = bookId;
         this.reviewRating = reviewRating;
     }

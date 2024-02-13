@@ -6,6 +6,7 @@ import com.bookstore.readme.domain.member.exception.DuplicationMemberEmailExcept
 import com.bookstore.readme.domain.member.exception.DuplicationNicknameException;
 import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
 import com.bookstore.readme.domain.member.model.Member;
+import com.bookstore.readme.domain.member.model.MemberDetails;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
 import com.bookstore.readme.domain.review.domain.Review;
 import lombok.RequiredArgsConstructor;
@@ -45,9 +46,11 @@ public class MemberService {
     }
 
     @Transactional
-    public boolean changePassword(MemberPasswordUpdateDto memberPasswordUpdateDto) {
-        Member member = memberRepository.findById(memberPasswordUpdateDto.getMemberId())
-                .orElseThrow(() -> new NotFoundMemberByIdException(memberPasswordUpdateDto.getMemberId()));
+    public boolean changePassword(
+            MemberDetails memberDetails,
+            MemberPasswordUpdateDto memberPasswordUpdateDto) {
+        Member member = memberRepository.findById(memberDetails.getMemberId())
+                .orElseThrow(() -> new NotFoundMemberByIdException(memberDetails.getMemberId()));
 
         member.updateNewPassword(memberPasswordUpdateDto.getNewPassword(), encoder);
         memberRepository.saveAndFlush(member);
@@ -55,9 +58,9 @@ public class MemberService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public boolean changeProfile(MultipartFile profileImage, MemberUpdateDto memberUpdateDto) {
-        Member member = memberRepository.findById(memberUpdateDto.getMemberId())
-                .orElseThrow(() -> new NotFoundMemberByIdException(memberUpdateDto.getMemberId()));
+    public boolean changeProfile(MemberDetails memberDetails, MultipartFile profileImage, MemberUpdateDto memberUpdateDto) {
+        Member member = memberRepository.findById(memberDetails.getMemberId())
+                .orElseThrow(() -> new NotFoundMemberByIdException(memberDetails.getMemberId()));
 
         String fileUrl = null;
 

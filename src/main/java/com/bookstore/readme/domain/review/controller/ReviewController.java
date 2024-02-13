@@ -53,8 +53,10 @@ public class ReviewController {
 
     @PostMapping
     @Operation(summary = "리뷰 등록", description = "리뷰를 등록하는 API")
-    public ResponseEntity<ReviewResponse> saveReview(@Valid @RequestBody ReviewSaveRequest request) {
-        Long reviewId = reviewSaveService.save(request);
+    public ResponseEntity<ReviewResponse> saveReview(
+            @AuthenticationPrincipal MemberDetails memberDetails,
+            @Valid @RequestBody ReviewSaveRequest request) {
+        Long reviewId = reviewSaveService.save(memberDetails, request);
         return ResponseEntity.ok(ReviewResponse.ok(reviewId));
     }
 
