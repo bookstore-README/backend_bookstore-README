@@ -20,7 +20,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class JwtTokenService {
 
-    private final static long ACCESS_TOKEN_EXPIRED_TIME = 1000L * 60 * 30; // 30분
+    private final static long ACCESS_TOKEN_EXPIRED_TIME = 1000L * 60L * 60L * 24L; // 1일
+            // 1000L * 60 * 30; // 30분
     private final static long REFRESH_TOKEN_EXPIRED_TIME = 1000L * 60L * 60L * 24L * 7L; // 7일
     private final static String AUTHORIZATION = "Authorization";
     private final static String TOKEN_PREFIX = "Bearer ";

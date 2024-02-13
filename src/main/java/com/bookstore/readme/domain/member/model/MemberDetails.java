@@ -22,9 +22,11 @@ public class MemberDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collect = new ArrayList<>();
-        collect.add(() -> { return "ROLE_" + member.getRole();});
+        collect.add(() -> "ROLE_" + member.getRole());
         return collect;
     }
+
+    public Long getMemberId() { return member.getId(); }
 
     @Override
     public String getPassword() {

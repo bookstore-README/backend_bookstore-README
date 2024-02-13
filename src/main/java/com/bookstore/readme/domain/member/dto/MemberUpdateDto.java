@@ -8,10 +8,6 @@ import lombok.Getter;
 @Getter
 public class MemberUpdateDto {
 
-    @NotEmpty(message = "회원 아이디는 필수 입니다.")
-    @Schema(description = "회원 아이디입니다.", example = "1")
-    private Long memberId;
-
     @NotEmpty(message = "회원 닉네임 수정 시 필수 입니다.")
     @Schema(description = "회원 닉네임입니다.", example = "ReadMe")
     private String nickname;

@@ -20,7 +20,6 @@ public class Community {
     @Column(name = "community_id")
     private Long id;
 
-    private String title;
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,8 +39,7 @@ public class Community {
     private LocalDateTime updateDate;
 
     @Builder
-    public Community(String title, String content) {
-        this.title = title;
+    public Community(String content) {
         this.content = content;
     }
 
@@ -53,9 +51,6 @@ public class Community {
         this.member = member;
     }
 
-    public void changeTitle(String title) {
-        this.title = title;
-    }
 
     public void changeContent(String content) {
         this.content = content;
