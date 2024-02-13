@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Getter
 public class BookPageRequest {
-    @Schema(description = "현재 조회를 시작할 도서 아이디입니다.", example = "1")
+    @Schema(description = "현재 조회를 시작할 도서 아이디입니다.", example = "0")
     private final Integer bookId;
     @Schema(description = "페이지당 가져올 데이터 수 입니다.", example = "10")
     private final Integer limit;
@@ -28,7 +28,7 @@ public class BookPageRequest {
     private final String search;
 
     public BookPageRequest(Integer bookId, Integer limit, List<String> sort, Boolean ascending, String search) {
-        this.bookId = bookId;
+        this.bookId = bookId == null ? 0 : bookId;
         this.limit = limit == null ? 10 : limit;
         this.sort = (sort == null || sort.isEmpty()) ? List.of(SortType.VIEW) : sort.stream().map(s -> SortType.valueOf(s.toUpperCase())).collect(Collectors.toList());
         this.ascending = ascending != null && ascending;
