@@ -26,9 +26,9 @@ public class BookmarkSearchService {
     private final BookmarkRepository bookmarkRepository;
 
     @Transactional
-    public BookmarkPageDto searchBookmarkAndBookByMember(Integer memberId, Integer offset, Integer limit, SortType sortType) {
+    public BookmarkPageDto searchBookmarkAndBookByMember(Long memberId, Integer offset, Integer limit, SortType sortType) {
         PageRequest pageRequest = PageRequest.of(offset, limit, Sort.by(Sort.Order.desc(sortType.getSortType())));
-        Page<Bookmark> bookmarks = bookmarkRepository.findAll(equalMemberId(memberId.longValue()).and(equalMarked()), pageRequest);
+        Page<Bookmark> bookmarks = bookmarkRepository.findAll(equalMemberId(memberId).and(equalMarked()), pageRequest);
         List<Bookmark> content = bookmarks.getContent();
         List<BookmarkInfoDto> list = content.stream()
                 .map(bookmark -> BookmarkInfoDto.of(bookmark.getBook(), bookmark.getId()))
@@ -37,7 +37,7 @@ public class BookmarkSearchService {
         return BookmarkPageDto.builder()
                 .total(list.size())
                 .limit(limit)
-                .memberId(memberId)
+                .memberId(memberId.intValue())
                 .cursorId(bookmarks.hasNext() ? offset + 1 : -1)
                 .bookmarks(list)
                 .build();
