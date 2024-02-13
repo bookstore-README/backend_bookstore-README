@@ -40,13 +40,14 @@ public class ReviewController {
         return ResponseEntity.ok(ReviewResponse.ok(reviewSearchDto));
     }
 
-    @GetMapping("/member/{memberId}")
-    @Operation(summary = "회원 아이디로 리뷰 조회", description = "회원 아이디로 리뷰 목록 조회하는 API")
+    @GetMapping
+    @Operation(summary = "로그인 한 회원의 리뷰 조회", description = "로그인 한 회원의 리뷰 목록 조회하는 API")
     public ResponseEntity<ReviewResponse> searchReviewByMemberId(
-            @Parameter(description = "조회할 회원 아이디", example = "1", required = true)
-            @PathVariable("memberId") Integer reviewId
+            @AuthenticationPrincipal MemberDetails memberDetails
+//            @Parameter(description = "조회할 회원 아이디", example = "1", required = true)
+//            @PathVariable("memberId") Integer reviewId
     ) {
-        ReviewListDto result = reviewSearchService.searchReviewByMemberId(reviewId.longValue());
+        ReviewListDto result = reviewSearchService.searchReviewByMemberId(memberDetails.getMemberId());
         return ResponseEntity.ok(ReviewResponse.ok(result));
     }
 
