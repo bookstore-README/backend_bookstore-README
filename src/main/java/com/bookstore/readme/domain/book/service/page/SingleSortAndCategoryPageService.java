@@ -67,7 +67,7 @@ public class SingleSortAndCategoryPageService extends BookPage {
         if (book == null) {
             pageBooks = bookRepository.findAll(BookPageSpecification.of(search, categoryName), pageRequest);
         } else {
-            pageBooks = bookRepository.findAll(BookPageSpecification.of(book, sortType, ascending, categoryName, search), pageRequest);
+            pageBooks = bookRepository.findAll(BookPageSpecification.of(book, sortType, ascending, search, categoryName), pageRequest);
         }
         List<Book> contents = pageBooks.getContent();
         List<BookDto> results = contents.stream()
