@@ -1,5 +1,6 @@
 package com.bookstore.readme.domain.member.model;
 
+//import com.bookstore.readme.domain.delivery.domain.Delivery;
 import com.bookstore.readme.domain.review.domain.Review;
 import com.bookstore.readme.domain.social.domain.SocialId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -57,6 +58,11 @@ public class Member {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     private List<Review> reviews = new ArrayList<>();
 
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+//    private List<Delivery> deliveries = new ArrayList<>();
+
+    private String categories;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createDate;
@@ -66,7 +72,8 @@ public class Member {
     private LocalDateTime updateDate;
 
     @Builder
-    public Member(Long id, String name, String nickname, String profileImage, String email, String password, MemberRole role, String refreshToken, SocialId socialId) {
+    public Member(Long id, String name, String nickname, String profileImage, String email, String password
+            , MemberRole role, String refreshToken, SocialId socialId, String categories) {
         this.id = id;
         this.name = name;
         this.nickname = nickname;
@@ -76,10 +83,16 @@ public class Member {
         this.role = role;
         this.refreshToken = refreshToken;
         this.socialId = socialId;
+        this.categories = categories;
     }
 
     public void updateNewPassword(String password, PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(password);
+    }
+
+    public void updateCategories(List<Integer> categories) {
+        List<String> collect = categories.stream().map(String::valueOf).toList();
+        this.categories = String.join(",", collect);
     }
 
     public void passwordEncode(PasswordEncoder passwordEncoder) {

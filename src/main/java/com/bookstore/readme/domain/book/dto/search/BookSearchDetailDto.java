@@ -14,11 +14,13 @@ import java.util.List;
 public class BookSearchDetailDto extends BookDto {
     private List<BookmarkDto> bookmarks;
     private List<ReviewSearchDto> reviews;
+    private List<Integer> ratingDist;
 
-    public BookSearchDetailDto(Long bookId, String bookTitle, LocalDateTime publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Double averageRating, Integer price, Integer bookmarkCount, Integer reviewCount, Integer viewCount, Integer quantityCount, String publisher, LocalDateTime createDate, LocalDateTime updateDate, List<BookmarkDto> bookmarks, List<ReviewSearchDto> reviews) {
+    public BookSearchDetailDto(Long bookId, String bookTitle, LocalDateTime publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Double averageRating, Integer price, Integer bookmarkCount, Integer reviewCount, Integer viewCount, Integer quantityCount, String publisher, LocalDateTime createDate, LocalDateTime updateDate, List<BookmarkDto> bookmarks, List<ReviewSearchDto> reviews, List<Integer> ratingDist) {
         super(bookId, bookTitle, publishedDate, bookImgUrl, authors, description, categories, averageRating, price, bookmarkCount, reviewCount, viewCount, quantityCount, publisher, createDate, updateDate);
         this.bookmarks = bookmarks;
         this.reviews = reviews;
+        this.ratingDist = ratingDist;
     }
 
     public static BookSearchDetailDto of(Book book, List<ReviewSearchDto> reviews, List<BookmarkDto> bookmarks) {
@@ -30,7 +32,8 @@ public class BookSearchDetailDto extends BookDto {
                 .authors(convertAuthors(book.getAuthors()))
                 .description(book.getDescription())
                 .categories(convertCategories(book.getCategories()))
-                .averageRating(book.getAverageRating())
+                .averageRating(Math.round(book.getAverageRating() * 10) / 10.0)
+                .ratingDist(convertRating(reviews))
                 .price(book.getPrice())
                 .bookmarks(bookmarks)
                 .reviews(reviews)
@@ -42,6 +45,16 @@ public class BookSearchDetailDto extends BookDto {
                 .createDate(book.getCreateDate())
                 .updateDate(book.getUpdateDate())
                 .build();
+    }
+
+    private static List<Integer> convertRating(List<ReviewSearchDto> reviews) {
+        Integer[] test = new Integer[]{0,0,0,0,0};
+        for (ReviewSearchDto review : reviews) {
+            if (!(review.getReviewRating() == null || review.getReviewRating() == 0))
+                test[(int) (review.getReviewRating() - 1)] += 1;
+        }
+
+        return List.of(test);
     }
 
 }

@@ -78,4 +78,16 @@ public class MemberController {
 
         return ResponseEntity.ok(MemberResponse.ok(memberReviewsDtos));
     }
+
+    @PutMapping("/categories")
+    @Operation(summary = "선호 장르 선택", description = "마이페이지 설정 선호 장르 API")
+    public ResponseEntity<MemberResponse> changeCategories(
+            @AuthenticationPrincipal MemberDetails memberDetails,
+            @RequestBody MemberCategoryDto memberCategoryDto
+    ) {
+
+        memberService.changeCategories(memberDetails, memberCategoryDto);
+
+        return ResponseEntity.ok(MemberResponse.ok(null));
+    }
 }

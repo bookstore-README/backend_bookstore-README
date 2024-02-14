@@ -33,7 +33,7 @@ public class Book {
     private String categories;
     private Integer price;
     private Double averageRating;
-
+    private String ratingDist;
     private String bookImgUrl;
     private Integer reviewCount;
     private Integer bookmarkCount;
