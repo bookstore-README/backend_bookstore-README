@@ -69,6 +69,7 @@ public class BookSearchService {
         List<BookmarkDto> bookmarkDto = bookmarks.stream()
                 .filter(Bookmark::getIsMarked)
                 .map(bookmark -> BookmarkDto.builder()
+                        .bookmarkId(bookmark.getId())
                         .bookId(bookmark.getBook().getId())
                         .memberId(bookmark.getMember().getId())
                         .isMarked(bookmark.getIsMarked())

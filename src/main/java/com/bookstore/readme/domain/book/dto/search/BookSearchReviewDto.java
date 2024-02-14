@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -39,4 +40,6 @@ public class BookSearchReviewDto extends BookDto {
                 .updateDate(book.getUpdateDate())
                 .build();
     }
+
+
 }
