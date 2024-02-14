@@ -5,6 +5,7 @@ import com.bookstore.readme.domain.book.repository.BookRepository;
 import com.bookstore.readme.domain.book.util.DateTimeConverter;
 import com.bookstore.readme.domain.collection.aladin.dto.BookDto;
 import com.bookstore.readme.domain.collection.aladin.dto.BookItemDto;
+import com.bookstore.readme.domain.collection.aladin.request.CoverSize;
 import com.bookstore.readme.domain.collection.aladin.request.SearchTarget;
 import com.bookstore.readme.domain.collection.aladin.request.search.AladdinSearchRequest;
 import com.bookstore.readme.domain.collection.aladin.request.search.QueryType;
@@ -100,7 +101,7 @@ public class CollectionBookSearchService extends CollectionService {
         List<AladdinSearchRequest> requests = new ArrayList<>();
         setSearches.forEach(search -> {
             starts.forEach(start -> {
-                AladdinSearchRequest aladdinSearchRequest = new AladdinSearchRequest(search, queryType, searchTarget, start, maxResult, null, null, null);
+                AladdinSearchRequest aladdinSearchRequest = new AladdinSearchRequest(search, queryType, searchTarget, start, maxResult, null, CoverSize.BIG, null);
                 requests.add(aladdinSearchRequest);
             });
         });
