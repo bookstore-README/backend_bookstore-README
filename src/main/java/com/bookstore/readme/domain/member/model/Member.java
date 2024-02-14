@@ -1,6 +1,6 @@
 package com.bookstore.readme.domain.member.model;
 
-import com.bookstore.readme.domain.delivery.domain.Delivery;
+//import com.bookstore.readme.domain.delivery.domain.Delivery;
 import com.bookstore.readme.domain.review.domain.Review;
 import com.bookstore.readme.domain.social.domain.SocialId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -58,8 +58,8 @@ public class Member {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     private List<Review> reviews = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
-    private List<Delivery> deliveries = new ArrayList<>();
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+//    private List<Delivery> deliveries = new ArrayList<>();
 
     private String categories;
 
