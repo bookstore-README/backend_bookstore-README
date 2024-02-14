@@ -57,6 +57,7 @@ public class SocialController {
         Map<String, Object> mem = new HashMap<>();
         mem.put("email", socialLoginResponseDto.getEmail());
         mem.put("memberId", socialLoginResponseDto.getMemberId());
+        mem.put("socialType", socialLoginResponseDto.getSocialType());
         mem.put(AUTHENTICATION, PREFIX_BEARER + socialLoginResponseDto.getAccessToken());
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -64,9 +65,6 @@ public class SocialController {
 
         // response.setHeader(AUTHENTICATION, PREFIX_BEARER + socialLoginResponseDto.getAccessToken());
         response.addCookie(cookie);
-
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json");
 
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");

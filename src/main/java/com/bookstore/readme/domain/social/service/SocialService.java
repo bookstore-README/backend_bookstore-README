@@ -38,6 +38,7 @@ public class SocialService {
         return SocialLoginResponseDto.builder()
                 .memberId(member.getId())
                 .email(member.getEmail())
+                .socialType(member.getSocialId().socialServer())
                 .accessToken(accessToken)
                 .refreshToken(member.getRefreshToken())
                 .build();
