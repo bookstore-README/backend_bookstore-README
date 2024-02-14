@@ -32,7 +32,7 @@ public class BookSearchDetailDto extends BookDto {
                 .authors(convertAuthors(book.getAuthors()))
                 .description(book.getDescription())
                 .categories(convertCategories(book.getCategories()))
-                .averageRating(book.getAverageRating())
+                .averageRating(Math.round(book.getAverageRating() * 10) / 10.0)
                 .ratingDist(convertRating(reviews))
                 .price(book.getPrice())
                 .bookmarks(bookmarks)
