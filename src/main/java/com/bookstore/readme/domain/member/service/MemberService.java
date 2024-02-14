@@ -91,4 +91,13 @@ public class MemberService {
 
         return MemberReviewsDto.ofs(reviews);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void changeCategories(MemberDetails memberDetails, MemberCategoryDto memberCategoryDto) {
+        Member member = memberRepository.findById(memberDetails.getMemberId())
+                .orElseThrow(() -> new NotFoundMemberByIdException(memberDetails.getMemberId()));
+
+        member.updateCategories(memberCategoryDto.getCategories());
+        memberRepository.saveAndFlush(member);
+    }
 }
