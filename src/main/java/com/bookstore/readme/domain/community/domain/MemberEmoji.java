@@ -58,4 +58,14 @@ public class MemberEmoji {
         }
     }
 
+    public Boolean getCheck(String type) {
+        return switch (type) {
+            case "heart" -> isHeart;
+            case "smile" -> isSmile;
+            case "excited" -> isExcited;
+            case "angry" -> isAngry;
+            case "crying" -> isCrying;
+            default -> false;
+        };
+    }
 }
