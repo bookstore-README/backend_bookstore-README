@@ -74,23 +74,18 @@ public class BookPageController {
     }
 
     @GetMapping("/book/favorite")
-    @Operation(summary = "맞춤 도서 조회", description = "사용자 맞춤 도서를 위한 도서 조회 API", hidden = true)
+    @Operation(summary = "맞춤 도서 조회", description = "사용자 맞춤 도서를 위한 도서 조회 API")
     public ResponseEntity<BookResponse> favoriteBook(
             @AuthenticationPrincipal MemberDetails memberDetails,
             @ParameterObject @Valid FavoriteCategoryRequest request
-
     ) {
-        return ResponseEntity.ok()
-                .body(BookResponse.ok(favoritePageService.searchRandomBookPage(memberDetails.getMemberId(), request)));
-    }
-
-    @GetMapping("/book/favorite/main")
-    @Operation(summary = "맞춤 도서 조회", description = "사용자 맞춤 도서를 위한 도서 조회 API", hidden = true)
-    public ResponseEntity<BookResponse> favoriteBooks(
-            @AuthenticationPrincipal MemberDetails memberDetails
-    ) {
-        return ResponseEntity.ok()
-                .body(BookResponse.ok(favoritePageService.searchRandomBook(memberDetails.getMemberId())));
+        if (request.getIsRandom()) {
+            return ResponseEntity.ok()
+                    .body(BookResponse.ok(favoritePageService.searchRandomBookPage(memberDetails.getMemberId(), request)));
+        } else {
+            return ResponseEntity.ok()
+                    .body(BookResponse.ok(favoritePageService.searchFavoriteBookPage(memberDetails.getMemberId(), request)));
+        }
     }
 
     @PostMapping("/book")

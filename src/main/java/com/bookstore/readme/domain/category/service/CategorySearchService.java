@@ -3,19 +3,27 @@ package com.bookstore.readme.domain.category.service;
 import com.bookstore.readme.domain.category.domain.Category;
 import com.bookstore.readme.domain.category.dto.CategoryDto;
 import com.bookstore.readme.domain.category.dto.CategoryInfo;
+import com.bookstore.readme.domain.category.dto.MemberCategory;
 import com.bookstore.readme.domain.category.exception.NotFoundCategoryByIdException;
 import com.bookstore.readme.domain.category.exception.NotFoundCategoryByMainSubIdException;
 import com.bookstore.readme.domain.category.repository.CategoryRepository;
+import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
+import com.bookstore.readme.domain.member.model.Member;
+import com.bookstore.readme.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class CategorySearchService {
     private final CategoryRepository categoryRepository;
+    private final MemberRepository memberRepository;
 
     public CategoryDto searchCategory() {
         List<Category> categories = categoryRepository.findAll();
@@ -52,10 +60,69 @@ public class CategorySearchService {
     }
 
     public List<CategoryInfo> categoryInfos(List<Integer> categories) {
-        List<Category> categoryList = categoryRepository.findAllByIdIn(categories);
+        List<Long> collect = categories.stream()
+                .map(Integer::longValue)
+                .collect(Collectors.toList());
+
+        List<Category> categoryList = categoryRepository.findAllByIdIn(collect);
 
         return categoryList.stream()
                 .map(CategoryInfo::of)
                 .toList();
+    }
+
+    @Transactional
+    public MemberCategory memberCategories(Long memberId) {
+        //회원이 가진 데이터
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
+
+        String categories = member.getCategories();
+        String[] split = categories.split(",");
+        List<Long> list = Stream.of(split)
+                .map(Long::parseLong)
+                .toList();
+
+        List<Category> result = categoryRepository.findAllByIdIn(list);
+        List<CategoryInfo> list1 = result.stream()
+                .map(CategoryInfo::of)
+                .toList();
+
+        return MemberCategory.builder()
+                .memberCategory(list1)
+                .build();
+    }
+
+    @Transactional
+    @Cacheable(value = "favoriteBooks", keyGenerator = "viewKeyGeneratorBean")
+    public MemberCategory randomMemberCategories(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
+
+        String categories = member.getCategories();
+        String[] split = categories.split(",");
+        Set<Long> list = Stream.of(split)
+                .map(Long::parseLong)
+                .collect(Collectors.toSet());
+
+        if (list.size() < 3) {
+            Random random = new Random();
+            int count = (int) categoryRepository.count();
+            while (list.size() <= 3) {
+                list.add((long) random.nextInt(count + 1));
+            }
+        }
+
+        List<Category> result = categoryRepository.findAllByIdIn(list);
+        Collections.shuffle(result);
+        List<Category> randomCategoryIds = result.subList(0, 4);
+
+        List<CategoryInfo> list1 = randomCategoryIds.stream()
+                .map(CategoryInfo::of)
+                .toList();
+
+        return MemberCategory.builder()
+                .memberCategory(list1)
+                .build();
     }
 }
