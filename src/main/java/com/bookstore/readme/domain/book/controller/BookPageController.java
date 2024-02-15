@@ -74,7 +74,7 @@ public class BookPageController {
     }
 
     @GetMapping("/book/favorite")
-    @Operation(summary = "맞춤 도서 조회", description = "사용자 맞춤 도서를 위한 도서 조회 API", hidden = true)
+    @Operation(summary = "맞춤 도서 조회", description = "사용자 맞춤 도서를 위한 도서 조회 API")
     public ResponseEntity<BookResponse> favoriteBook(
             @AuthenticationPrincipal MemberDetails memberDetails,
             @ParameterObject @Valid FavoriteCategoryRequest request

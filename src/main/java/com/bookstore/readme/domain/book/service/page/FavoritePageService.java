@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -37,20 +38,22 @@ public class FavoritePageService {
         Sort sort = Sort.by(Sort.Direction.DESC, SortType.ID.getSortType());
         PageRequest pageRequest = PageRequest.of(0, 100, sort);
 
+        //회원이 가진 데이터
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
 
-        //TODO MEMBER 에 데이터가 추가되면 설정
-        List<Integer> requestId = request.getCategoryId();
-        if (requestId == null) {
-            //회원 에서 카테고리 아이디 가져오기 추가
-        }
-
+        String categoryId = member.getCategories();
+        String[] split = categoryId.split(",");
+        List<Integer> convertId = Stream.of(split)
+                .map(Integer::parseInt)
+                .filter(integer -> request.getCategoryId().contains(integer))
+                .toList();
+        
         List<Category> categories;
-        if (requestId == null)
+        if (convertId.isEmpty())
             categories = categoryRepository.findAll();
         else
-            categories = categoryRepository.findAllByIdIn(requestId);
+            categories = categoryRepository.findAllByIdIn(convertId);
 
         List<String> list = categories.stream()
                 .map(category -> {
