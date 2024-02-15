@@ -22,7 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -37,15 +39,12 @@ public class FavoritePageService {
         Sort sort = Sort.by(Sort.Direction.DESC, SortType.ID.getSortType());
         PageRequest pageRequest = PageRequest.of(0, request.getLimit(), sort);
 
-        //회원이 가진 데이터
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
 
-        List<Long> convertId = convertLongAndFilter(member.getCategories(), request.getCategoryId());
-        List<Category> categories = convertId.isEmpty() ?
-                categoryRepository.findAll() : categoryRepository.findAllByIdIn(convertId);
+        List<Long> categoryId = convertLongAndFilter(member.getCategories(), request.getCategoryId());
 
-        List<String> list = categories.stream()
+        List<String> list = categoryRepository.findAllByIdIn(categoryId).stream()
                 .map(category -> String.join(",", category.getMainName(), category.getSubName()))
                 .toList();
 
@@ -59,11 +58,11 @@ public class FavoritePageService {
                 .total(results.size())
                 .limit(request.getLimit())
                 .books(results)
+                .memberCategory(Arrays.stream(member.getCategories().split(",")).toList())
                 .build();
     }
 
     @Transactional
-    @Cacheable(value = "favoriteBooks", keyGenerator = "viewKeyGeneratorBean")
     public BookPageDto searchRandomBook(Long memberId) {
         Sort sort = Sort.by(Sort.Direction.DESC, SortType.ID.getSortType());
         PageRequest pageRequest = PageRequest.of(0, 4, sort);
@@ -91,6 +90,7 @@ public class FavoritePageService {
                 .total(results.size())
                 .limit(100)
                 .books(results)
+                .memberCategory(categories)
                 .build();
     }
 
@@ -99,14 +99,16 @@ public class FavoritePageService {
      * @param filter     변환할 List에 포함할 필터 데이터 ex) '[1, 2]'
      */
     private static List<Long> convertLongAndFilter(String categoryId, List<Integer> filter) {
-        List<Long> collect = filter.stream()
-                .map(Integer::longValue)
-                .toList();
-
         String[] split = categoryId.split(",");
-        return Stream.of(split)
-                .map(Long::parseLong)
-                .filter(collect::contains)
-                .toList();
+        Stream<Long> longStream = Stream.of(split).map(Long::parseLong);
+
+        if (!filter.isEmpty()) {
+            List<Long> collect = filter.stream()
+                    .map(Integer::longValue)
+                    .toList();
+            longStream = longStream.filter(collect::contains);
+        }
+
+        return longStream.toList();
     }
 }

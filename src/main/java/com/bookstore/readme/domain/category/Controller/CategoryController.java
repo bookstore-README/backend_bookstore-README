@@ -58,8 +58,13 @@ public class CategoryController {
     @GetMapping("/member")
     @Operation(summary = "회원 맞춤 카테고리 조회 기능", description = "회원이 선택한 카테고리 조회 API")
     public ResponseEntity<CategoryResponse> memberCategory(
-            @AuthenticationPrincipal MemberDetails memberDetails
+            @AuthenticationPrincipal MemberDetails memberDetails,
+            @Parameter boolean isRandom
     ) {
-        return ResponseEntity.ok(CategoryResponse.of(categorySearchService.memberCategories(memberDetails.getMemberId())));
+        if (isRandom) {
+            return ResponseEntity.ok(CategoryResponse.of(categorySearchService.randomMemberCategories(memberDetails.getMemberId())));
+        } else {
+            return ResponseEntity.ok(CategoryResponse.of(categorySearchService.memberCategories(memberDetails.getMemberId())));
+        }
     }
 }
