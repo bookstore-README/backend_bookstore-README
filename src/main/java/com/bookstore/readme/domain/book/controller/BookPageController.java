@@ -78,7 +78,6 @@ public class BookPageController {
     public ResponseEntity<BookResponse> favoriteBook(
             @AuthenticationPrincipal MemberDetails memberDetails,
             @ParameterObject @Valid FavoriteCategoryRequest request
-
     ) {
         return ResponseEntity.ok()
                 .body(BookResponse.ok(favoritePageService.searchRandomBookPage(memberDetails.getMemberId(), request)));

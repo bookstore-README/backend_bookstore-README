@@ -14,6 +14,7 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
 
     boolean existsByBookTitle(String bookTitle);
 
-    @Query("select b from Book b where b.categories in :categories ORDER by  RAND()")
-    Page<Book> findRandomBookPage(List<String> categories, Pageable pageable);
+        @Query("select b from Book b where b.categories in :categories ORDER by  RAND()")
+    Page<Book> findFavoriteBookPage(List<String> categories, Pageable pageable);
+//    Page<Book> findFavoriteBookPage(List<String> categories, Pageable pageable);
 }

@@ -1,14 +1,14 @@
 package com.bookstore.readme.domain.book.service.page;
 
 import com.bookstore.readme.domain.book.domain.Book;
-import com.bookstore.readme.domain.book.dto.page.BookDto;
-import com.bookstore.readme.domain.book.dto.page.BookPageDto;
-import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
+import com.bookstore.readme.domain.book.dto.favorite.BookDto;
+import com.bookstore.readme.domain.book.dto.favorite.BookPageDto;
 import com.bookstore.readme.domain.book.repository.BookRepository;
-import com.bookstore.readme.domain.book.request.BookPageRequest;
 import com.bookstore.readme.domain.book.request.FavoriteCategoryRequest;
 import com.bookstore.readme.domain.bookmark.dto.SortType;
 import com.bookstore.readme.domain.category.domain.Category;
+import com.bookstore.readme.domain.category.dto.CategoryDto;
+import com.bookstore.readme.domain.category.dto.CategoryInfo;
 import com.bookstore.readme.domain.category.repository.CategoryRepository;
 import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
 import com.bookstore.readme.domain.member.model.Member;
@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Stream;
 
 @Service
@@ -36,32 +35,21 @@ public class FavoritePageService {
     @Transactional
     public BookPageDto searchRandomBookPage(Long memberId, FavoriteCategoryRequest request) {
         Sort sort = Sort.by(Sort.Direction.DESC, SortType.ID.getSortType());
-        PageRequest pageRequest = PageRequest.of(0, 100, sort);
+        PageRequest pageRequest = PageRequest.of(0, request.getLimit(), sort);
 
         //회원이 가진 데이터
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
 
-        String categoryId = member.getCategories();
-        String[] split = categoryId.split(",");
-        List<Integer> convertId = Stream.of(split)
-                .map(Integer::parseInt)
-                .filter(integer -> request.getCategoryId().contains(integer))
-                .toList();
-        
-        List<Category> categories;
-        if (convertId.isEmpty())
-            categories = categoryRepository.findAll();
-        else
-            categories = categoryRepository.findAllByIdIn(convertId);
+        List<Long> convertId = convertLongAndFilter(member.getCategories(), request.getCategoryId());
+        List<Category> categories = convertId.isEmpty() ?
+                categoryRepository.findAll() : categoryRepository.findAllByIdIn(convertId);
 
         List<String> list = categories.stream()
-                .map(category -> {
-                    return category.getMainName() + "," + category.getSubName();
-                })
+                .map(category -> String.join(",", category.getMainName(), category.getSubName()))
                 .toList();
 
-        Page<Book> randomBookPage = bookRepository.findRandomBookPage(list, pageRequest);
+        Page<Book> randomBookPage = bookRepository.findFavoriteBookPage(list, pageRequest);
         List<Book> contents = randomBookPage.getContent();
         List<BookDto> results = contents.stream()
                 .map(BookDto::of)
@@ -69,8 +57,7 @@ public class FavoritePageService {
 
         return BookPageDto.builder()
                 .total(results.size())
-                .limit(100)
-                .cursorId(-1)
+                .limit(request.getLimit())
                 .books(results)
                 .build();
     }
@@ -79,17 +66,22 @@ public class FavoritePageService {
     @Cacheable(value = "favoriteBooks", keyGenerator = "viewKeyGeneratorBean")
     public BookPageDto searchRandomBook(Long memberId) {
         Sort sort = Sort.by(Sort.Direction.DESC, SortType.ID.getSortType());
-        PageRequest pageRequest = PageRequest.of(0, 100, sort);
+        PageRequest pageRequest = PageRequest.of(0, 4, sort);
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
 
-        //TODO 회원 맞춤 도서로 설정하기
-        //TODO MEMBER 에 데이터가 추가되면 설정
+        String categoryId = member.getCategories();
+        if (categoryId == null || categoryId.isEmpty()) {
+            //모든 카테고리중 아무거나 3개
+        } else {
+
+        }
+
         List<String> categories = new ArrayList<>();
         categories.add("국내도서");
 
-        Page<Book> randomBookPage = bookRepository.findRandomBookPage(categories, pageRequest);
+        Page<Book> randomBookPage = bookRepository.findFavoriteBookPage(categories, pageRequest);
         List<Book> contents = randomBookPage.getContent();
         List<BookDto> results = contents.stream()
                 .map(BookDto::of)
@@ -98,22 +90,23 @@ public class FavoritePageService {
         return BookPageDto.builder()
                 .total(results.size())
                 .limit(100)
-                .cursorId(-1)
                 .books(results)
                 .build();
     }
 
-    private List<String> getCategories(int limit, List<Category> categories) {
-        Random random = new Random();
+    /**
+     * @param categoryId List 로 변환할 categoryId ex) '1,2,3'
+     * @param filter     변환할 List에 포함할 필터 데이터 ex) '[1, 2]'
+     */
+    private static List<Long> convertLongAndFilter(String categoryId, List<Integer> filter) {
+        List<Long> collect = filter.stream()
+                .map(Integer::longValue)
+                .toList();
 
-        List<String> result = new ArrayList<>();
-        for (int i = 0; i < limit; i++) {
-            int index = random.nextInt(0, categories.size());
-            Category category = categories.get(index);
-            String strCategory = category.getMainName() + "," + category.getSubName();
-            result.add(strCategory);
-        }
-
-        return result;
+        String[] split = categoryId.split(",");
+        return Stream.of(split)
+                .map(Long::parseLong)
+                .filter(collect::contains)
+                .toList();
     }
 }
