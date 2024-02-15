@@ -1,7 +1,7 @@
-package com.bookstore.readme.domain.review.domain;
+package com.bookstore.readme.domain.order.domain;
 
-import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.member.model.Member;
+import com.bookstore.readme.domain.order.dto.OrderDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,7 +11,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.sql.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,51 +19,38 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class Review {
+@Table(name = "orders")
+public class Order {
+
     @Id
     @GeneratedValue
-    @Column(name = "review_id")
+    @Column(name = "orderId")
     private Long id;
-    private String content;
-    private Double reviewRating;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
-    private Book book;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+    private List<OrderBook> orderBooks = new ArrayList<>();
 
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createDate;
 
     @LastModifiedDate
-    @Column(updatable = true)
+    @Column
     private LocalDateTime updateDate;
 
     @Builder
-    public Review(String content, Double reviewRating) {
-        this.content = content;
-        this.reviewRating = reviewRating;
-    }
-
-    public void changeBook(Book book) {
-        this.book = book;
-        book.getReviews().add(this);
-    }
-
-    public void changeMember(Member member) {
+    public Order(Long id, Member member, List<OrderBook> orderBooks) {
+        this.id = id;
         this.member = member;
-        member.getReviews().add(this);
+        this.orderBooks = orderBooks;
     }
 
-    public void changeContent(String content) {
-        this.content = content;
-    }
+    // public void changeOrder(OrderBook orderBook) {
+    //     this.getOrderBooks().add(orderBook);
+    // }
 
-    public void changeReviewRating(Double reviewRating) {
-        this.reviewRating = reviewRating;
-    }
 }

@@ -1,6 +1,7 @@
 package com.bookstore.readme.domain.book.domain;
 
 import com.bookstore.readme.domain.bookmark.domain.Bookmark;
+import com.bookstore.readme.domain.order.domain.OrderBook;
 import com.bookstore.readme.domain.review.domain.Review;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -47,6 +48,9 @@ public class Book {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
     private List<Bookmark> bookmarks = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
+    private List<OrderBook> orderBooks = new ArrayList<>();
 
     @Column(name = "published_date", columnDefinition = "DATETIME(6)")
     private LocalDateTime publishedDate;

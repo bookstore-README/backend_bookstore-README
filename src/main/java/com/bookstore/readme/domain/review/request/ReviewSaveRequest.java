@@ -16,15 +16,14 @@ public class ReviewSaveRequest extends ReviewRequest {
 
     private Double reviewRating;
 
-    public ReviewSaveRequest(String title, String content, Long bookId, Double reviewRating) {
-        super(title, content);
+    public ReviewSaveRequest(String content, Long bookId, Double reviewRating) {
+        super(content);
         this.bookId = bookId;
         this.reviewRating = reviewRating;
     }
 
     public static Review toReview(ReviewSaveRequest request) {
         return Review.builder()
-                .title(request.getTitle())
                 .content(request.getContent())
                 .reviewRating(request.getReviewRating())
                 .build();

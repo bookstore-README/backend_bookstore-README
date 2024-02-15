@@ -1,15 +1,17 @@
 package com.bookstore.readme.domain.book.service.page;
 
 import com.bookstore.readme.domain.book.domain.Book;
-import com.bookstore.readme.domain.book.dto.page.BookDto;
-import com.bookstore.readme.domain.book.dto.page.BookPageDto;
-import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
+import com.bookstore.readme.domain.book.dto.favorite.BookDto;
+import com.bookstore.readme.domain.book.dto.favorite.BookPageDto;
 import com.bookstore.readme.domain.book.repository.BookRepository;
-import com.bookstore.readme.domain.book.request.BookPageRequest;
 import com.bookstore.readme.domain.book.request.FavoriteCategoryRequest;
 import com.bookstore.readme.domain.bookmark.dto.SortType;
 import com.bookstore.readme.domain.category.domain.Category;
+import com.bookstore.readme.domain.category.dto.CategoryDto;
+import com.bookstore.readme.domain.category.dto.CategoryInfo;
+import com.bookstore.readme.domain.category.dto.MemberCategory;
 import com.bookstore.readme.domain.category.repository.CategoryRepository;
+import com.bookstore.readme.domain.category.response.CategoryResponse;
 import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
 import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
@@ -20,10 +22,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -34,34 +39,20 @@ public class FavoritePageService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public BookPageDto searchRandomBookPage(Long memberId, FavoriteCategoryRequest request) {
+    public BookPageDto searchFavoriteBookPage(Long memberId, FavoriteCategoryRequest request) {
         Sort sort = Sort.by(Sort.Direction.DESC, SortType.ID.getSortType());
         PageRequest pageRequest = PageRequest.of(0, 100, sort);
 
-        //회원이 가진 데이터
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
 
-        String categoryId = member.getCategories();
-        String[] split = categoryId.split(",");
-        List<Integer> convertId = Stream.of(split)
-                .map(Integer::parseInt)
-                .filter(integer -> request.getCategoryId().contains(integer))
-                .toList();
-        
-        List<Category> categories;
-        if (convertId.isEmpty())
-            categories = categoryRepository.findAll();
-        else
-            categories = categoryRepository.findAllByIdIn(convertId);
+        List<Long> categoryId = convertLongAndFilter(member.getCategories(), request.getCategoryId());
 
-        List<String> list = categories.stream()
-                .map(category -> {
-                    return category.getMainName() + "," + category.getSubName();
-                })
+        List<String> list = categoryRepository.findAllByIdIn(categoryId).stream()
+                .map(category -> String.join(",", category.getMainName(), category.getSubName()))
                 .toList();
 
-        Page<Book> randomBookPage = bookRepository.findRandomBookPage(list, pageRequest);
+        Page<Book> randomBookPage = bookRepository.findFavoriteBookPage(list, pageRequest);
         List<Book> contents = randomBookPage.getContent();
         List<BookDto> results = contents.stream()
                 .map(BookDto::of)
@@ -70,50 +61,64 @@ public class FavoritePageService {
         return BookPageDto.builder()
                 .total(results.size())
                 .limit(100)
-                .cursorId(-1)
                 .books(results)
+                .memberCategory(Arrays.stream(member.getCategories().split(",")).toList())
                 .build();
     }
 
     @Transactional
-    @Cacheable(value = "favoriteBooks", keyGenerator = "viewKeyGeneratorBean")
-    public BookPageDto searchRandomBook(Long memberId) {
-        Sort sort = Sort.by(Sort.Direction.DESC, SortType.ID.getSortType());
-        PageRequest pageRequest = PageRequest.of(0, 100, sort);
+    @Cacheable(value = "randomBook", keyGenerator = "viewKeyGeneratorBean")
+    public BookPageDto searchRandomBookPage(Long memberId, FavoriteCategoryRequest request) {
+        PageRequest pageRequest = PageRequest.of(0, 100);
+
+        if (request.getCategoryId().isEmpty()) {
+            throw new IllegalArgumentException("카테고리 아이디는 필수 입니다.");
+        }
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
 
-        //TODO 회원 맞춤 도서로 설정하기
-        //TODO MEMBER 에 데이터가 추가되면 설정
-        List<String> categories = new ArrayList<>();
-        categories.add("국내도서");
+        List<Long> categoryId = convertLongAndFilter(member.getCategories(), request.getCategoryId());
 
-        Page<Book> randomBookPage = bookRepository.findRandomBookPage(categories, pageRequest);
+        List<String> list = categoryRepository.findAllByIdIn(categoryId).stream()
+                .map(category -> String.join(",", category.getMainName(), category.getSubName()))
+                .toList();
+
+        Page<Book> randomBookPage = bookRepository.findFavoriteBookPage(list, pageRequest);
         List<Book> contents = randomBookPage.getContent();
+
         List<BookDto> results = contents.stream()
                 .map(BookDto::of)
-                .toList();
+                .collect(Collectors.toList());
+
+        Collections.shuffle(results);
+        List<BookDto> randomBook = results.subList(0, 4);
+
 
         return BookPageDto.builder()
                 .total(results.size())
-                .limit(100)
-                .cursorId(-1)
-                .books(results)
+                .limit(4)
+                .books(randomBook)
+                .memberCategory(Arrays.stream(member.getCategories().split(",")).toList())
                 .build();
     }
 
-    private List<String> getCategories(int limit, List<Category> categories) {
-        Random random = new Random();
 
-        List<String> result = new ArrayList<>();
-        for (int i = 0; i < limit; i++) {
-            int index = random.nextInt(0, categories.size());
-            Category category = categories.get(index);
-            String strCategory = category.getMainName() + "," + category.getSubName();
-            result.add(strCategory);
+    /**
+     * @param categoryId List 로 변환할 categoryId ex) '1,2,3'
+     * @param filter     변환할 List에 포함할 필터 데이터 ex) '[1, 2]'
+     */
+    private static List<Long> convertLongAndFilter(String categoryId, List<Integer> filter) {
+        String[] split = categoryId.split(",");
+        Stream<Long> longStream = Stream.of(split).map(Long::parseLong);
+
+        if (!filter.isEmpty()) {
+            List<Long> collect = filter.stream()
+                    .map(Integer::longValue)
+                    .toList();
+            longStream = longStream.filter(collect::contains);
         }
 
-        return result;
+        return longStream.toList();
     }
 }

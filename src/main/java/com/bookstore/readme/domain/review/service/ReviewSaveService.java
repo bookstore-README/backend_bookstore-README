@@ -37,7 +37,6 @@ public class ReviewSaveService {
         } else {
             //리뷰 새로운 값으로 변경
             Review newReview = ReviewSaveRequest.toReview(request);
-            review.changeTitle(newReview.getTitle());
             review.changeContent(newReview.getContent());
             review.changeReviewRating(newReview.getReviewRating());
         }

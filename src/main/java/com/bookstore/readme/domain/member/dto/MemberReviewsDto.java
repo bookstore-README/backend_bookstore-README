@@ -21,7 +21,6 @@ public class MemberReviewsDto {
     public static MemberReviewsDto of(Review review) {
         return MemberReviewsDto.builder()
                 .reviewId(review.getId())
-                .title(review.getTitle())
                 .content(review.getContent())
                 .bookId(review.getBook().getId())
                 .bookTitle(review.getBook().getBookTitle())

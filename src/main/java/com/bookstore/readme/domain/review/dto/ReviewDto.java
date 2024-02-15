@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @SuperBuilder
 public class ReviewDto {
     private Long reviewId;
-    private String title;
     private String content;
     private Double reviewRating;
     private LocalDateTime createDate;
@@ -19,7 +18,6 @@ public class ReviewDto {
     public static ReviewDto of(Review review) {
         return ReviewDto.builder()
                 .reviewId(review.getId())
-                .title(review.getTitle())
                 .reviewRating(review.getReviewRating())
                 .createDate(review.getCreateDate())
                 .updateDate(review.getUpdateDate())
