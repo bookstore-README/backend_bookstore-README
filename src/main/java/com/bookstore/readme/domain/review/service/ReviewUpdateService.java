@@ -19,7 +19,6 @@ public class ReviewUpdateService {
         Review review = reviewRepository.findById(reviewId.longValue())
                 .orElseThrow(() -> new NotFoundReviewByIdException(reviewId.longValue()));
 
-        review.changeTitle(request.getTitle());
         review.changeContent(request.getContent());
         reviewRepository.flush();
 

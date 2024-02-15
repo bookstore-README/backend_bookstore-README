@@ -25,7 +25,6 @@ public class Review {
     @GeneratedValue
     @Column(name = "review_id")
     private Long id;
-    private String title;
     private String content;
     private Double reviewRating;
 
@@ -46,8 +45,7 @@ public class Review {
     private LocalDateTime updateDate;
 
     @Builder
-    public Review(String title, String content, Double reviewRating) {
-        this.title = title;
+    public Review(String content, Double reviewRating) {
         this.content = content;
         this.reviewRating = reviewRating;
     }
@@ -60,10 +58,6 @@ public class Review {
     public void changeMember(Member member) {
         this.member = member;
         member.getReviews().add(this);
-    }
-
-    public void changeTitle(String title) {
-        this.title = title;
     }
 
     public void changeContent(String content) {
