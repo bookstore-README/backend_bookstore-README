@@ -1,8 +1,10 @@
 package com.bookstore.readme.domain.community.controller;
 
+import com.bookstore.readme.domain.community.domain.MemberEmoji;
 import com.bookstore.readme.domain.community.dto.CommunityPageDto;
 import com.bookstore.readme.domain.community.dto.CommunitySaveDto;
 import com.bookstore.readme.domain.community.dto.CommunityUpdateDto;
+import com.bookstore.readme.domain.community.dto.EmojiUpdateDto;
 import com.bookstore.readme.domain.community.request.*;
 import com.bookstore.readme.domain.community.response.CommunityResponse;
 import com.bookstore.readme.domain.community.service.*;
@@ -90,7 +92,7 @@ public class CommunityController {
             @ParameterObject @Valid EmojiRequest request,
             @Parameter(description = "이모지 선택에 대한 커뮤니티 아이디", example = "1", required = true) @PathVariable(name = "communityId") Integer communityId
     ) {
-        emojiUpdateService.update(memberDetails.getMemberId(), communityId.longValue(), request);
-        return ResponseEntity.ok(CommunityResponse.ok(null));
+        EmojiUpdateDto update = emojiUpdateService.update(memberDetails.getMemberId(), communityId.longValue(), request);
+        return ResponseEntity.ok(CommunityResponse.ok(update));
     }
 }

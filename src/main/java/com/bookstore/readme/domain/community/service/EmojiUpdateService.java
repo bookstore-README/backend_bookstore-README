@@ -4,6 +4,7 @@ import com.bookstore.readme.domain.community.domain.Community;
 import com.bookstore.readme.domain.community.domain.Emoji;
 import com.bookstore.readme.domain.community.domain.MemberEmoji;
 import com.bookstore.readme.domain.community.dto.EmojiType;
+import com.bookstore.readme.domain.community.dto.EmojiUpdateDto;
 import com.bookstore.readme.domain.community.exception.NotFoundCommunityByIdException;
 import com.bookstore.readme.domain.community.repository.CommunityRepository;
 import com.bookstore.readme.domain.community.repository.EmojiRepository;
@@ -30,7 +31,7 @@ public class EmojiUpdateService {
     private final MemberEmojiRepository emojiRepository;
 
     @Transactional
-    public void update(Long memberId, Long communityId, EmojiRequest request) {
+    public EmojiUpdateDto update(Long memberId, Long communityId, EmojiRequest request) {
         Community community = communityRepository.findById(communityId)
                 .orElseThrow(() -> new NotFoundCommunityByIdException(communityId));
 
@@ -49,14 +50,24 @@ public class EmojiUpdateService {
 
 
         EmojiType emojiType = request.getType();
-        memberEmoji.changeEmoji(emojiType.getEmojiType(), request.getCheck());
+        if (memberEmoji.getCheck(emojiType.getEmojiType()) != request.getCheck()) {
+            memberEmoji.changeEmoji(emojiType.getEmojiType(), request.getCheck());
+
+            if (request.getCheck())
+                emoji.add(emojiType.getEmojiType());
+            else
+                emoji.sub(emojiType.getEmojiType());
+        }
+
         memberEmoji.changeMember(member);
         memberEmoji.changeCommunity(community);
         emojiRepository.save(memberEmoji);
 
-        if (request.getCheck())
-            emoji.add(emojiType.getEmojiType());
-        else
-            emoji.sub(emojiType.getEmojiType());
+
+        return EmojiUpdateDto.builder()
+                .memberEmojiId(memberEmoji.getId())
+                .memberId(memberId)
+                .communityId(communityId)
+                .build();
     }
 }
