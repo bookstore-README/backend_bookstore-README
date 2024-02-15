@@ -30,6 +30,10 @@ public class Community {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "emoji_id")
+    private Emoji emoji;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createDate;
@@ -51,6 +55,9 @@ public class Community {
         this.member = member;
     }
 
+    public void changeEmoji(Emoji emoji) {
+        this.emoji = emoji;
+    }
 
     public void changeContent(String content) {
         this.content = content;
