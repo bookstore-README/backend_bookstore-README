@@ -9,7 +9,9 @@ import com.bookstore.readme.domain.bookmark.dto.SortType;
 import com.bookstore.readme.domain.category.domain.Category;
 import com.bookstore.readme.domain.category.dto.CategoryDto;
 import com.bookstore.readme.domain.category.dto.CategoryInfo;
+import com.bookstore.readme.domain.category.dto.MemberCategory;
 import com.bookstore.readme.domain.category.repository.CategoryRepository;
+import com.bookstore.readme.domain.category.response.CategoryResponse;
 import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
 import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,9 +38,9 @@ public class FavoritePageService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public BookPageDto searchRandomBookPage(Long memberId, FavoriteCategoryRequest request) {
+    public BookPageDto searchFavoriteBookPage(Long memberId, FavoriteCategoryRequest request) {
         Sort sort = Sort.by(Sort.Direction.DESC, SortType.ID.getSortType());
-        PageRequest pageRequest = PageRequest.of(0, request.getLimit(), sort);
+        PageRequest pageRequest = PageRequest.of(0, 100, sort);
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
@@ -56,43 +59,45 @@ public class FavoritePageService {
 
         return BookPageDto.builder()
                 .total(results.size())
-                .limit(request.getLimit())
+                .limit(100)
                 .books(results)
                 .memberCategory(Arrays.stream(member.getCategories().split(",")).toList())
                 .build();
     }
 
     @Transactional
-    public BookPageDto searchRandomBook(Long memberId) {
-        Sort sort = Sort.by(Sort.Direction.DESC, SortType.ID.getSortType());
-        PageRequest pageRequest = PageRequest.of(0, 4, sort);
+    @Cacheable(value = "randomBook", keyGenerator = "viewKeyGeneratorBean")
+    public BookPageDto searchRandomBookPage(Long memberId, FavoriteCategoryRequest request) {
+        PageRequest pageRequest = PageRequest.of(0, 100);
+
+        if (request.getCategoryId().isEmpty()) {
+            throw new IllegalArgumentException("카테고리 아이디는 필수 입니다.");
+        }
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
 
-        String categoryId = member.getCategories();
-        if (categoryId == null || categoryId.isEmpty()) {
-            //모든 카테고리중 아무거나 3개
-        } else {
+        List<Long> categoryId = convertLongAndFilter(member.getCategories(), request.getCategoryId());
 
-        }
+        List<String> list = categoryRepository.findAllByIdIn(categoryId).stream()
+                .map(category -> String.join(",", category.getMainName(), category.getSubName()))
+                .toList();
 
-        List<String> categories = new ArrayList<>();
-        categories.add("국내도서");
-
-        Page<Book> randomBookPage = bookRepository.findFavoriteBookPage(categories, pageRequest);
+        Page<Book> randomBookPage = bookRepository.findFavoriteBookPage(list, pageRequest);
         List<Book> contents = randomBookPage.getContent();
         List<BookDto> results = contents.stream()
                 .map(BookDto::of)
+                .limit(4)
                 .toList();
 
         return BookPageDto.builder()
                 .total(results.size())
-                .limit(100)
+                .limit(4)
                 .books(results)
-                .memberCategory(categories)
+                .memberCategory(Arrays.stream(member.getCategories().split(",")).toList())
                 .build();
     }
+
 
     /**
      * @param categoryId List 로 변환할 categoryId ex) '1,2,3'

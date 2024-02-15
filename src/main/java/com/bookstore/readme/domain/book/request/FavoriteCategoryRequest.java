@@ -2,22 +2,24 @@ package com.bookstore.readme.domain.book.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@EqualsAndHashCode
 public class FavoriteCategoryRequest {
-    @Schema(defaultValue = "0")
+    @Schema(defaultValue = "0", description = "isRandom 값이 true일 경우 필수 입력 값")
     private final List<Integer> categoryId;
+    @Schema(description = "맞춤 도서 100권 조회면 false")
+    private final Boolean isRandom;
 
-    @Schema(defaultValue = "0")
-    private final Integer limit;
 
-
-    public FavoriteCategoryRequest(List<Integer> categoryId, Integer limit) {
+    public FavoriteCategoryRequest(List<Integer> categoryId, Boolean isRandom) {
         this.categoryId = categoryId == null || categoryId.isEmpty() ? new ArrayList<>() : categoryId;
-        this.limit = limit == null ? 4 : limit;
+        this.isRandom = isRandom;
     }
 }
