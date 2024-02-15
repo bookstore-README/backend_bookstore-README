@@ -4,11 +4,13 @@ import com.bookstore.readme.domain.category.request.CategoryRequest;
 import com.bookstore.readme.domain.category.response.CategoryResponse;
 import com.bookstore.readme.domain.category.service.CategorySaveService;
 import com.bookstore.readme.domain.category.service.CategorySearchService;
+import com.bookstore.readme.domain.member.model.MemberDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -51,5 +53,18 @@ public class CategoryController {
     public ResponseEntity<CategoryResponse> saveCategory(@RequestBody CategoryRequest request) {
         saveService.save(request);
         return ResponseEntity.ok(CategoryResponse.of(true));
+    }
+
+    @GetMapping("/member")
+    @Operation(summary = "회원 맞춤 카테고리 조회 기능", description = "회원이 선택한 카테고리 조회 API")
+    public ResponseEntity<CategoryResponse> memberCategory(
+            @AuthenticationPrincipal MemberDetails memberDetails,
+            @Parameter boolean isRandom
+    ) {
+        if (isRandom) {
+            return ResponseEntity.ok(CategoryResponse.of(categorySearchService.randomMemberCategories(memberDetails.getMemberId())));
+        } else {
+            return ResponseEntity.ok(CategoryResponse.of(categorySearchService.memberCategories(memberDetails.getMemberId())));
+        }
     }
 }
