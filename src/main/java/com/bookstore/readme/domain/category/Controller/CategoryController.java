@@ -59,7 +59,7 @@ public class CategoryController {
     @Operation(summary = "회원 맞춤 카테고리 조회 기능", description = "회원이 선택한 카테고리 조회 API")
     public ResponseEntity<CategoryResponse> memberCategory(
             @AuthenticationPrincipal MemberDetails memberDetails,
-            @Parameter boolean isRandom
+            @Parameter(description = "회원이 선택한 모든 카테고리를 조회하려면 false, 랜덤 4개를 조회하려면 true") boolean isRandom
     ) {
         if (isRandom) {
             return ResponseEntity.ok(CategoryResponse.of(categorySearchService.randomMemberCategories(memberDetails.getMemberId())));

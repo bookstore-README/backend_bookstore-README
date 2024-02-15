@@ -26,6 +26,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -85,15 +86,19 @@ public class FavoritePageService {
 
         Page<Book> randomBookPage = bookRepository.findFavoriteBookPage(list, pageRequest);
         List<Book> contents = randomBookPage.getContent();
+
         List<BookDto> results = contents.stream()
                 .map(BookDto::of)
-                .limit(4)
-                .toList();
+                .collect(Collectors.toList());
+
+        Collections.shuffle(results);
+        List<BookDto> randomBook = results.subList(0, 4);
+
 
         return BookPageDto.builder()
                 .total(results.size())
                 .limit(4)
-                .books(results)
+                .books(randomBook)
                 .memberCategory(Arrays.stream(member.getCategories().split(",")).toList())
                 .build();
     }
