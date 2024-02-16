@@ -6,6 +6,9 @@ import com.bookstore.readme.domain.book.dto.page.BookDto;
 import com.bookstore.readme.domain.book.dto.page.BookPageDto;
 import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
 import com.bookstore.readme.domain.book.repository.*;
+import com.bookstore.readme.domain.bookmark.domain.Bookmark;
+import com.bookstore.readme.domain.bookmark.dto.BookmarkDto;
+import com.bookstore.readme.domain.bookmark.repository.BookmarkRepository;
 import com.bookstore.readme.domain.category.dto.CategoryInfo;
 import com.bookstore.readme.domain.category.service.CategorySearchService;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +25,10 @@ import java.util.List;
 public class SingleSortAndCategoryPageService extends BookPage {
     private final BookRepository bookRepository;
     private final CategorySearchService categorySearchService;
+    private final BookmarkRepository bookmarkRepository;
 
     @Transactional
-    public BookPageDto mainBook(Integer cursorId, Integer limit, SortType sortType, boolean ascending, String search, Integer categoryId) {
+    public BookPageDto mainBook(Long memberId, Integer cursorId, Integer limit, SortType sortType, boolean ascending, String search, Integer categoryId) {
         PageRequest pageRequest = PageRequest.of(0, limit + 1, getSort(sortType, ascending));
         String mainName = categoryId == 0 ? "국내도서" : "외국도서";
         Book book = null;
@@ -42,7 +46,19 @@ public class SingleSortAndCategoryPageService extends BookPage {
 
         List<Book> contents = pageBooks.getContent();
         List<BookDto> results = contents.stream()
-                .map(BookDto::of)
+                .map((Book book1) -> {
+                    Bookmark bookmark = bookmarkRepository.findByBookIdAndMemberId(book1.getId(), memberId)
+                            .orElseGet(() -> Bookmark.builder()
+                                    .isMarked(false)
+                                    .build());
+
+                    return BookDto.of(book1, BookmarkDto.builder()
+                            .bookmarkId(bookmark.getId() == null ? -1 : bookmark.getId())
+                            .bookId(bookmark.getBook() == null ? -1 : bookmark.getBook().getId())
+                            .memberId(bookmark.getMember() == null ? -1 : bookmark.getMember().getId())
+                            .isMarked(bookmark.getIsMarked())
+                            .build());
+                })
                 .limit(limit)
                 .toList();
 
@@ -56,7 +72,7 @@ public class SingleSortAndCategoryPageService extends BookPage {
     }
 
     @Transactional
-    public BookPageDto subBook(Integer cursorId, Integer limit, SortType sortType, boolean ascending, String search, Integer categoryId) {
+    public BookPageDto subBook(Long memberId, Integer cursorId, Integer limit, SortType sortType, boolean ascending, String search, Integer categoryId) {
         PageRequest pageRequest = PageRequest.of(0, limit + 1, getSort(sortType, ascending));
         CategoryInfo categoryInfo = categorySearchService.searchCategoryInfo(categoryId);
         String categoryName = categoryInfo.getMainName() + "," + categoryInfo.getSubName();
@@ -74,7 +90,19 @@ public class SingleSortAndCategoryPageService extends BookPage {
         }
         List<Book> contents = pageBooks.getContent();
         List<BookDto> results = contents.stream()
-                .map(BookDto::of)
+                .map((Book book1) -> {
+                    Bookmark bookmark = bookmarkRepository.findByBookIdAndMemberId(book1.getId(), memberId)
+                            .orElseGet(() -> Bookmark.builder()
+                                    .isMarked(false)
+                                    .build());
+
+                    return BookDto.of(book1, BookmarkDto.builder()
+                            .bookmarkId(bookmark.getId() == null ? -1 : bookmark.getId())
+                            .bookId(bookmark.getBook() == null ? -1 : bookmark.getBook().getId())
+                            .memberId(bookmark.getMember() == null ? -1 : bookmark.getMember().getId())
+                            .isMarked(bookmark.getIsMarked())
+                            .build());
+                })
                 .limit(limit)
                 .toList();
 
@@ -107,7 +135,7 @@ public class SingleSortAndCategoryPageService extends BookPage {
         Page<Book> pages = bookRepository.findAll(bookSpecification, pageRequest);
         List<Book> content = pages.getContent();
         List<BookDto> list = content.stream()
-                .map(BookDto::of)
+                .map((Book book) -> BookDto.of(book, null))
                 .toList();
 
         return BookPageDto.builder()

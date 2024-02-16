@@ -1,6 +1,7 @@
 package com.bookstore.readme.domain.book.dto.page;
 
 import com.bookstore.readme.domain.book.domain.Book;
+import com.bookstore.readme.domain.bookmark.dto.BookmarkDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -25,10 +26,11 @@ public class BookDto {
     private final Integer viewCount;
     private final String publisher;
     private final Integer quantityCount;
+    private final BookmarkDto bookmarks;
     private final LocalDateTime createDate;
     private final LocalDateTime updateDate;
 
-    public BookDto(Long bookId, String bookTitle, LocalDateTime publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Double averageRating, Integer price, Integer bookmarkCount, Integer reviewCount, Integer viewCount, String publisher, Integer quantityCount, LocalDateTime createDate, LocalDateTime updateDate) {
+    public BookDto(Long bookId, String bookTitle, LocalDateTime publishedDate, String bookImgUrl, List<String> authors, String description, List<String> categories, Double averageRating, Integer price, Integer bookmarkCount, Integer reviewCount, Integer viewCount, String publisher, Integer quantityCount, BookmarkDto bookmarks, LocalDateTime createDate, LocalDateTime updateDate) {
         this.bookId = bookId;
         this.bookTitle = bookTitle;
         this.publishedDate = publishedDate;
@@ -43,11 +45,12 @@ public class BookDto {
         this.viewCount = viewCount;
         this.publisher = publisher;
         this.quantityCount = quantityCount;
+        this.bookmarks = bookmarks;
         this.createDate = createDate;
         this.updateDate = updateDate;
     }
 
-    public static BookDto of(Book book) {
+    public static BookDto of(Book book, BookmarkDto bookmarks) {
         return BookDto.builder()
                 .bookId(book.getId())
                 .bookTitle(book.getBookTitle())
@@ -58,6 +61,7 @@ public class BookDto {
                 .categories(convertCategories(book.getCategories()))
                 .averageRating(book.getAverageRating())
                 .price(book.getPrice())
+                .bookmarks(bookmarks)
                 .bookmarkCount(book.getBookmarkCount())
                 .reviewCount(book.getReviewCount())
                 .viewCount(book.getViewCount())
