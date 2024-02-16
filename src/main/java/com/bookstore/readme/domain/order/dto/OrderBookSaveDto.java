@@ -11,11 +11,4 @@ public class OrderBookSaveDto {
 
     Integer quantity;
 
-    public OrderBook toEntity(Book book) {
-        return OrderBook.builder()
-                .book(book)
-                .quantity(quantity)
-                .build();
-    }
-
 }

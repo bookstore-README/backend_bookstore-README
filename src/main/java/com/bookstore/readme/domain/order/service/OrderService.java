@@ -38,7 +38,7 @@ public class OrderService {
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
         try {
             Order order = orderRepository.save(Order.builder()
-                    .member(member)
+                    // .member(member)
                     .orderBooks(new ArrayList<>())
                     .build());
 
@@ -68,17 +68,17 @@ public class OrderService {
     public OrderDto findById(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundOrderByIdException(orderId));
-
-
-
+        
         return OrderDto.of(order);
     }
 
     @Transactional
     public List<OrderDto> findByMemberId(Long memberId) {
-        List<Order> orders = orderRepository.findByMemberId(memberId);
+        // List<Order> orders = orderRepository.findByMemberId(memberId);
 
-        return OrderDto.ofs(orders);
+        // OrderDto.ofs(orders)
+
+        return null;
     }
 
 }
