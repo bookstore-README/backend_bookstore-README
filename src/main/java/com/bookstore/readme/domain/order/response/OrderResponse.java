@@ -2,7 +2,9 @@ package com.bookstore.readme.domain.order.response;
 
 import com.bookstore.readme.common.response.CommonResponse;
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class OrderResponse extends CommonResponse {
 
     private final Object data;
