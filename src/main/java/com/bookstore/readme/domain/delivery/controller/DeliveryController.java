@@ -1,8 +1,12 @@
 package com.bookstore.readme.domain.delivery.controller;
 
+import com.bookstore.readme.domain.delivery.dto.DeliveryDto;
+import com.bookstore.readme.domain.delivery.dto.DeliverySaveDto;
 import com.bookstore.readme.domain.delivery.dto.DeliveryStatusDto;
 import com.bookstore.readme.domain.delivery.response.DeliveryResponse;
+import com.bookstore.readme.domain.delivery.service.DeliveryService;
 import com.bookstore.readme.domain.member.model.MemberDetails;
+import com.bookstore.readme.domain.order.dto.OrderBookSaveDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,18 +16,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "배송 API")
 @RequestMapping("/delivery")
 public class DeliveryController {
 
-    // @PostMapping("")
-    // @Operation(summary = "배송 등록", description = "배송 등록 API")
-    // public ResponseEntity<DeliveryResponse> addDelivery() {
-    //
-    //     return ResponseEntity.ok(DeliveryResponse.ok(""));
-    // }
+    private final DeliveryService deliveryService;
+
+    @PostMapping("")
+    @Operation(summary = "배송 등록", description = "배송 등록 API")
+    public ResponseEntity<DeliveryResponse> addDelivery(
+            @AuthenticationPrincipal MemberDetails memberDetails,
+            @RequestBody DeliverySaveDto deliverySaveDto
+    ) {
+
+        DeliveryDto deliveryDto = deliveryService.save(memberDetails.getMemberId(), deliverySaveDto);
+
+        return ResponseEntity.ok(DeliveryResponse.ok(deliveryDto));
+    }
 
     @GetMapping("")
     @Operation(summary = "회원 배송 목록 조회", description = "회원 배송 목록 조회 API")

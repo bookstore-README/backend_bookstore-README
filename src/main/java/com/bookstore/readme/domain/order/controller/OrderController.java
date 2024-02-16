@@ -22,7 +22,7 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
-    // private final DeliveryService deliveryService;
+    private final DeliveryService deliveryService;
 
     @PostMapping
     @Operation(summary = "주문 등록", description = "주문 등록 API")
