@@ -31,7 +31,7 @@ public class Order {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
     private List<OrderBook> orderBooks = new ArrayList<>();
 
     @CreatedDate
