@@ -34,9 +34,12 @@ public class BookPageController {
 
     @GetMapping("/book")
     @Operation(summary = "도서 페이징 조회", description = "도서 페이징 조회 API")
-    public ResponseEntity<BookResponse> bookPage(@ParameterObject @Valid BookPageRequest request) {
+    public ResponseEntity<BookResponse> bookPage(
+            @AuthenticationPrincipal MemberDetails memberDetails,
+            @ParameterObject @Valid BookPageRequest request) {
         return ResponseEntity.ok()
                 .body(BookResponse.ok(singleSortPageService.pageBooks(
+                        memberDetails.getMemberId(),
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort().get(0),
@@ -47,12 +50,14 @@ public class BookPageController {
     @GetMapping("/book/{mainId}/main")
     @Operation(summary = "도서 페이징 조회(카테고리 - 대분류)", description = "대분류 ID로 도서 조회 API")
     public ResponseEntity<BookResponse> mainBook(
+            @AuthenticationPrincipal MemberDetails memberDetails,
             @ParameterObject @Valid BookPageRequest request,
             @Parameter(description = "조회할 대분류 ID", required = true, example = "0이면 국내도서, 1이면 국외도서")
             @PathVariable(name = "mainId") Integer mainId
     ) {
         return ResponseEntity.ok()
                 .body(BookResponse.ok(singleSortAndCategoryPageService.mainBook(
+                        memberDetails.getMemberId(),
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort().get(0),
@@ -62,11 +67,13 @@ public class BookPageController {
     @GetMapping("/book/{categoryId}/sub")
     @Operation(summary = "도서 페이징 조회(카테고리 - 대분류, 중분류)", description = "카테고리가 국내도서인 도서 조회 API")
     public ResponseEntity<BookResponse> subBook(
+            @AuthenticationPrincipal MemberDetails memberDetails,
             @ParameterObject @Valid BookPageRequest request,
             @PathVariable(name = "categoryId") Integer categoryId
     ) {
         return ResponseEntity.ok()
                 .body(BookResponse.ok(singleSortAndCategoryPageService.subBook(
+                        memberDetails.getMemberId(),
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort().get(0),

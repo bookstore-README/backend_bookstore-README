@@ -60,10 +60,10 @@ public class Member {
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
-    private List<Delivery> deliveries = new ArrayList<>();
+    private List<Order> orders = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
-    private List<Order> orders = new ArrayList<>();
+    private List<Delivery> deliveries = new ArrayList<>();
 
     private String categories;
 

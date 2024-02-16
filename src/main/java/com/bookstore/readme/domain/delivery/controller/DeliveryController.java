@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/delivery")
 public class DeliveryController {
 
-    @PostMapping("")
-    @Operation(summary = "배송 등록", description = "배송 등록 API")
-    public ResponseEntity<DeliveryResponse> addDelivery() {
-
-        return ResponseEntity.ok(DeliveryResponse.ok(""));
-    }
+    // @PostMapping("")
+    // @Operation(summary = "배송 등록", description = "배송 등록 API")
+    // public ResponseEntity<DeliveryResponse> addDelivery() {
+    //
+    //     return ResponseEntity.ok(DeliveryResponse.ok(""));
+    // }
 
     @GetMapping("")
     @Operation(summary = "회원 배송 목록 조회", description = "회원 배송 목록 조회 API")

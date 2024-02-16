@@ -3,6 +3,7 @@ package com.bookstore.readme.domain.book.service.page;
 import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.dto.SortType;
 import com.bookstore.readme.domain.book.dto.page.BookDto;
+import com.bookstore.readme.domain.bookmark.dto.BookmarkDto;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
