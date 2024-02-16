@@ -47,18 +47,16 @@ public class SingleSortPageService extends BookPage {
         List<BookDto> results = contents.stream()
                 .map((Book book) -> {
                     Bookmark bookmark = bookmarkRepository.findByBookIdAndMemberId(book.getId(), memberId)
-                            .orElseGet(() -> null);
+                            .orElseGet(() -> Bookmark.builder()
+                                    .isMarked(false)
+                                    .build());
 
-                    if (bookmark != null) {
-                        return BookDto.of(book, BookmarkDto.builder()
-                                .bookmarkId(bookmark.getId())
-                                .bookId(bookmark.getBook().getId())
-                                .memberId(bookmark.getMember().getId())
-                                .isMarked(bookmark.getIsMarked())
-                                .build());
-                    } else {
-                        return BookDto.of(book, null);
-                    }
+                    return BookDto.of(book, BookmarkDto.builder()
+                            .bookmarkId(bookmark.getId() == null ? -1 : bookmark.getId())
+                            .bookId(bookmark.getBook() == null ? -1 : bookmark.getBook().getId())
+                            .memberId(bookmark.getMember() == null ? -1 : bookmark.getMember().getId())
+                            .isMarked(bookmark.getIsMarked())
+                            .build());
                 })
                 .limit(limit)
                 .toList();
