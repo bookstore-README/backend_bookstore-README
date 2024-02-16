@@ -3,7 +3,9 @@ package com.bookstore.readme.domain.review.controller;
 import com.bookstore.readme.domain.member.model.MemberDetails;
 import com.bookstore.readme.domain.review.dto.ReviewDto;
 import com.bookstore.readme.domain.review.dto.ReviewListDto;
+import com.bookstore.readme.domain.review.dto.ReviewPageDto;
 import com.bookstore.readme.domain.review.dto.ReviewSearchDto;
+import com.bookstore.readme.domain.review.request.ReviewPageRequest;
 import com.bookstore.readme.domain.review.request.ReviewRequest;
 import com.bookstore.readme.domain.review.request.ReviewSaveRequest;
 import com.bookstore.readme.domain.review.request.ReviewUpdateRequest;
@@ -14,6 +16,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +32,7 @@ public class ReviewController {
     private final ReviewSaveService reviewSaveService;
     private final ReviewDeleteService reviewDeleteService;
     private final ReviewUpdateService reviewUpdateService;
+    private final ReviewPageService reviewPageService;
 
     @GetMapping("/{reviewId}")
     @Operation(summary = "리뷰 단일 조회", description = "리뷰 아이디로 단일 조회하는 API")
@@ -38,6 +42,16 @@ public class ReviewController {
     ) {
         ReviewSearchDto reviewSearchDto = reviewSearchService.searchReview(reviewId.longValue());
         return ResponseEntity.ok(ReviewResponse.ok(reviewSearchDto));
+    }
+
+    @GetMapping("/{bookId}/book")
+    @Operation(summary = "도서 아이디로 리뷰 조회", description = "도서 아이디로 리뷰 전체 페이징 조회 API")
+    public ResponseEntity<ReviewResponse> searchReviewByBookId(
+            @PathVariable(name = "bookId") Integer bookId,
+            @ParameterObject @Valid ReviewPageRequest request
+    ) {
+        ReviewPageDto reviewPageDto = reviewPageService.searchPage(bookId.longValue(), request);
+        return ResponseEntity.ok(ReviewResponse.ok(reviewPageDto));
     }
 
     @GetMapping
