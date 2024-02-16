@@ -14,17 +14,21 @@ public class BookDto {
     private final String bookTitle;
     private final String bookImgUrl;
     private final Integer price;
+    private final Integer viewCount;
+    private final Integer bookmarkCount;
     private final List<String> authors;
     private final List<String> categories;
     private final LocalDateTime createDate;
     private final LocalDateTime updateDate;
 
     @Builder
-    public BookDto(Long bookId, String bookTitle, String bookImgUrl, Integer price, List<String> authors, List<String> categories, LocalDateTime createDate, LocalDateTime updateDate) {
+    public BookDto(Long bookId, String bookTitle, String bookImgUrl, Integer price, Integer viewCount, Integer bookmarkCount, List<String> authors, List<String> categories, LocalDateTime createDate, LocalDateTime updateDate) {
         this.bookId = bookId;
         this.bookTitle = bookTitle;
         this.bookImgUrl = bookImgUrl;
         this.price = price;
+        this.viewCount = viewCount;
+        this.bookmarkCount = bookmarkCount;
         this.authors = authors;
         this.categories = categories;
         this.createDate = createDate;
@@ -38,6 +42,8 @@ public class BookDto {
                 .bookTitle(book.getBookTitle())
                 .bookImgUrl(book.getBookImgUrl())
                 .price(book.getPrice())
+                .viewCount(book.getViewCount())
+                .bookmarkCount(book.getBookmarkCount())
                 .authors(convertAuthors(book.getAuthors()))
                 .categories(convertCategories(book.getCategories()))
                 .createDate(book.getCreateDate())
