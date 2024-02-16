@@ -34,9 +34,12 @@ public class BookPageController {
 
     @GetMapping("/book")
     @Operation(summary = "도서 페이징 조회", description = "도서 페이징 조회 API")
-    public ResponseEntity<BookResponse> bookPage(@ParameterObject @Valid BookPageRequest request) {
+    public ResponseEntity<BookResponse> bookPage(
+            @AuthenticationPrincipal MemberDetails memberDetails,
+            @ParameterObject @Valid BookPageRequest request) {
         return ResponseEntity.ok()
                 .body(BookResponse.ok(singleSortPageService.pageBooks(
+                        memberDetails.getMemberId(),
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort().get(0),

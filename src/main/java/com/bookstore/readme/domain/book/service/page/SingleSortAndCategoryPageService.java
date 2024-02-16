@@ -6,6 +6,7 @@ import com.bookstore.readme.domain.book.dto.page.BookDto;
 import com.bookstore.readme.domain.book.dto.page.BookPageDto;
 import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
 import com.bookstore.readme.domain.book.repository.*;
+import com.bookstore.readme.domain.bookmark.repository.BookmarkRepository;
 import com.bookstore.readme.domain.category.dto.CategoryInfo;
 import com.bookstore.readme.domain.category.service.CategorySearchService;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class SingleSortAndCategoryPageService extends BookPage {
 
         List<Book> contents = pageBooks.getContent();
         List<BookDto> results = contents.stream()
-                .map(BookDto::of)
+                .map((Book book1) -> BookDto.of(book1, null))
                 .limit(limit)
                 .toList();
 
@@ -74,7 +75,7 @@ public class SingleSortAndCategoryPageService extends BookPage {
         }
         List<Book> contents = pageBooks.getContent();
         List<BookDto> results = contents.stream()
-                .map(BookDto::of)
+                .map((Book book1) -> BookDto.of(book1, null))
                 .limit(limit)
                 .toList();
 
@@ -107,7 +108,7 @@ public class SingleSortAndCategoryPageService extends BookPage {
         Page<Book> pages = bookRepository.findAll(bookSpecification, pageRequest);
         List<Book> content = pages.getContent();
         List<BookDto> list = content.stream()
-                .map(BookDto::of)
+                .map((Book book) -> BookDto.of(book, null))
                 .toList();
 
         return BookPageDto.builder()

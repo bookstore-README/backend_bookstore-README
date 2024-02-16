@@ -7,6 +7,9 @@ import com.bookstore.readme.domain.book.dto.page.BookPageDto;
 import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
 import com.bookstore.readme.domain.book.repository.BookPageSpecification;
 import com.bookstore.readme.domain.book.repository.BookRepository;
+import com.bookstore.readme.domain.bookmark.domain.Bookmark;
+import com.bookstore.readme.domain.bookmark.dto.BookmarkDto;
+import com.bookstore.readme.domain.bookmark.repository.BookmarkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,9 +23,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SingleSortPageService extends BookPage {
     private final BookRepository bookRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     @Transactional
-    public BookPageDto pageBooks(Integer cursorId, Integer limit, SortType sortType, boolean ascending, String search) {
+    public BookPageDto pageBooks(Long memberId, Integer cursorId, Integer limit, SortType sortType, boolean ascending, String search) {
         PageRequest pageRequest = PageRequest.of(0, limit + 1, getSort(sortType, ascending));
         Page<Book> pages;
 
@@ -41,7 +45,21 @@ public class SingleSortPageService extends BookPage {
 
         List<Book> contents = pages.getContent();
         List<BookDto> results = contents.stream()
-                .map(BookDto::of)
+                .map((Book book) -> {
+                    Bookmark bookmark = bookmarkRepository.findByBookIdAndMemberId(book.getId(), memberId)
+                            .orElseGet(() -> null);
+
+                    if (bookmark != null) {
+                        return BookDto.of(book, BookmarkDto.builder()
+                                .bookmarkId(bookmark.getId())
+                                .bookId(bookmark.getBook().getId())
+                                .memberId(bookmark.getMember().getId())
+                                .isMarked(bookmark.getIsMarked())
+                                .build());
+                    } else {
+                        return BookDto.of(book, null);
+                    }
+                })
                 .limit(limit)
                 .toList();
 
