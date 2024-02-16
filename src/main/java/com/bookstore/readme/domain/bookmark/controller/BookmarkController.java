@@ -77,4 +77,14 @@ public class BookmarkController {
         BookmarkCountByMemberIdDto result = bookmarkCountService.bookmarkCountByMemberId(memberId.longValue());
         return ResponseEntity.ok(BookmarkResponse.ok(result));
     }
+
+    @GetMapping("/bookmark/{bookId}/check")
+    @Operation(summary = "찜 여부 조회", description = "회원이 찜한 개수 조회 API")
+    public ResponseEntity<BookmarkResponse> searchBookmarkCountByMember(
+            @AuthenticationPrincipal MemberDetails memberDetails,
+            @Parameter(description = "찜 여부를 확인할 도서 아이디", required = true) @PathVariable(name = "bookId") Integer bookId
+    ) {
+        boolean result = bookmarkService.checkMemberBookmark(memberDetails.getMemberId(), bookId.longValue());
+        return ResponseEntity.ok(BookmarkResponse.ok(result));
+    }
 }

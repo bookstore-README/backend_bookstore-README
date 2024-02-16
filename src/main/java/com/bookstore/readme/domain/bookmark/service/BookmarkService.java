@@ -8,6 +8,7 @@ import com.bookstore.readme.domain.bookmark.dto.BookmarkAndBookDto;
 import com.bookstore.readme.domain.bookmark.dto.BookmarkCountDto;
 import com.bookstore.readme.domain.bookmark.dto.BookmarkDetailDto;
 import com.bookstore.readme.domain.bookmark.dto.BookmarkDto;
+import com.bookstore.readme.domain.bookmark.dto.count.BookmarkCountByMemberIdDto;
 import com.bookstore.readme.domain.bookmark.repository.BookmarkRepository;
 import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
 import com.bookstore.readme.domain.member.model.Member;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +52,16 @@ public class BookmarkService {
                 .memberId(memberId)
                 .isMarked(bookmark.getIsMarked())
                 .build();
+    }
+
+    @Transactional
+    public boolean checkMemberBookmark(Long memberId, Long bookId) {
+        Bookmark bookmark = bookmarkRepository.findByBookIdAndMemberId(bookId, memberId)
+                .orElseGet(() -> Bookmark.builder()
+                        .isMarked(false)
+                        .build());
+
+        return bookmark.getIsMarked();
     }
 
     private Bookmark createBookmark(Member member, Book book, boolean isMarked) {
