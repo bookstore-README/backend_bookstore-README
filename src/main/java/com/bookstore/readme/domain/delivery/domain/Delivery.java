@@ -64,4 +64,8 @@ public class Delivery {
         this.member = member;
     }
 
+    public void updateDeliveryStatus(DeliveryStatus deliveryStatus) {
+        this.deliveryStatus = deliveryStatus;
+    }
+
 }
