@@ -20,7 +20,7 @@ public class BasketSaveService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long save(Integer bookId, Long memberId) {
+    public Long save(Integer bookId, Long memberId, int count) {
         Book book = bookRepository.findById(bookId.longValue())
                 .orElseThrow(() -> new NotFoundBookByIdException(bookId.longValue()));
 
@@ -35,6 +35,7 @@ public class BasketSaveService {
                     return newBasket;
                 });
 
+        basket.addCount(count);
         basketRepository.save(basket);
         return basket.getId();
     }

@@ -34,9 +34,10 @@ public class BasketController {
     @PostMapping("/{bookId}")
     public ResponseEntity<Object> test(
             @AuthenticationPrincipal MemberDetails memberDetails,
-            @Parameter(description = "저장할 도서 아이디", required = true) @PathVariable(name = "bookId") Integer bookId
+            @Parameter(description = "저장할 도서 아이디", required = true) @PathVariable(name = "bookId") Integer bookId,
+            @Parameter(description = "저장할 도서 개수", required = true) @RequestParam(defaultValue = "1", required = false) Integer count
     ) {
-        Long save = basketSaveService.save(bookId, memberDetails.getMemberId());
+        Long save = basketSaveService.save(bookId, memberDetails.getMemberId(), count);
         return ResponseEntity.ok(BasketResponse.of(save));
     }
 
