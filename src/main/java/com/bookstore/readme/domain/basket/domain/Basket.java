@@ -27,6 +27,8 @@ public class Basket {
     @JoinColumn(name = "book_id")
     private Book book;
 
+    private int count;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createDate;
@@ -41,5 +43,10 @@ public class Basket {
 
     public void changeBook(Book book) {
         this.book = book;
+    }
+
+
+    public void addCount(int count) {
+        this.count += count;
     }
 }
