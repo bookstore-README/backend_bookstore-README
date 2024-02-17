@@ -68,8 +68,8 @@ public class SecurityConfig {
                     authorizeRequests.requestMatchers(
                             "/member", "/member/sign-in", "/social/**"
                     ).permitAll(); //Permit
-                    authorizeRequests.requestMatchers(apiPermit).permitAll(); //Permit
                     authorizeRequests.requestMatchers(permitUrl).permitAll();
+                    authorizeRequests.requestMatchers(apiPermit).permitAll();
                     authorizeRequests.anyRequest().authenticated();
                 })
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
@@ -94,11 +94,10 @@ public class SecurityConfig {
                         -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorizeRequests) -> {
                     authorizeRequests.requestMatchers("/member", "/member/sign-in", "/social/**").permitAll();
-                    authorizeRequests.requestMatchers(apiPermit).permitAll();
                     authorizeRequests.requestMatchers(PathRequest.toH2Console()).permitAll();
                     authorizeRequests.requestMatchers(permitUrl).permitAll();
                     authorizeRequests.anyRequest().authenticated();
-                })
+                    authorizeRequests.requestMatchers(apiPermit).permitAll();})
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
         /*

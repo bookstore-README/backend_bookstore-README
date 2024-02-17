@@ -1,6 +1,5 @@
 package com.bookstore.readme.domain.book.controller;
 
-import com.bookstore.readme.domain.book.request.BookCategoryRequest;
 import com.bookstore.readme.domain.book.request.BookPageRequest;
 import com.bookstore.readme.domain.book.request.BookRequest;
 import com.bookstore.readme.domain.book.request.FavoriteCategoryRequest;
@@ -9,8 +8,6 @@ import com.bookstore.readme.domain.book.service.BookSaveService;
 import com.bookstore.readme.domain.book.service.page.FavoritePageService;
 import com.bookstore.readme.domain.book.service.page.SingleSortAndCategoryPageService;
 import com.bookstore.readme.domain.book.service.page.SingleSortPageService;
-import com.bookstore.readme.domain.category.dto.CategoryInfo;
-import com.bookstore.readme.domain.category.service.CategorySearchService;
 import com.bookstore.readme.domain.member.model.MemberDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,7 +36,7 @@ public class BookPageController {
             @ParameterObject @Valid BookPageRequest request) {
         return ResponseEntity.ok()
                 .body(BookResponse.ok(singleSortPageService.pageBooks(
-                        memberDetails.getMemberId(),
+                        memberDetails == null ? -1 : memberDetails.getMemberId(),
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort().get(0),
@@ -57,7 +54,7 @@ public class BookPageController {
     ) {
         return ResponseEntity.ok()
                 .body(BookResponse.ok(singleSortAndCategoryPageService.mainBook(
-                        memberDetails.getMemberId(),
+                        memberDetails == null ? -1 : memberDetails.getMemberId(),
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort().get(0),
@@ -73,7 +70,7 @@ public class BookPageController {
     ) {
         return ResponseEntity.ok()
                 .body(BookResponse.ok(singleSortAndCategoryPageService.subBook(
-                        memberDetails.getMemberId(),
+                        memberDetails == null ? -1 : memberDetails.getMemberId(),
                         request.getBookId(),
                         request.getLimit(),
                         request.getSort().get(0),
@@ -88,10 +85,10 @@ public class BookPageController {
     ) {
         if (request.getIsRandom()) {
             return ResponseEntity.ok()
-                    .body(BookResponse.ok(favoritePageService.searchRandomBookPage(memberDetails.getMemberId(), request)));
+                    .body(BookResponse.ok(favoritePageService.searchRandomBookPage(memberDetails == null ? -1 : memberDetails.getMemberId(), request)));
         } else {
             return ResponseEntity.ok()
-                    .body(BookResponse.ok(favoritePageService.searchFavoriteBookPage(memberDetails.getMemberId(), request)));
+                    .body(BookResponse.ok(favoritePageService.searchFavoriteBookPage(memberDetails == null ? -1 : memberDetails.getMemberId(), request)));
         }
     }
 
