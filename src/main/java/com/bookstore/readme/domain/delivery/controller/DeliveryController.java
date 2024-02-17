@@ -53,15 +53,19 @@ public class DeliveryController {
             @Parameter(description = "배송 아이디", required = true)
             @PathVariable Integer deleveryId
     ) {
-        return ResponseEntity.ok(DeliveryResponse.ok(""));
+        return ResponseEntity.ok(
+                DeliveryResponse.ok(deliveryService.cancleDelivery(memberDetails.getMemberId()
+                , deleveryId.longValue())));
     }
 
     @PutMapping("")
     @Operation(summary = "회원 배송 상태 변경", description = "회원 배송 상태 변경 API")
     public ResponseEntity<DeliveryResponse> changeDeliveryStatus(
+            @AuthenticationPrincipal MemberDetails memberDetails,
             @Valid @RequestBody DeliveryStatusDto deliveryStatusDto
     ) {
-        return ResponseEntity.ok(DeliveryResponse.ok(""));
+        return ResponseEntity.ok(DeliveryResponse.ok(deliveryService.changeDelivery(memberDetails.getMemberId()
+                , deliveryStatusDto)));
     }
 
 

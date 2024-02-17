@@ -4,8 +4,10 @@ import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
 import com.bookstore.readme.domain.book.repository.BookRepository;
 import com.bookstore.readme.domain.delivery.domain.Delivery;
+import com.bookstore.readme.domain.delivery.domain.DeliveryStatus;
 import com.bookstore.readme.domain.delivery.dto.DeliveryDto;
 import com.bookstore.readme.domain.delivery.dto.DeliverySaveDto;
+import com.bookstore.readme.domain.delivery.dto.DeliveryStatusDto;
 import com.bookstore.readme.domain.delivery.exception.DeliverySaveException;
 import com.bookstore.readme.domain.delivery.exception.NotFoundDeliveryByMemberIdException;
 import com.bookstore.readme.domain.delivery.repository.DeliveryRepository;
@@ -87,6 +89,22 @@ public class DeliveryService {
     public Long cancleDelivery(Long memberId, Long deliveryId) {
         Delivery delivery = deliveryRepository.findByIdAndMemberId(deliveryId, memberId)
                 .orElseThrow(() -> new NotFoundDeliveryByMemberIdException(memberId));
+
+        delivery.updateDeliveryStatus(DeliveryStatus.CANCEL);
+
+        return delivery.getId();
+    }
+
+    @Transactional
+    public Long changeDelivery(Long memberId, DeliveryStatusDto deliveryStatusDto) {
+        Long deliveryId = deliveryStatusDto.getDeliveryId().longValue();
+
+        Delivery delivery = deliveryRepository.findByIdAndMemberId(deliveryId, memberId)
+                .orElseThrow(() -> new NotFoundDeliveryByMemberIdException(memberId));
+
+        DeliveryStatus deliveryStatus = DeliveryStatus.of(deliveryStatusDto.getDeliveryStatus());
+
+        delivery.updateDeliveryStatus(deliveryStatus);
 
         return delivery.getId();
     }
