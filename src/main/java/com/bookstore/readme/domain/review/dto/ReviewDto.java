@@ -12,6 +12,8 @@ public class ReviewDto {
     private Long reviewId;
     private String content;
     private Double reviewRating;
+    private String userNickname;
+    private String profileImg;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 
@@ -19,9 +21,11 @@ public class ReviewDto {
         return ReviewDto.builder()
                 .reviewId(review.getId())
                 .reviewRating(review.getReviewRating())
+                .content(review.getContent())
+                .userNickname(review.getMember().getNickname())
+                .profileImg(review.getMember().getProfileImage())
                 .createDate(review.getCreateDate())
                 .updateDate(review.getUpdateDate())
-                .content(review.getContent())
                 .build();
     }
 }
