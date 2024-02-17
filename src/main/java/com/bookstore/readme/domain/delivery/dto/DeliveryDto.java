@@ -7,6 +7,8 @@ import com.bookstore.readme.domain.social.domain.SocialId;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Getter
 @SuperBuilder
 public class DeliveryDto {
@@ -60,6 +62,12 @@ public class DeliveryDto {
                 .socialId(delivery.getMember().getSocialId())
                 .orderDto(orderDto)
                 .build();
+    }
+
+    public static List<DeliveryDto> ofs(List<Delivery> deliveries) {
+        return deliveries.stream()
+                .map(DeliveryDto::of)
+                .toList();
     }
 
 }

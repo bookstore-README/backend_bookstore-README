@@ -6,6 +6,8 @@ import com.bookstore.readme.domain.book.repository.BookRepository;
 import com.bookstore.readme.domain.delivery.domain.Delivery;
 import com.bookstore.readme.domain.delivery.dto.DeliveryDto;
 import com.bookstore.readme.domain.delivery.dto.DeliverySaveDto;
+import com.bookstore.readme.domain.delivery.exception.DeliverySaveException;
+import com.bookstore.readme.domain.delivery.exception.NotFoundDeliveryByMemberIdException;
 import com.bookstore.readme.domain.delivery.repository.DeliveryRepository;
 import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
 import com.bookstore.readme.domain.member.model.Member;
@@ -13,8 +15,6 @@ import com.bookstore.readme.domain.member.repository.MemberRepository;
 import com.bookstore.readme.domain.order.domain.Order;
 import com.bookstore.readme.domain.order.domain.OrderBook;
 import com.bookstore.readme.domain.order.dto.OrderBookSaveDto;
-import com.bookstore.readme.domain.order.dto.OrderDto;
-import com.bookstore.readme.domain.order.exception.OrderSaveException;
 import com.bookstore.readme.domain.order.repository.OrderBookRepository;
 import com.bookstore.readme.domain.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +35,7 @@ public class DeliveryService {
     private final DeliveryRepository deliveryRepository;
 
     @Transactional(rollbackFor = Exception.class)
-    public DeliveryDto save(Long memberId, DeliverySaveDto deliverySaveDto) {
+    public Long save(Long memberId, DeliverySaveDto deliverySaveDto) {
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
@@ -66,12 +67,28 @@ public class DeliveryService {
                 orderBookRepository.save(orderBook);
             }
 
-            OrderDto orderDto = OrderDto.of(order);
+            // OrderDto orderDto = OrderDto.of(order);
 
-            return DeliveryDto.of(delivery, orderDto);
+            return delivery.getId();
         } catch(Exception e) {
-            throw new OrderSaveException();
+            throw new DeliverySaveException();
         }
+    }
+
+    @Transactional
+    public List<DeliveryDto> searchByMemberId(Long memberId) {
+
+        List<Delivery> deliveries = deliveryRepository.findByMemberId(memberId);
+
+        return DeliveryDto.ofs(deliveries);
+    }
+
+    @Transactional
+    public Long cancleDelivery(Long memberId, Long deliveryId) {
+        Delivery delivery = deliveryRepository.findByIdAndMemberId(deliveryId, memberId)
+                .orElseThrow(() -> new NotFoundDeliveryByMemberIdException(memberId));
+
+        return delivery.getId();
     }
 
 }

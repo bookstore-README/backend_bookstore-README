@@ -32,10 +32,7 @@ public class DeliveryController {
             @AuthenticationPrincipal MemberDetails memberDetails,
             @RequestBody DeliverySaveDto deliverySaveDto
     ) {
-
-        DeliveryDto deliveryDto = deliveryService.save(memberDetails.getMemberId(), deliverySaveDto);
-
-        return ResponseEntity.ok(DeliveryResponse.ok(deliveryDto));
+        return ResponseEntity.ok(DeliveryResponse.ok(deliveryService.save(memberDetails.getMemberId(), deliverySaveDto)));
     }
 
     @GetMapping("")
@@ -43,12 +40,16 @@ public class DeliveryController {
     public ResponseEntity<DeliveryResponse> searchDeliveryByMember(
             @AuthenticationPrincipal MemberDetails memberDetails
     ) {
-        return ResponseEntity.ok(DeliveryResponse.ok(""));
+
+        List<DeliveryDto> deliveryDtos = deliveryService.searchByMemberId(memberDetails.getMemberId());
+
+        return ResponseEntity.ok(DeliveryResponse.ok(deliveryDtos));
     }
 
     @PutMapping("/{deliveryId}")
     @Operation(summary = "회원 배송 취소", description = "회원 배송 취소 API")
     public ResponseEntity<DeliveryResponse> cancleDelivery(
+            @AuthenticationPrincipal MemberDetails memberDetails,
             @Parameter(description = "배송 아이디", required = true)
             @PathVariable Integer deleveryId
     ) {
