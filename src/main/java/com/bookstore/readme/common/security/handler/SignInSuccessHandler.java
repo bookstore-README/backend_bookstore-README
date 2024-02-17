@@ -51,7 +51,7 @@ public class SignInSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         memberRepository.save(member);
 
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        Cookie cookie = new Cookie("RefreshToken", refreshToken);
 
         ObjectMapper objectMapper = new ObjectMapper();
 
