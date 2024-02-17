@@ -17,13 +17,13 @@ public class OrderDto {
 
     private Long orderId;
 
-    private Long memberId;
-
-    private String nickname;
-
-    private String email;
-
-    private SocialId socialId;
+    // private Long memberId;
+    //
+    // private String nickname;
+    //
+    // private String email;
+    //
+    // private SocialId socialId;
 
     private List<OrderBookDto> orderBook;
 
@@ -36,10 +36,10 @@ public class OrderDto {
 
         return OrderDto.builder()
                 .orderId(order.getId())
-                .memberId(order.getMember().getId())
-                .nickname(order.getMember().getNickname())
-                .email(order.getMember().getEmail())
-                .socialId(order.getMember().getSocialId())
+                // .memberId(order.getMember().getId())
+                // .nickname(order.getMember().getNickname())
+                // .email(order.getMember().getEmail())
+                // .socialId(order.getMember().getSocialId())
                 .orderBook(ofs)
                 .createTime(order.getCreateDate())
                 .updateTime(order.getUpdateDate())

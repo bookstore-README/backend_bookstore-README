@@ -1,11 +1,16 @@
 package com.bookstore.readme.domain.delivery.domain;
 
 import com.bookstore.readme.domain.member.model.Member;
+import com.bookstore.readme.domain.order.domain.Order;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -15,21 +20,48 @@ public class Delivery {
 
     @Id
     @GeneratedValue
-    @Column(name = "delivery_id")
+    @Column(name = "deliveryId")
     private Long id;
+
+    private String name;
+
+    private String phone;
+
+    private String address;
+
+    private String message;
 
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
-    // 주문 객체 필요
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "delivery")
+    private List<Order> orders = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
+    private String paymentMethod;
+
+    private Integer paymentAmount;
+
     public void changeMember(Member member) {
         this.member = member;
         member.getDeliveries().add(this);
+    }
+
+    @Builder
+    public Delivery(String name, String phone, String address, String message
+            , DeliveryStatus deliveryStatus, String paymentMethod, Integer paymentAmount
+            , Member member) {
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+        this.message = message;
+        this.deliveryStatus = deliveryStatus;
+        this.paymentMethod = paymentMethod;
+        this.paymentAmount = paymentAmount;
+        this.member = member;
     }
 
 }

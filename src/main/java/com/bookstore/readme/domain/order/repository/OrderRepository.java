@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    List<Order> findByMemberId(Long memberId);
+    // List<Order> findByMemberId(Long memberId);
 
 }

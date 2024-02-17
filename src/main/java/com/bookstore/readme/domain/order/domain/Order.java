@@ -1,7 +1,8 @@
 package com.bookstore.readme.domain.order.domain;
 
-import com.bookstore.readme.domain.member.model.Member;
-import com.bookstore.readme.domain.order.dto.OrderDto;
+import com.bookstore.readme.domain.delivery.domain.Delivery;
+// import com.bookstore.readme.domain.member.model.Member;
+// import com.bookstore.readme.domain.order.dto.OrderDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -27,9 +28,13 @@ public class Order {
     @Column(name = "orderId")
     private Long id;
 
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "member_id")
+    // private Member member;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "deliveryId")
+    private Delivery delivery;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
     private List<OrderBook> orderBooks = new ArrayList<>();
@@ -42,10 +47,15 @@ public class Order {
     @Column
     private LocalDateTime updateDate;
 
+    public void changeDelivery(Delivery delivery) {
+        this.delivery = delivery;
+        delivery.getOrders().add(this);
+    }
+
     @Builder
-    public Order(Long id, Member member, List<OrderBook> orderBooks) {
+    public Order(Long id, Delivery delivery, List<OrderBook> orderBooks) {
         this.id = id;
-        this.member = member;
+        this.delivery = delivery;
         this.orderBooks = orderBooks;
     }
 
