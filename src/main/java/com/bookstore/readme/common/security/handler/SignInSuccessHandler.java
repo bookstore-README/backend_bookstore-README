@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -52,12 +53,21 @@ public class SignInSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         memberRepository.save(member);
 
         Cookie cookie = new Cookie("RefreshToken", refreshToken);
+        // Cookie cookie = new Cookie("refreshToken", refreshToken);
 
         ObjectMapper objectMapper = new ObjectMapper();
 
         // response.setHeader(AUTHENTICATION, PREFIX_BEARER + accessToken);
-        response.addCookie(cookie);
+        // response.addCookie(cookie);
 
+        ResponseCookie responseCookie = ResponseCookie.from("RefreshToken", refreshToken)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .build();
+
+        response.setHeader("Set-Cookie", responseCookie.toString());
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         objectMapper.writeValue(response.getWriter(), MemberResponse.ok(mem));
