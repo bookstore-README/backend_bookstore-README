@@ -97,7 +97,7 @@ public class SecurityConfig {
                     authorizeRequests.requestMatchers(PathRequest.toH2Console()).permitAll();
                     authorizeRequests.requestMatchers(permitUrl).permitAll();
                     authorizeRequests.anyRequest().authenticated();
-                    authorizeRequests.requestMatchers(apiPermit).permitAll();})
+                })
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
         /*
