@@ -1,6 +1,7 @@
 package com.bookstore.readme.domain.category.service;
 
 import com.bookstore.readme.domain.category.domain.Category;
+import com.bookstore.readme.domain.category.domain.PreferredCategory;
 import com.bookstore.readme.domain.category.dto.CategoryDto;
 import com.bookstore.readme.domain.category.dto.CategoryInfo;
 import com.bookstore.readme.domain.category.dto.MemberCategory;
@@ -77,10 +78,10 @@ public class CategorySearchService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
 
-        String categories = member.getCategories();
-        String[] split = categories.split(",");
-        List<Long> list = Stream.of(split)
-                .map(Long::parseLong)
+        Set<PreferredCategory> categories = member.getCategories();
+        List<Long> list = categories
+                .stream()
+                .map(c -> c.getCategory().getId())
                 .toList();
 
         List<Category> result = categoryRepository.findAllByIdIn(list);
@@ -99,11 +100,11 @@ public class CategorySearchService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
 
-        String categories = member.getCategories();
-        String[] split = categories.split(",");
-        Set<Long> list = Stream.of(split)
-                .map(Long::parseLong)
-                .collect(Collectors.toSet());
+        Set<PreferredCategory> categories = member.getCategories();
+        List<Long> list = categories
+                .stream()
+                .map(c -> c.getCategory().getId())
+                .toList();
 
         if (list.size() < 3) {
             Random random = new Random();

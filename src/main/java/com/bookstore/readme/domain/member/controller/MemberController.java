@@ -67,7 +67,7 @@ public class MemberController {
     }
 
 
-    @PutMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "프로필 수정", description = "마이페이지 프로필 수정 API")
     public ResponseEntity<MemberResponse> changeProfileImage(
             @AuthenticationPrincipal MemberDetails memberDetails,
