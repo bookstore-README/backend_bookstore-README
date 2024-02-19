@@ -1,5 +1,10 @@
 package com.bookstore.readme.domain.member.service;
 
+import com.bookstore.readme.domain.category.domain.Category;
+import com.bookstore.readme.domain.category.domain.PreferredCategory;
+import com.bookstore.readme.domain.category.exception.NotFoundCategoryByIdException;
+import com.bookstore.readme.domain.category.repository.CategoryRepository;
+import com.bookstore.readme.domain.category.repository.PreferredCategoryRepository;
 import com.bookstore.readme.domain.file.service.FileService;
 import com.bookstore.readme.domain.member.dto.*;
 import com.bookstore.readme.domain.member.exception.DuplicationMemberEmailException;
@@ -23,6 +28,8 @@ public class MemberService {
 
     private final FileService fileService;
     private final MemberRepository memberRepository;
+    private final CategoryRepository categoryRepository;
+    private final PreferredCategoryRepository preferredCategoryRepository;
     private final PasswordEncoder encoder;
 
     @Transactional
@@ -97,7 +104,20 @@ public class MemberService {
         Member member = memberRepository.findById(memberDetails.getMemberId())
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberDetails.getMemberId()));
 
-        member.updateCategories(memberCategoryDto.getCategories());
-        memberRepository.saveAndFlush(member);
+        preferredCategoryRepository.deleteByMemberId(member.getId());
+
+        for(Integer categoryId : memberCategoryDto.getCategories()) {
+            Category category = categoryRepository.findById(categoryId.longValue())
+                    .orElseThrow(() -> new NotFoundCategoryByIdException(categoryId.longValue()));
+
+            PreferredCategory preferredCategory = PreferredCategory.builder()
+                    .member(member)
+                    .category(category)
+                    .build();
+
+            preferredCategoryRepository.save(preferredCategory);
+
+            preferredCategory.changeMember(member);
+        }
     }
 }

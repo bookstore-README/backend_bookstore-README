@@ -12,10 +12,10 @@ public class BookPageDto {
     private final Integer total;
     private final Integer limit;
     private final List<BookDto> books;
-    private final List<String> memberCategory;
+    private final List<Long> memberCategory;
 
     @Builder
-    public BookPageDto(Integer total, Integer limit, List<BookDto> books, List<String> memberCategory) {
+    public BookPageDto(Integer total, Integer limit, List<BookDto> books, List<Long> memberCategory) {
         this.total = total;
         this.limit = limit;
         this.books = books;

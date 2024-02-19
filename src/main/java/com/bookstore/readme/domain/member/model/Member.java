@@ -1,5 +1,6 @@
 package com.bookstore.readme.domain.member.model;
 
+import com.bookstore.readme.domain.category.domain.PreferredCategory;
 import com.bookstore.readme.domain.delivery.domain.Delivery;
 import com.bookstore.readme.domain.review.domain.Review;
 import com.bookstore.readme.domain.social.domain.SocialId;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -64,7 +66,8 @@ public class Member {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     private List<Delivery> deliveries = new ArrayList<>();
 
-    private String categories;
+    @OneToMany(mappedBy = "member")
+    private Set<PreferredCategory> categories;
 
     @CreatedDate
     @Column(updatable = false)
@@ -76,7 +79,7 @@ public class Member {
 
     @Builder
     public Member(Long id, String name, String nickname, String profileImage, String email, String password
-            , MemberRole role, String refreshToken, SocialId socialId, String categories) {
+            , MemberRole role, String refreshToken, SocialId socialId) {
         this.id = id;
         this.name = name;
         this.nickname = nickname;
@@ -86,16 +89,10 @@ public class Member {
         this.role = role;
         this.refreshToken = refreshToken;
         this.socialId = socialId;
-        this.categories = categories;
     }
 
     public void updateNewPassword(String password, PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(password);
-    }
-
-    public void updateCategories(List<Integer> categories) {
-        List<String> collect = categories.stream().map(String::valueOf).toList();
-        this.categories = String.join(",", collect);
     }
 
     public void passwordEncode(PasswordEncoder passwordEncoder) {
