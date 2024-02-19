@@ -41,6 +41,14 @@ public class MemberController {
         return ResponseEntity.ok(MemberResponse.ok(memberLoginDto.getEmail()));
     }
 
+    @GetMapping("")
+    @Operation(summary = "회원 본인 조회", description = "회원 본인 조회 API")
+    public ResponseEntity<MemberResponse> searchMemberOne(
+            @AuthenticationPrincipal MemberDetails memberDetails) {
+        MemberDto memberDto = memberService.searchMember(memberDetails.getMemberId());
+        return ResponseEntity.ok(MemberResponse.ok(memberDto));
+    }
+
     @GetMapping("/{memberId}")
     @Operation(summary = "회원 단일 조회", description = "회원을 단일 조회 하기위한 API")
     public ResponseEntity<MemberResponse> searchMemberOne(
