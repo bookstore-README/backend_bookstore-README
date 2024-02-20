@@ -36,7 +36,7 @@ public class Order {
     @JoinColumn(name = "deliveryId")
     private Delivery delivery;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<OrderBook> orderBooks = new ArrayList<>();
 
     @CreatedDate

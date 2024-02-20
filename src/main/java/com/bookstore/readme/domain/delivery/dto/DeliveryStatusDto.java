@@ -1,5 +1,6 @@
 package com.bookstore.readme.domain.delivery.dto;
 
+import com.bookstore.readme.domain.delivery.domain.DeliveryStatus;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 
@@ -10,6 +11,6 @@ public class DeliveryStatusDto {
     private Integer deliveryId;
 
     @NotEmpty(message = "필수 주문 상태값입니다.")
-    private String deliveryStatus;
+    private DeliveryStatus deliveryStatus;
 
 }

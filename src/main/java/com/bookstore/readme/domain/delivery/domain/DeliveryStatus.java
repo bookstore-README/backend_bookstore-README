@@ -10,7 +10,10 @@ public enum DeliveryStatus {
     READY("배송 준비중"),
     DELIVERING("배송 중"),
     COMPLETE("배송 완료"),
-    CANCEL("배송 취소");
+    EXCHANGE_AND_REFUND("교환/환불"),
+    CONFIRM("구매확정"),
+    CANCEL("배송 취소"),
+    ALL("전체");
 
     private final String status;
 

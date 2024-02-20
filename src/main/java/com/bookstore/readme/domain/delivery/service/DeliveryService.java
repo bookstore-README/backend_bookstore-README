@@ -23,6 +23,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,9 +81,41 @@ public class DeliveryService {
     }
 
     @Transactional
-    public List<DeliveryDto> searchByMemberId(Long memberId) {
+    public List<DeliveryDto> searchByMemberId(
+            Long memberId
+            , DeliveryStatus deliveryStatus
+            , String startDate
+            , String endDate
+    ) {
+        LocalDateTime start = LocalDate.parse(startDate).atStartOfDay();
+        LocalDateTime end = LocalDate.parse(endDate).atTime(LocalTime.MAX);
 
-        List<Delivery> deliveries = deliveryRepository.findByMemberId(memberId);
+        // List<Delivery> deliveries = deliveryRepository.findByMemberId(memberId);
+
+        // if(deliveryStatus.equals(DeliveryStatus.ALL))
+        //     deliveryStatus = null;
+
+        List<Delivery> deliveries = null;
+
+        // !!!!!!!나중에 리팩토링!!!!!!!
+        //  1. N+1 발생
+        //  2. deliveryStatus 전체 조회 시 조건 null 처리
+        // 전체 조회
+        if(deliveryStatus.equals(DeliveryStatus.ALL)) {
+            deliveries = deliveryRepository.findAllByMemberIdAndCreateDateBetween(
+                    memberId
+                    , start
+                    , end
+            );
+        }
+        // 상태값 조건 추가 조회
+        else {
+            deliveries = deliveryRepository.findCustomByMemberIdAndDeliveryStatusAndCreateDateBetween(memberId
+                    , deliveryStatus
+                    , start
+                    , end
+            );
+        }
 
         return DeliveryDto.ofs(deliveries);
     }
@@ -102,11 +137,17 @@ public class DeliveryService {
         Delivery delivery = deliveryRepository.findByIdAndMemberId(deliveryId, memberId)
                 .orElseThrow(() -> new NotFoundDeliveryByMemberIdException(memberId));
 
-        DeliveryStatus deliveryStatus = DeliveryStatus.of(deliveryStatusDto.getDeliveryStatus());
-
-        delivery.updateDeliveryStatus(deliveryStatus);
+        delivery.updateDeliveryStatus(deliveryStatusDto.getDeliveryStatus());
 
         return delivery.getId();
+    }
+
+    @Transactional
+    public Long deleteDelivery(Long deliveryId) {
+
+        deliveryRepository.deleteById(deliveryId);
+
+        return deliveryId;
     }
 
 }
