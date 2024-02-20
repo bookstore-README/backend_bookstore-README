@@ -4,10 +4,7 @@ import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
 import com.bookstore.readme.domain.book.repository.BookRepository;
 import com.bookstore.readme.domain.bookmark.domain.Bookmark;
-import com.bookstore.readme.domain.bookmark.dto.BookmarkAndBookDto;
-import com.bookstore.readme.domain.bookmark.dto.BookmarkCountDto;
-import com.bookstore.readme.domain.bookmark.dto.BookmarkDetailDto;
-import com.bookstore.readme.domain.bookmark.dto.BookmarkDto;
+import com.bookstore.readme.domain.bookmark.dto.*;
 import com.bookstore.readme.domain.bookmark.dto.count.BookmarkCountByMemberIdDto;
 import com.bookstore.readme.domain.bookmark.repository.BookmarkRepository;
 import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
@@ -55,13 +52,16 @@ public class BookmarkService {
     }
 
     @Transactional
-    public boolean checkMemberBookmark(Long memberId, Long bookId) {
+    public BookmarkBooleanDto checkMemberBookmark(Long memberId, Long bookId) {
         Bookmark bookmark = bookmarkRepository.findByBookIdAndMemberId(bookId, memberId)
                 .orElseGet(() -> Bookmark.builder()
                         .isMarked(false)
                         .build());
 
-        return bookmark.getIsMarked();
+        return BookmarkBooleanDto.builder()
+                .isMarked(bookmark.getIsMarked())
+                .bookmarkId(bookmark.getIsMarked() ? bookmark.getId() : -1)
+                .build();
     }
 
     private Bookmark createBookmark(Member member, Book book, boolean isMarked) {
@@ -71,6 +71,4 @@ public class BookmarkService {
                 .isMarked(isMarked)
                 .build();
     }
-
-
 }
