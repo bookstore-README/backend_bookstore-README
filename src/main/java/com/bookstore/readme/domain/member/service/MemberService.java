@@ -81,12 +81,14 @@ public class MemberService {
         // 닉네임 수정 시 중복 확인
         if(!member.getNickname().equals(memberUpdateDto.getNickname())) {
             if(!memberRepository.existsByNickname(memberUpdateDto.getNickname())) {
-                memberRepository.saveAndFlush(memberUpdateDto.toUpdateEntity(member, fileUrl));
+                memberRepository.saveAndFlush(memberUpdateDto.toUpdateEntity(member
+                        , null == fileUrl ? member.getProfileImage() : fileUrl));
             } else {
                 throw new DuplicationNicknameException(memberUpdateDto.getNickname());
             }
         } else {
-            memberRepository.saveAndFlush(memberUpdateDto.toUpdateEntity(member, fileUrl));
+            memberRepository.saveAndFlush(memberUpdateDto.toUpdateEntity(member
+                    , null == fileUrl ? member.getProfileImage() : fileUrl));
         }
 
         return true;
