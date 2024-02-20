@@ -30,6 +30,8 @@ public class DeliveryDto {
     private OrderDto orderDto;
 
     public static DeliveryDto of(Delivery delivery) {
+        OrderDto of = OrderDto.of(delivery.getOrder());
+
         return DeliveryDto.builder()
                 .deliveryId(delivery.getId())
                 .deliveryStatus(delivery.getDeliveryStatus().getStatus())
@@ -43,6 +45,7 @@ public class DeliveryDto {
                 .nickname(delivery.getMember().getNickname())
                 .email(delivery.getMember().getEmail())
                 .socialId(delivery.getMember().getSocialId())
+                .orderDto(of)
                 .build();
     }
 

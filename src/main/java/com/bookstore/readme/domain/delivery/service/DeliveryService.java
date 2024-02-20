@@ -46,16 +46,13 @@ public class DeliveryService {
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
 
         try {
-            Delivery delivery = deliveryRepository.save(deliverySaveDto.toEntity(member));
-
-            delivery.changeMember(member);
-
             Order order = orderRepository.save(Order.builder()
-                    .delivery(delivery)
                     .orderBooks(new ArrayList<>())
                     .build());
 
-            order.changeDelivery(delivery);
+            Delivery delivery = deliveryRepository.save(deliverySaveDto.toEntity(order));
+
+            delivery.changeMember(member);
 
             for (OrderBookSaveDto orderSaveDto : deliverySaveDto.getOrderBooks()) {
                 Book book = bookRepository.findById(orderSaveDto.getBookId().longValue())
