@@ -4,11 +4,11 @@ import com.bookstore.readme.domain.member.dto.*;
 import com.bookstore.readme.domain.member.model.MemberDetails;
 import com.bookstore.readme.domain.member.service.MemberService;
 import com.bookstore.readme.domain.member.response.MemberResponse;
-import com.bookstore.readme.domain.review.dto.ReviewSearchDto;
-import com.bookstore.readme.domain.review.service.ReviewSearchService;
+import com.bookstore.readme.domain.review.dto.ReviewSearchDto;;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
@@ -73,11 +73,12 @@ public class MemberController {
     @PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "프로필 수정", description = "마이페이지 프로필 수정 API")
     public ResponseEntity<MemberResponse> changeProfileImage(
+            HttpServletRequest request,
             @AuthenticationPrincipal MemberDetails memberDetails,
             @RequestPart(name = "update") MemberUpdateDto memberUpdateDto,
             @Parameter(description = "업로드 할 프로필 이미지")
             @RequestPart(required = false) MultipartFile profileImage) {
-        return ResponseEntity.ok(MemberResponse.ok(memberService.changeProfile(memberDetails, profileImage, memberUpdateDto)));
+        return ResponseEntity.ok(MemberResponse.ok(memberService.changeProfile(request, memberDetails, profileImage, memberUpdateDto)));
     }
 
     @GetMapping("/reviews")
