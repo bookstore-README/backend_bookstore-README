@@ -3,6 +3,7 @@ package com.bookstore.readme.domain.delivery.dto;
 import com.bookstore.readme.domain.delivery.domain.Delivery;
 import com.bookstore.readme.domain.delivery.domain.DeliveryStatus;
 import com.bookstore.readme.domain.member.model.Member;
+import com.bookstore.readme.domain.order.domain.Order;
 import com.bookstore.readme.domain.order.dto.OrderBookSaveDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -40,12 +41,13 @@ public class DeliverySaveDto {
     @NotNull(message = "주문한 책 목록은 필수입니다.")
     private List<OrderBookSaveDto> orderBooks;
 
-    public Delivery toEntity(Member member) {
+    public Delivery toEntity(Order order) {
         return Delivery.builder()
                 .name(name)
                 .phone(phone)
                 .address(address)
                 .message(message)
+                .order(order)
                 .deliveryStatus(DeliveryStatus.READY)
                 .paymentMethod(paymentMethod)
                 .paymentAmount(paymentAmount)

@@ -37,8 +37,9 @@ public class Delivery {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "delivery", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Order> orders = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "orderId")
+    private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -64,7 +65,7 @@ public class Delivery {
     @Builder
     public Delivery(String name, String phone, String address, String message
             , DeliveryStatus deliveryStatus, String paymentMethod, Integer paymentAmount
-            , Member member) {
+            , Order order, Member member) {
         this.name = name;
         this.phone = phone;
         this.address = address;
@@ -72,6 +73,7 @@ public class Delivery {
         this.deliveryStatus = deliveryStatus;
         this.paymentMethod = paymentMethod;
         this.paymentAmount = paymentAmount;
+        this.order = order;
         this.member = member;
     }
 

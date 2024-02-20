@@ -32,8 +32,7 @@ public class Order {
     // @JoinColumn(name = "member_id")
     // private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "deliveryId")
+    @OneToOne(mappedBy = "order")
     private Delivery delivery;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -46,11 +45,6 @@ public class Order {
     @LastModifiedDate
     @Column
     private LocalDateTime updateDate;
-
-    public void changeDelivery(Delivery delivery) {
-        this.delivery = delivery;
-        delivery.getOrders().add(this);
-    }
 
     @Builder
     public Order(Long id, Delivery delivery, List<OrderBook> orderBooks) {
