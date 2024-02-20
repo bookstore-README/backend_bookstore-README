@@ -11,10 +11,13 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -71,7 +74,7 @@ public class MemberController {
     @Operation(summary = "프로필 수정", description = "마이페이지 프로필 수정 API")
     public ResponseEntity<MemberResponse> changeProfileImage(
             @AuthenticationPrincipal MemberDetails memberDetails,
-            @RequestPart MemberUpdateDto memberUpdateDto,
+            @RequestPart(name = "update") MemberUpdateDto memberUpdateDto,
             @Parameter(description = "업로드 할 프로필 이미지")
             @RequestPart(required = false) MultipartFile profileImage) {
         return ResponseEntity.ok(MemberResponse.ok(memberService.changeProfile(memberDetails, profileImage, memberUpdateDto)));
@@ -97,5 +100,15 @@ public class MemberController {
         memberService.changeCategories(memberDetails, memberCategoryDto);
 
         return ResponseEntity.ok(MemberResponse.ok(null));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<Object> maxUploadSizeExceededException() {
+        return new ResponseEntity<>(MemberResponse.profileError(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FileSizeLimitExceededException.class)
+    public ResponseEntity<Object> fileSizeLimitExceededException() {
+        return new ResponseEntity<>(MemberResponse.profileError(), HttpStatus.BAD_REQUEST);
     }
 }

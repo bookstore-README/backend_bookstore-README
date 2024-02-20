@@ -20,4 +20,8 @@ public class MemberResponse extends CommonResponse {
     public static MemberResponse ok(Object member) {
         return new MemberResponse(200, "Success", member);
     }
+
+    public static MemberResponse profileError() {
+        return new MemberResponse(400, "해당 프로필 파일은 10MB를 넘기면 안됩니다.", null);
+    }
 }
