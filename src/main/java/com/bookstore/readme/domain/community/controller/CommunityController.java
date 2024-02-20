@@ -48,7 +48,11 @@ public class CommunityController {
             @AuthenticationPrincipal MemberDetails memberDetails,
             @ParameterObject CommunityPageRequest request) {
 
-        CommunityPageDto result = communitySearchService.searchCommunityPage(memberDetails.getMemberId(), request.getCursorId(), request.getLimit());
+        CommunityPageDto result = communitySearchService.searchCommunityPage(
+                memberDetails == null ? -1 : memberDetails.getMemberId(),
+                request.getCursorId(), request.getLimit()
+        );
+
         if (result.getCards().isEmpty())
             return ResponseEntity.ok(CommunityResponse.empty(result));
         else
