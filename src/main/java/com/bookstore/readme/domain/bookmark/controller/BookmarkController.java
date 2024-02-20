@@ -1,5 +1,6 @@
 package com.bookstore.readme.domain.bookmark.controller;
 
+import com.bookstore.readme.domain.bookmark.dto.BookmarkBooleanDto;
 import com.bookstore.readme.domain.bookmark.dto.BookmarkDto;
 import com.bookstore.readme.domain.bookmark.dto.count.BookmarkCountByBookIdDto;
 import com.bookstore.readme.domain.bookmark.dto.count.BookmarkCountByMemberIdDto;
@@ -84,7 +85,7 @@ public class BookmarkController {
             @AuthenticationPrincipal MemberDetails memberDetails,
             @Parameter(description = "찜 여부를 확인할 도서 아이디", required = true) @PathVariable(name = "bookId") Integer bookId
     ) {
-        boolean result = bookmarkService.checkMemberBookmark(memberDetails.getMemberId(), bookId.longValue());
+        BookmarkBooleanDto result = bookmarkService.checkMemberBookmark(memberDetails.getMemberId(), bookId.longValue());
         return ResponseEntity.ok(BookmarkResponse.ok(result));
     }
 }
