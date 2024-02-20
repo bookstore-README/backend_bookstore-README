@@ -48,7 +48,7 @@ public class CommunitySearchService {
                     .isAngry(false)
                     .isCrying(false)
                     .build());
-            
+
             List<EmojiInfoDto> emojis = List.of(
                     new EmojiInfoDto("heart", emoji.getHeart(), memberEmoji.getIsHeart()),
                     new EmojiInfoDto("smile", emoji.getSmile(), memberEmoji.getIsSmile()),
