@@ -48,7 +48,6 @@ public class SocialService {
         String refreshToken = jwtTokenService.createRefreshToken(socialMember.getEmail());
 
         Member saved = Member.builder()
-                .name(socialMember.getName())
                 .nickname(socialMember.getNickname())
                 .profileImage(socialMember.getProfileImage())
                 .email(socialMember.getEmail())

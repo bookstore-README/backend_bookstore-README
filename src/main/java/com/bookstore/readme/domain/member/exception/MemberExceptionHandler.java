@@ -43,6 +43,19 @@ public class MemberExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
+    @ExceptionHandler(DuplicationNicknameException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    private ResponseEntity<MemberResponse> handler(DuplicationNicknameException e) {
+
+        MemberResponse response = MemberResponse.builder()
+                .status(e.getStatus())
+                .message(e.getMessage())
+                .data(e.getNickname())
+                .build();
+
+        return ResponseEntity.badRequest().body(response);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     private ResponseEntity<MemberResponse> handlerMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         Map<String, Object> errors = new HashMap<>();

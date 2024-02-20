@@ -9,9 +9,6 @@ import lombok.Getter;
 
 @Getter
 public class MemberSaveDto {
-    @NotEmpty(message = "회원 이름은 필수 입니다.")
-    @Schema(description = "회원 이름입니다.", example = "회원 이름")
-    private String name;
 
     @NotEmpty(message = "회원 이름은 필수 입니다.")
     @Schema(description = "회원의 닉네임 입니다", example = "익명1")
@@ -28,7 +25,6 @@ public class MemberSaveDto {
 
     public Member toEntity() {
         return Member.builder()
-                .name(name)
                 .nickname(nickname)
                 .email(email)
                 .password(password)

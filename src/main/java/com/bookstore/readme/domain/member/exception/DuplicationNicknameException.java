@@ -7,7 +7,7 @@ public class DuplicationNicknameException extends MemberException {
     private final String nickname;
 
     public DuplicationNicknameException(String nickname) {
-        super(MemberStatus.DUPLICATE_MEMBER);
+        super(MemberStatus.DUPLICATE_NICKNAME);
         this.nickname = nickname;
     }
 }

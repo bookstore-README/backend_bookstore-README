@@ -38,8 +38,6 @@ public class Member {
     @Column(name = "memberId")
     private Long id;
 
-    private String name;
-
     private String nickname;
 
     private String profileImage;
@@ -78,10 +76,9 @@ public class Member {
     private LocalDateTime updateDate;
 
     @Builder
-    public Member(Long id, String name, String nickname, String profileImage, String email, String password
+    public Member(Long id, String nickname, String profileImage, String email, String password
             , MemberRole role, String refreshToken, SocialId socialId) {
         this.id = id;
-        this.name = name;
         this.nickname = nickname;
         this.profileImage = profileImage;
         this.email = email;
