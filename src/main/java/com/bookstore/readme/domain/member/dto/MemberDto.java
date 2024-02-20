@@ -19,7 +19,6 @@ public class MemberDto {
 
     public Member toEntity() {
         return Member.builder()
-                .name(name)
                 .nickname(nickname)
                 .profileImage(profileImage)
                 .email(email)
@@ -29,7 +28,6 @@ public class MemberDto {
 
     public static MemberDto of(Member member) {
         return MemberDto.builder()
-                .name(member.getName())
                 .nickname(member.getNickname())
                 .profileImage(member.getProfileImage())
                 .email(member.getEmail())

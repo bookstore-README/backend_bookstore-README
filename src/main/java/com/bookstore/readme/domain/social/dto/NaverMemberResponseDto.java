@@ -7,8 +7,6 @@ import com.bookstore.readme.domain.social.domain.SocialType;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-import java.time.LocalDateTime;
-
 @JsonNaming(SnakeCaseStrategy.class)
 public record NaverMemberResponseDto(
         String resultcode,
@@ -23,7 +21,6 @@ public record NaverMemberResponseDto(
                 .socialId(new SocialId(String.valueOf(response.id), SocialType.NAVER))
                 .nickname(utils.RandomNickname()) // 닉네임 없음으로 인한 Default 값 추가
                 .email(response.email)
-                .name(response.name)
                 .profileImage(response.profileImage)
                 .build();
     }
