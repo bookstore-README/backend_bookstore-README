@@ -36,7 +36,7 @@ public class SocialController {
     @GetMapping("/auth/{socialType}")
     @Operation(summary = "소셜 로그인 리다이렉트", description = "소셜 로그인 실행 시 로그인 창 리다이렉트")
     ResponseEntity<Void> redirectAuthCodeRequestUrl(
-            @Parameter(description = "소셜타입", example = "google", required = true)
+            @Parameter(description = "소셜타입", required = true)
             @PathVariable SocialType socialType,
             HttpServletResponse response) {
         String redirectUrl = socialService.getAuthCodeRequestUrl(socialType);
@@ -47,7 +47,7 @@ public class SocialController {
     @GetMapping("/login/{socialType}")
     @Operation(summary = "소셜 로그인 진행", description = "소셜 로그인 진행 후 서비스")
     ResponseEntity<Void> login(
-            @Parameter(description = "소셜타입", example = "google", required = true)
+            @Parameter(description = "소셜타입", required = true)
             @PathVariable SocialType socialType,
             @Parameter(description = "로그인 진행 후 인증 코드", example = "sampleX", required = true)
             @RequestParam("code") String code,
