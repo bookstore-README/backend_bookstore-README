@@ -87,13 +87,13 @@ public abstract class BookPagination<T> {
 
     protected static Specification<Book> likeAuthors(String authors) {
         return ((root, query, criteriaBuilder) -> {
-            return criteriaBuilder.like(root.get("authors"), authors);
+            return criteriaBuilder.like(root.get("authors"), "%"+authors+"%");
         });
     }
 
     protected static Specification<Book> likeBookTitle(String bookTitle) {
         return ((root, query, criteriaBuilder) -> {
-            return criteriaBuilder.like(root.get("bookTitle"), bookTitle);
+            return criteriaBuilder.like(root.get("bookTitle"), "%"+bookTitle+"%");
         });
     }
 
