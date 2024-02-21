@@ -19,6 +19,8 @@ public class OrderBookDto {
 
     private String authors;
 
+    private String bookImgUrl;
+
     private Integer price;
 
     private Integer quantity;
@@ -29,6 +31,7 @@ public class OrderBookDto {
                 .bookId(orderBook.getBook().getId())
                 .bookTitle(orderBook.getBook().getBookTitle())
                 .authors(orderBook.getBook().getAuthors())
+                .bookImgUrl(orderBook.getBook().getBookImgUrl())
                 .price(orderBook.getBook().getPrice())
                 .quantity(orderBook.getQuantity())
                 .build();
