@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -61,9 +62,16 @@ public class SingleSortPageService extends BookPage {
                 .limit(limit)
                 .toList();
 
-        int nextCursorId = pages.hasNext() ? contents.get(contents.size() - 1).getId().intValue() : -1;
+        Long total = 0L;
+        if (StringUtils.hasText(search)) {
+            total = bookRepository.countAllBySearch("%" + search + "%");
+        } else {
+            total = bookRepository.count();
+        }
+
+        int nextCursorId = pages.hasNext() || contents.size() > limit ? contents.get(contents.size() - 1).getId().intValue() : -1;
         return BookPageDto.builder()
-                .total(results.size())
+                .total(Math.toIntExact(total))
                 .limit(limit)
                 .cursorId(nextCursorId)
                 .books(results)
