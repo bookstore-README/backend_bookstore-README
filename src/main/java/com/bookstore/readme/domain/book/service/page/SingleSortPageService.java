@@ -61,7 +61,16 @@ public class SingleSortPageService extends BookPage {
                 .limit(limit)
                 .toList();
 
-        int nextCursorId = pages.hasNext() ? contents.get(contents.size() - 1).getId().intValue() : -1;
+        Long total = 0L;
+        if (StringUtils.hasText(search)) {
+            total = bookRepository.countAllBySearch("%" + search + "%");
+        } else {
+            total = bookRepository.count();
+        }
+
+        
+        int nextCursorId = pages.hasNext() || contents.size() > limit ? contents.get(contents.size() - 1).getId().intValue() : -1;
+
         return BookPageDto.builder()
                 .total(results.size())
                 .limit(limit)
