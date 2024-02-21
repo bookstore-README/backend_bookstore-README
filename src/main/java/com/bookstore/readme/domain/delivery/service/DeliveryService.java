@@ -9,6 +9,7 @@ import com.bookstore.readme.domain.delivery.dto.DeliveryDto;
 import com.bookstore.readme.domain.delivery.dto.DeliverySaveDto;
 import com.bookstore.readme.domain.delivery.dto.DeliveryStatusDto;
 import com.bookstore.readme.domain.delivery.exception.DeliverySaveException;
+import com.bookstore.readme.domain.delivery.exception.NotFoundDeliveryByIdException;
 import com.bookstore.readme.domain.delivery.exception.NotFoundDeliveryByMemberIdException;
 import com.bookstore.readme.domain.delivery.repository.DeliveryRepository;
 import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
@@ -75,6 +76,14 @@ public class DeliveryService {
         } catch(Exception e) {
             throw new DeliverySaveException();
         }
+    }
+
+    @Transactional
+    public DeliveryDto searchDelivery(Long deliveryId) {
+        Delivery delivery = deliveryRepository.findById(deliveryId)
+                .orElseThrow(() -> new NotFoundDeliveryByIdException(deliveryId));
+
+        return DeliveryDto.of(delivery);
     }
 
     @Transactional
