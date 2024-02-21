@@ -17,6 +17,6 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
     @Query("select b from Book b where b.categories in :categories")
     Page<Book> findFavoriteBookPage(List<String> categories, Pageable pageable);
 
-    @Query("select b from Book b where  b.authors like :search or b.bookTitle like :search")
+    @Query("select count(b.id) from Book b where  b.authors like :search or b.bookTitle like :search")
     Long countAllBySearch(String search);
 }

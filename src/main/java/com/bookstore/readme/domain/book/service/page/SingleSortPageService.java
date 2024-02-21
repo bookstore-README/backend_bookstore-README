@@ -73,7 +73,7 @@ public class SingleSortPageService extends BookPage {
         int nextCursorId = pages.hasNext() || contents.size() > limit ? contents.get(contents.size() - 1).getId().intValue() : -1;
 
         return BookPageDto.builder()
-                .total(results.size())
+                .total(Math.toIntExact(total))
                 .limit(limit)
                 .cursorId(nextCursorId)
                 .books(results)
