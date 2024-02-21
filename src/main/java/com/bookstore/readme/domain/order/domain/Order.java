@@ -32,7 +32,7 @@ public class Order {
     // @JoinColumn(name = "member_id")
     // private Member member;
 
-    @OneToOne(mappedBy = "order")
+    @OneToOne(mappedBy = "delivery")
     private Delivery delivery;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.REMOVE, orphanRemoval = true)
