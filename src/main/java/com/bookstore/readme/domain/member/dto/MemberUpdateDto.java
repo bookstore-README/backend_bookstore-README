@@ -15,7 +15,6 @@ public class MemberUpdateDto {
     public Member toUpdateEntity(Member member, String fileUrl) {
         return Member.builder()
                 .id(member.getId())
-                .name(member.getName())
                 .nickname(nickname)
                 .profileImage(fileUrl)
                 .email(member.getEmail())

@@ -49,9 +49,6 @@ public class Book {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
     private List<Bookmark> bookmarks = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
-    private List<OrderBook> orderBooks = new ArrayList<>();
-
     @Column(name = "published_date", columnDefinition = "DATETIME(6)")
     private LocalDateTime publishedDate;
 

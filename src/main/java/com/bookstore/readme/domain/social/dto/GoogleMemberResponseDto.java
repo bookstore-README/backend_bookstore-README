@@ -23,7 +23,6 @@ public record GoogleMemberResponseDto(
                 .socialId(new SocialId(id, SocialType.GOOGLE))
                 .nickname(utils.RandomNickname()) // 닉네임 없음으로 인한 Default 값 추가
                 .email(email)
-                .name(name)
                 .profileImage(picture)
                 .build();
     }

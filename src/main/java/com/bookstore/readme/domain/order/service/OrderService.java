@@ -11,6 +11,7 @@ import com.bookstore.readme.domain.order.domain.OrderBook;
 import com.bookstore.readme.domain.order.dto.OrderBookSaveDto;
 import com.bookstore.readme.domain.order.dto.OrderDto;
 import com.bookstore.readme.domain.order.exception.NotFoundOrderByIdException;
+import com.bookstore.readme.domain.order.exception.NotFoundOrderByMemberIdException;
 import com.bookstore.readme.domain.order.exception.OrderSaveException;
 import com.bookstore.readme.domain.order.repository.OrderBookRepository;
 import com.bookstore.readme.domain.order.repository.OrderRepository;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,29 +33,34 @@ public class OrderService {
 
     @Transactional(rollbackFor = Exception.class)
     public OrderDto save(Long memberId, List<OrderBookSaveDto> orderSaveDtos) {
-        // try {
+
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberId));
+        try {
+            Order order = orderRepository.save(Order.builder()
+                    // .member(member)
+                    .orderBooks(new ArrayList<>())
+                    .build());
 
-        Order order = orderRepository.save(Order.builder().member(member).build());
+            for (OrderBookSaveDto orderSaveDto : orderSaveDtos) {
+                Book book = bookRepository.findById(orderSaveDto.getBookId().longValue())
+                        .orElseThrow(() -> new NotFoundBookByIdException(orderSaveDto.getBookId().longValue()));
 
-        for (OrderBookSaveDto orderSaveDto : orderSaveDtos) {
-            Book book = bookRepository.findById(orderSaveDto.getBookId().longValue())
-                    .orElseThrow(() -> new NotFoundBookByIdException(orderSaveDto.getBookId().longValue()));
+                OrderBook orderBook = OrderBook.builder()
+                        .book(book)
+                        .quantity(orderSaveDto.getQuantity())
+                        .order(order)
+                        .build();
 
-            OrderBook orderBook = OrderBook.builder()
-                    .book(book)
-                    .quantity(orderSaveDto.getQuantity())
-                    .order(order)
-                    .build();
+                orderBook.changeOrder(order);
 
-            orderBookRepository.save(orderBook);
+                orderBookRepository.save(orderBook);
+            }
+            
+            return OrderDto.of(order);
+        } catch(Exception e) {
+            throw new OrderSaveException();
         }
-
-        return OrderDto.of(order);
-        // } catch(Exception e) {
-        //     throw new OrderSaveException();
-        // }
     }
 
 
@@ -61,8 +68,17 @@ public class OrderService {
     public OrderDto findById(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundOrderByIdException(orderId));
-
+        
         return OrderDto.of(order);
+    }
+
+    @Transactional
+    public List<OrderDto> findByMemberId(Long memberId) {
+        // List<Order> orders = orderRepository.findByMemberId(memberId);
+
+        // OrderDto.ofs(orders)
+
+        return null;
     }
 
 }

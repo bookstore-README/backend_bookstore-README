@@ -7,6 +7,7 @@ import com.bookstore.readme.domain.book.repository.BookRepository;
 import com.bookstore.readme.domain.book.request.FavoriteCategoryRequest;
 import com.bookstore.readme.domain.bookmark.dto.SortType;
 import com.bookstore.readme.domain.category.domain.Category;
+import com.bookstore.readme.domain.category.domain.PreferredCategory;
 import com.bookstore.readme.domain.category.dto.CategoryDto;
 import com.bookstore.readme.domain.category.dto.CategoryInfo;
 import com.bookstore.readme.domain.category.dto.MemberCategory;
@@ -24,10 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -58,11 +56,15 @@ public class FavoritePageService {
                 .map(BookDto::of)
                 .toList();
 
+        List<Long> categories = member.getCategories().stream()
+                .map(c -> c.getCategory().getId())
+                .toList();
+
         return BookPageDto.builder()
                 .total(results.size())
                 .limit(100)
                 .books(results)
-                .memberCategory(Arrays.stream(member.getCategories().split(",")).toList())
+                .memberCategory(categories)
                 .build();
     }
 
@@ -94,23 +96,25 @@ public class FavoritePageService {
         Collections.shuffle(results);
         List<BookDto> randomBook = results.subList(0, 4);
 
+        List<Long> categories = member.getCategories().stream()
+                .map(c -> c.getCategory().getId())
+                .toList();
 
         return BookPageDto.builder()
                 .total(results.size())
                 .limit(4)
                 .books(randomBook)
-                .memberCategory(Arrays.stream(member.getCategories().split(",")).toList())
+                .memberCategory(categories)
                 .build();
     }
 
 
     /**
-     * @param categoryId List 로 변환할 categoryId ex) '1,2,3'
+     * @param categories List 로 변환할 categoryId ex) '1,2,3'
      * @param filter     변환할 List에 포함할 필터 데이터 ex) '[1, 2]'
      */
-    private static List<Long> convertLongAndFilter(String categoryId, List<Integer> filter) {
-        String[] split = categoryId.split(",");
-        Stream<Long> longStream = Stream.of(split).map(Long::parseLong);
+    private static List<Long> convertLongAndFilter(Set<PreferredCategory> categories, List<Integer> filter) {
+        Stream<Long> longStream = categories.stream().map(c -> c.getCategory().getId());
 
         if (!filter.isEmpty()) {
             List<Long> collect = filter.stream()

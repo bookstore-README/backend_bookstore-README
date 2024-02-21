@@ -12,7 +12,7 @@ public class RandomUtils {
 
         sb.append("익명 ");
 
-        // 앞 대문자 영어 3글자
+        // 앞 대문자 영어 4글자
         for(int i = 0; i < 4; i++) {
             sb.append((char)(random.nextInt(26) + 65));
         }

@@ -1,5 +1,11 @@
 package com.bookstore.readme.domain.member.service;
 
+import com.bookstore.readme.common.utils.UrlUtils;
+import com.bookstore.readme.domain.category.domain.Category;
+import com.bookstore.readme.domain.category.domain.PreferredCategory;
+import com.bookstore.readme.domain.category.exception.NotFoundCategoryByIdException;
+import com.bookstore.readme.domain.category.repository.CategoryRepository;
+import com.bookstore.readme.domain.category.repository.PreferredCategoryRepository;
 import com.bookstore.readme.domain.file.service.FileService;
 import com.bookstore.readme.domain.member.dto.*;
 import com.bookstore.readme.domain.member.exception.DuplicationMemberEmailException;
@@ -9,6 +15,7 @@ import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.model.MemberDetails;
 import com.bookstore.readme.domain.member.repository.MemberRepository;
 import com.bookstore.readme.domain.review.domain.Review;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +30,8 @@ public class MemberService {
 
     private final FileService fileService;
     private final MemberRepository memberRepository;
+    private final CategoryRepository categoryRepository;
+    private final PreferredCategoryRepository preferredCategoryRepository;
     private final PasswordEncoder encoder;
 
     @Transactional
@@ -58,25 +67,28 @@ public class MemberService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public boolean changeProfile(MemberDetails memberDetails, MultipartFile profileImage, MemberUpdateDto memberUpdateDto) {
+    public boolean changeProfile(HttpServletRequest request, MemberDetails memberDetails
+            , MultipartFile profileImage, MemberUpdateDto memberUpdateDto) {
         Member member = memberRepository.findById(memberDetails.getMemberId())
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberDetails.getMemberId()));
 
         String fileUrl = null;
 
         // 파일 업로드
-        if(!profileImage.isEmpty())
-            fileUrl = fileService.saveProfileImage(profileImage);
+        if(null != profileImage && !profileImage.isEmpty())
+            fileUrl = UrlUtils.getBaseUrl(request) + fileService.saveProfileImage(profileImage);
         
         // 닉네임 수정 시 중복 확인
         if(!member.getNickname().equals(memberUpdateDto.getNickname())) {
             if(!memberRepository.existsByNickname(memberUpdateDto.getNickname())) {
-                memberRepository.saveAndFlush(memberUpdateDto.toUpdateEntity(member, fileUrl));
+                memberRepository.saveAndFlush(memberUpdateDto.toUpdateEntity(member
+                        , null == fileUrl ? member.getProfileImage() : fileUrl));
             } else {
                 throw new DuplicationNicknameException(memberUpdateDto.getNickname());
             }
         } else {
-            memberRepository.saveAndFlush(memberUpdateDto.toUpdateEntity(member, fileUrl));
+            memberRepository.saveAndFlush(memberUpdateDto.toUpdateEntity(member
+                    , null == fileUrl ? member.getProfileImage() : fileUrl));
         }
 
         return true;
@@ -97,7 +109,20 @@ public class MemberService {
         Member member = memberRepository.findById(memberDetails.getMemberId())
                 .orElseThrow(() -> new NotFoundMemberByIdException(memberDetails.getMemberId()));
 
-        member.updateCategories(memberCategoryDto.getCategories());
-        memberRepository.saveAndFlush(member);
+        preferredCategoryRepository.deleteByMemberId(member.getId());
+
+        for(Integer categoryId : memberCategoryDto.getCategories()) {
+            Category category = categoryRepository.findById(categoryId.longValue())
+                    .orElseThrow(() -> new NotFoundCategoryByIdException(categoryId.longValue()));
+
+            PreferredCategory preferredCategory = PreferredCategory.builder()
+                    .member(member)
+                    .category(category)
+                    .build();
+
+            preferredCategoryRepository.save(preferredCategory);
+
+            preferredCategory.changeMember(member);
+        }
     }
 }

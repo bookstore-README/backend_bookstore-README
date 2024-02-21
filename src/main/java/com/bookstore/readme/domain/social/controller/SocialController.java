@@ -61,10 +61,20 @@ public class SocialController {
         mem.put(AUTHENTICATION, PREFIX_BEARER + socialLoginResponseDto.getAccessToken());
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Cookie cookie = new Cookie("refreshToken", socialLoginResponseDto.getRefreshToken());
+        // Cookie cookie = new Cookie("refreshToken", socialLoginResponseDto.getRefreshToken());
 
         // response.setHeader(AUTHENTICATION, PREFIX_BEARER + socialLoginResponseDto.getAccessToken());
-        response.addCookie(cookie);
+        // response.addCookie(cookie);
+
+        ResponseCookie responseCookie = ResponseCookie
+                .from("RefreshToken", socialLoginResponseDto.getRefreshToken())
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .build();
+
+        response.setHeader("Set-Cookie", responseCookie.toString());
 
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");

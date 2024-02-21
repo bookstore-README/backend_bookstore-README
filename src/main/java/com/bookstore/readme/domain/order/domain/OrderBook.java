@@ -21,13 +21,13 @@ public class OrderBook {
     @Column(name = "orderBookId")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
 
     private Integer quantity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orderId")
     private Order order;
 
