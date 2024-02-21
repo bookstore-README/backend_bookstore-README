@@ -57,6 +57,18 @@ public class DeliveryController {
         return ResponseEntity.ok(DeliveryResponse.ok(deliveryDtos));
     }
 
+    @GetMapping("/{deliveryId}")
+    @Operation(summary = "배송 아이디 조회", description = "배송 아이디  조회 API")
+    public ResponseEntity<DeliveryResponse> searchDelivery(
+            @Parameter(description = "배송 아이디", required = true)
+            @PathVariable Integer deliveryId
+    ) {
+
+        DeliveryDto deliveryDto = deliveryService.searchDelivery(deliveryId.longValue());
+
+        return ResponseEntity.ok(DeliveryResponse.ok(deliveryDto));
+    }
+
     @PutMapping("/{deliveryId}")
     @Operation(summary = "회원 배송 취소", description = "회원 배송 취소 API")
     public ResponseEntity<DeliveryResponse> cancleDelivery(

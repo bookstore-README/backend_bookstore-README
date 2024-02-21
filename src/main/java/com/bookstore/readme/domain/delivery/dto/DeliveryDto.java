@@ -19,6 +19,7 @@ public class DeliveryDto {
     private String phone;
     private String address;
     private String message;
+
     private String paymentMethod;
     private Integer paymentAmount;
 
