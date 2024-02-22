@@ -1,7 +1,10 @@
 package com.bookstore.readme.domain.delivery.domain;
 
+import com.bookstore.readme.domain.delivery.exception.NotEqualDeliveryStatusException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import static java.util.Locale.ENGLISH;
 
 @Getter
 @RequiredArgsConstructor
@@ -28,7 +31,6 @@ public enum DeliveryStatus {
             }
         }
 
-        throw new IllegalArgumentException("일치하는 배송 상태값이 없습니다.");
+        throw new NotEqualDeliveryStatusException(status);
     }
-
 }

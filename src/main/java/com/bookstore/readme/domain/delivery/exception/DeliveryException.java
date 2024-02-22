@@ -2,17 +2,17 @@ package com.bookstore.readme.domain.delivery.exception;
 
 public class DeliveryException extends RuntimeException {
 
-    private final DeliveryStatus orderStatus;
+    private final DeliveryExceptionStatus deliveryStatus;
 
-    public DeliveryException(DeliveryStatus orderStatus) {
-        this.orderStatus = orderStatus;
+    public DeliveryException(DeliveryExceptionStatus deliveryStatus) {
+        this.deliveryStatus = deliveryStatus;
     }
 
     public int getStatus() {
-        return orderStatus.getStatus();
+        return deliveryStatus.getStatus();
     }
 
     public String getMessage() {
-        return orderStatus.getMessage();
+        return deliveryStatus.getMessage();
     }
 }
