@@ -36,11 +36,18 @@ public class MemberService {
 
     @Transactional
     public Long joinMember(MemberSaveDto memberSaveDto) {
+        // 존재하는 아이디 여부
+        if (memberRepository.existsByEmail(memberSaveDto.getEmail())) {
+            throw new DuplicationMemberEmailException(memberSaveDto.getEmail());
+        }
+
+        // 존재하는 닉네임 여부
+        if(memberRepository.existsByNickname(memberSaveDto.getNickname())) {
+            throw new DuplicationNicknameException(memberSaveDto.getNickname());
+        }
+
         Member member = memberSaveDto.toEntity();
         member.passwordEncode(encoder);
-        if (memberRepository.existsByEmail(member.getEmail())) {
-            throw new DuplicationMemberEmailException(member.getEmail());
-        }
 
         memberRepository.save(member);
         return member.getId();

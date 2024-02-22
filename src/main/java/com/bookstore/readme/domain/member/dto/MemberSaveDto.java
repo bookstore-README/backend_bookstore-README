@@ -3,6 +3,7 @@ package com.bookstore.readme.domain.member.dto;
 import com.bookstore.readme.domain.member.model.Member;
 import com.bookstore.readme.domain.member.model.MemberRole;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.Getter;
@@ -15,6 +16,7 @@ public class MemberSaveDto {
     private String nickname;
 
     @NotEmpty(message = "이메일 주소는 필수 입니다.")
+    @Email(message = "이메일 형식에 맞지 않습니다.")
     @Schema(description = "이메일 주소입니다.", example = "이메일 주소")
     private String email;
 
