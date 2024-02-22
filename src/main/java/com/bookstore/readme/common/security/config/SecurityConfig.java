@@ -117,7 +117,7 @@ public class SecurityConfig {
     public CorsConfiguration corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(Arrays.asList(
-                "http://localhost:3000", "https://front-bookstore-readme-git-develop-thisisthewa2.vercel.app"
+                "http://localhost:3000", "https://front-bookstore-readme-virid.vercel.app/"
         ));
         config.setAllowedMethods(Collections.singletonList("*"));
         config.setAllowCredentials(true);
