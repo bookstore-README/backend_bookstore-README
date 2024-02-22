@@ -1,16 +1,18 @@
 package com.bookstore.readme.domain.delivery.dto;
 
-import com.bookstore.readme.domain.delivery.domain.DeliveryStatus;
-import jakarta.validation.constraints.NotEmpty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
 public class DeliveryStatusDto {
 
-    @NotEmpty(message = "필수 주문 아이디입니다.")
+    @NotNull(message = "필수 배송 아이디입니다.")
+    @Schema(name = "배송 아이디", example = "1")
     private Integer deliveryId;
 
-    @NotEmpty(message = "필수 주문 상태값입니다.")
-    private DeliveryStatus deliveryStatus;
+    @NotNull(message = "필수 배송 상태값입니다.")
+    @Schema(name = "배송 상태값", example = "READY, DELIVERING, COMPLETE, EXCHANGE_AND_REFUND, CONFIRM, CANCEL")
+    private String deliveryStatus;
 
 }

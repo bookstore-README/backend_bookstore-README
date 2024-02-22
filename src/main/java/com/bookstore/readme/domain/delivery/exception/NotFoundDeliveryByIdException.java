@@ -8,7 +8,7 @@ public class NotFoundDeliveryByIdException extends DeliveryException {
     private final Long deliveryId;
 
     public NotFoundDeliveryByIdException(Long deliveryId) {
-        super(DeliveryStatus.NOT_FOUND_DELIVERY_BY_ID);
+        super(DeliveryExceptionStatus.NOT_FOUND_DELIVERY_BY_ID);
         this.deliveryId = deliveryId;
     }
 }

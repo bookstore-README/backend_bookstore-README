@@ -143,7 +143,9 @@ public class DeliveryService {
         Delivery delivery = deliveryRepository.findByIdAndMemberId(deliveryId, memberId)
                 .orElseThrow(() -> new NotFoundDeliveryByMemberIdException(memberId));
 
-        delivery.updateDeliveryStatus(deliveryStatusDto.getDeliveryStatus());
+        DeliveryStatus deliveryStatus = DeliveryStatus.of(deliveryStatusDto.getDeliveryStatus());
+
+        delivery.updateDeliveryStatus(deliveryStatus);
 
         return delivery.getId();
     }
