@@ -49,7 +49,7 @@ public class InfinityScrollService extends BookPagination<InfinityScroll> {
                     return convertBook(book, bookmarkDto);
                 }).limit(request.getLimit()).toList();
 
-        long total = StringUtils.hasText(request.getSearch()) ? bookRepository.countAllBySearch(request.getSearch()) : bookRepository.count();
+        long total = StringUtils.hasText(request.getSearch()) ? bookRepository.countAllBySearch("%" + request.getSearch() + "%") : bookRepository.count();
         int nextCursorId = books.hasNext() || content.size() > request.getLimit() ? content.get(content.size() - 1).getId().intValue() : -1;
         return InfinityScroll.builder()
                 .total((int) total)

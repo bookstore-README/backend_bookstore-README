@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class PaginationService extends BookPagination<Pagination> {
                     return convertBook(book, bookmarkDto);
                 }).toList();
 
-        long total = bookRepository.count();
+        long total = StringUtils.hasText(request.getSearch()) ? bookRepository.countAllBySearch("%" + request.getSearch() + "%") : bookRepository.count();
         return Pagination.builder()
                 .total((int) total)
                 .limit(books.getSize())
