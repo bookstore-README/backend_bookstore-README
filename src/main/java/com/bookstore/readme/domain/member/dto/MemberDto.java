@@ -20,6 +20,7 @@ public class MemberDto {
     private String profileImage;
     private String email;
     private String password;
+    private String address;
 
     private List<DeliveryDto> deliveries;
 
@@ -40,7 +41,7 @@ public class MemberDto {
                 .nickname(member.getNickname())
                 .profileImage(member.getProfileImage())
                 .email(member.getEmail())
-                .password(member.getPassword())
+                .address(member.getAddress())
                 .deliveries(ofs)
                 .build();
     }

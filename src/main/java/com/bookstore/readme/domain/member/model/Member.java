@@ -47,6 +47,8 @@ public class Member {
     @JsonIgnore
     private String password;
 
+    private String address;
+
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
@@ -99,4 +101,6 @@ public class Member {
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
     }
+
+    public void updateAddress(String address) { this.address = address; }
 }

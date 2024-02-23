@@ -29,6 +29,9 @@ public class DeliverySaveDto {
     @Schema(description = "배송 시 전달할 메시지")
     private String message;
 
+    @Schema(description = "기본 배송지 저장 여부")
+    private boolean isBasicAddress;
+
     @Schema(description = "결제 방법", example = "CARD")
     @NotNull(message = "결제 방법은 필수입니다.")
     private String paymentMethod;
