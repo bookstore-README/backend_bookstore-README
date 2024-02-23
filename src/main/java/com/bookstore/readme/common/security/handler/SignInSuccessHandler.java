@@ -42,23 +42,17 @@ public class SignInSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 () -> new UsernameNotFoundException("해당 유저가 존재하지 않습니다.")
         );
 
-        Map<String, Object> mem = new HashMap<>();
-        mem.put("email", member.getEmail());
-        mem.put("memberId", member.getId());
-        mem.put(AUTHENTICATION, PREFIX_BEARER + accessToken);
-
         // refresh token update
         member.updateRefreshToken(refreshToken);
 
         memberRepository.save(member);
 
-        Cookie cookie = new Cookie("RefreshToken", refreshToken);
-        // Cookie cookie = new Cookie("refreshToken", refreshToken);
+        Map<String, Object> mem = new HashMap<>();
+        mem.put("email", member.getEmail());
+        mem.put("memberId", member.getId());
+        mem.put(AUTHENTICATION, PREFIX_BEARER + accessToken);
 
         ObjectMapper objectMapper = new ObjectMapper();
-
-        // response.setHeader(AUTHENTICATION, PREFIX_BEARER + accessToken);
-        // response.addCookie(cookie);
 
         ResponseCookie responseCookie = ResponseCookie.from("RefreshToken", refreshToken)
                 .path("/")

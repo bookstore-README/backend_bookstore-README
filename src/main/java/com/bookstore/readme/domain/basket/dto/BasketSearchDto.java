@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 public class BasketSearchDto {
     private final Long basketId;
+    private final Long bookId;
     private final String bookImgUrl;
     private final String bookTitle;
     private final Integer price;
@@ -17,8 +18,9 @@ public class BasketSearchDto {
     private final List<String> authors;
 
     @Builder
-    public BasketSearchDto(Long basketId, String bookImgUrl, String bookTitle, Integer price, Integer count, List<String> authors) {
+    public BasketSearchDto(Long basketId, Long bookId, String bookImgUrl, String bookTitle, Integer price, Integer count, List<String> authors) {
         this.basketId = basketId;
+        this.bookId = bookId;
         this.bookImgUrl = bookImgUrl;
         this.bookTitle = bookTitle;
         this.price = price;
@@ -29,6 +31,7 @@ public class BasketSearchDto {
     public static BasketSearchDto of(Book book, Long basketId, Integer count) {
         return BasketSearchDto.builder()
                 .basketId(basketId)
+                .bookId(book.getId())
                 .bookImgUrl(book.getBookImgUrl())
                 .bookTitle(book.getBookTitle())
                 .price(book.getPrice())

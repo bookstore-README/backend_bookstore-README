@@ -72,6 +72,13 @@ public class DeliveryService {
                 orderBookRepository.save(orderBook);
             }
 
+            // 기본 배송지 저장 시, Member의 Address 컬럼 업데이트
+            if(deliverySaveDto.isBasicAddress()) {
+                member.updateAddress(deliverySaveDto.getAddress());
+
+                memberRepository.saveAndFlush(member);
+            }
+
             // 장바구니 -> 주문하기로 장바구니 삭제 분기 처리
             if(null != deliverySaveDto.getBasketIds() && !deliverySaveDto.getBasketIds().isEmpty()) {
                 List<Long> ids = deliverySaveDto.getBasketIds().stream()

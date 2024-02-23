@@ -87,7 +87,6 @@ public class MemberController {
             @AuthenticationPrincipal MemberDetails memberDetails) {
 
         List<MemberReviewsDto> memberReviewsDtos = memberService.myReviews(memberDetails.getMemberId());
-
         return ResponseEntity.ok(MemberResponse.ok(memberReviewsDtos));
     }
 

@@ -37,7 +37,6 @@ public class SwaggerConfig {
                 "/review/**",
                 "/basket/**",
                 "/delivery/**",
-                "/order/**",
                 "/social/**",
         };
 
@@ -68,7 +67,6 @@ public class SwaggerConfig {
                 createTag("카테고리 API", "카테고리 관련 API"),
                 createTag("장바구니 API", "장바구니 관련 API"),
                 createTag("배송 API", "배송 관련 API"),
-                createTag("주문 API", "주문 관련 API"),
                 createTag("소셜 API", "소셜 관련 API")
         );
 
