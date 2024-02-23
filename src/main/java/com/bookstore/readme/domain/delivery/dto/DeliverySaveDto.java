@@ -37,6 +37,9 @@ public class DeliverySaveDto {
     @NotNull(message = "결제 금액은 필수입니다.")
     private Integer paymentAmount;
 
+    @Schema(description = "장바구니 아이디 리스트")
+    private List<Integer> basketIds;
+
     @Schema(description = "주문한 책 목록")
     @NotNull(message = "주문한 책 목록은 필수입니다.")
     private List<OrderBookSaveDto> orderBooks;
