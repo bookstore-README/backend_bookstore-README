@@ -27,10 +27,6 @@ public class OrderDto {
 
     private List<OrderBookDto> orderBook;
 
-    private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
-
     public static OrderDto of(Order order) {
         List<OrderBookDto> ofs = OrderBookDto.ofs(order.getOrderBooks());
 
@@ -41,8 +37,6 @@ public class OrderDto {
                 // .email(order.getMember().getEmail())
                 // .socialId(order.getMember().getSocialId())
                 .orderBook(ofs)
-                .createTime(order.getCreateDate())
-                .updateTime(order.getUpdateDate())
                 .build();
     }
 
