@@ -1,5 +1,6 @@
 package com.bookstore.readme.domain.delivery.service;
 
+import com.bookstore.readme.domain.basket.repository.BasketRepository;
 import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
 import com.bookstore.readme.domain.book.repository.BookRepository;
@@ -39,6 +40,7 @@ public class DeliveryService {
     private final OrderBookRepository orderBookRepository;
     private final OrderRepository orderRepository;
     private final DeliveryRepository deliveryRepository;
+    private final BasketRepository basketRepository;
 
     @Transactional(rollbackFor = Exception.class)
     public Long save(Long memberId, DeliverySaveDto deliverySaveDto) {
@@ -68,6 +70,15 @@ public class DeliveryService {
                 orderBook.changeOrder(order);
 
                 orderBookRepository.save(orderBook);
+            }
+
+            // 장바구니 -> 주문하기로 장바구니 삭제 분기 처리
+            if(null != deliverySaveDto.getBasketIds() && !deliverySaveDto.getBasketIds().isEmpty()) {
+                List<Long> ids = deliverySaveDto.getBasketIds().stream()
+                        .map(Integer::longValue)
+                        .toList();
+
+                basketRepository.deleteAllById(ids);
             }
 
             // OrderDto orderDto = OrderDto.of(order);
