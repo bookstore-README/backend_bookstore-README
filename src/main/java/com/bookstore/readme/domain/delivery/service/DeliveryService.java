@@ -73,7 +73,7 @@ public class DeliveryService {
             }
 
             // 기본 배송지 저장 시, Member의 Address 컬럼 업데이트
-            if(deliverySaveDto.isBasicAddress()) {
+            if(deliverySaveDto.isBasicAddress() && member.getAddress().equals(deliverySaveDto.getAddress())) {
                 member.updateAddress(deliverySaveDto.getAddress());
 
                 memberRepository.saveAndFlush(member);
