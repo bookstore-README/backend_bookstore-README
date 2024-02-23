@@ -86,4 +86,18 @@ public class SocialController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/auth/{socialType}/callback")
+    @Operation(hidden = true)
+    public ResponseEntity<Void> callback(
+            @PathVariable SocialType socialType,
+            @RequestParam(value = "code") String code, HttpServletResponse response) throws IOException {
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", code);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(response.getWriter(), map);
+
+        return ResponseEntity.ok().build();
+    }
+
 }
