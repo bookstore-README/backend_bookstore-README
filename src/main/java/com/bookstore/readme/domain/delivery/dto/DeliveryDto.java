@@ -1,12 +1,12 @@
 package com.bookstore.readme.domain.delivery.dto;
 
 import com.bookstore.readme.domain.delivery.domain.Delivery;
-import com.bookstore.readme.domain.order.domain.Order;
 import com.bookstore.readme.domain.order.dto.OrderDto;
 import com.bookstore.readme.domain.social.domain.SocialId;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -30,6 +30,9 @@ public class DeliveryDto {
 
     private OrderDto orderDto;
 
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
+
     public static DeliveryDto of(Delivery delivery) {
         OrderDto of = OrderDto.of(delivery.getOrder());
 
@@ -47,6 +50,8 @@ public class DeliveryDto {
                 .email(delivery.getMember().getEmail())
                 .socialId(delivery.getMember().getSocialId())
                 .orderDto(of)
+                .createDate(delivery.getCreateDate())
+                .updateDate(delivery.getUpdateDate())
                 .build();
     }
 
@@ -65,6 +70,8 @@ public class DeliveryDto {
                 .email(delivery.getMember().getEmail())
                 .socialId(delivery.getMember().getSocialId())
                 .orderDto(orderDto)
+                .createDate(delivery.getCreateDate())
+                .updateDate(delivery.getUpdateDate())
                 .build();
     }
 
@@ -73,5 +80,4 @@ public class DeliveryDto {
                 .map(DeliveryDto::of)
                 .toList();
     }
-
 }

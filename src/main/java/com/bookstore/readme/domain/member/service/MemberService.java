@@ -17,6 +17,7 @@ import com.bookstore.readme.domain.member.repository.MemberRepository;
 import com.bookstore.readme.domain.review.domain.Review;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +52,14 @@ public class MemberService {
 
         memberRepository.save(member);
         return member.getId();
+    }
+
+    @Transactional
+    public MemberDto searchEmail(String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(
+                () -> new UsernameNotFoundException("해당 유저가 존재하지 않습니다."));
+
+        return MemberDto.of(member);
     }
 
     @Transactional
