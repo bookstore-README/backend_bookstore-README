@@ -15,7 +15,11 @@ import org.springframework.http.HttpHeaders;
 
 import java.util.List;
 
-// @OpenAPIDefinition(servers = {@Server(url = "https://readme-bookstore.store", description = "Default Server URL")})
+@OpenAPIDefinition(servers = {
+        @Server(url = "https://readme-bookstore.store", description = "README HTTPS DEV SERVER"),
+        @Server(url = "http://15.165.141.22:8080", description = "README HTTP DEV SERVER"),
+        @Server(url = "http://localhost:8080", description = "README LOCAL SERVER")
+})
 @Configuration
 public class SwaggerConfig {
 
