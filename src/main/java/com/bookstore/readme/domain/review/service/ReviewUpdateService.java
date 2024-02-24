@@ -20,6 +20,7 @@ public class ReviewUpdateService {
                 .orElseThrow(() -> new NotFoundReviewByIdException(reviewId.longValue()));
 
         review.changeContent(request.getContent());
+        review.changeReviewRating(request.getRating());
         reviewRepository.flush();
 
         return ReviewDto.of(review);
