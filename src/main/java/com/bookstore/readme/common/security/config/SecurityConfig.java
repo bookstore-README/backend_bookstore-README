@@ -75,9 +75,12 @@ public class SecurityConfig {
                 })
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
+        // http
+        //         .addFilterBefore(getCustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+        //         .addFilterAt(getCustomAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http
-                .addFilterBefore(getCustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAt(getCustomAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(getCustomAuthenticationFilter(), LogoutFilter.class)
+                .addFilterBefore(getCustomAuthorizationFilter(), CustomAuthenticationFilter.class);
 
         return http.build();
     }
@@ -119,6 +122,7 @@ public class SecurityConfig {
         config.setAllowedOrigins(Arrays.asList(
                 "http://localhost:3000", "http://localhost:3001"
                 , "https://localhost:3001", "https://front-bookstore-readme-virid.vercel.app/"
+                , "https://readme-bookstore.store"
         ));
         config.setAllowedMethods(Collections.singletonList("*"));
         config.setAllowCredentials(true);
