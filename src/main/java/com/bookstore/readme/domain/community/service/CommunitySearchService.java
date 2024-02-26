@@ -92,11 +92,31 @@ public class CommunitySearchService {
             CommunityBookDto communityBookDto = CommunityBookDto.of(book);
             CommunityMemberDto communityMemberDto = CommunityMemberDto.of(member);
 
+            Emoji emoji = community.getEmoji();
+            Long id = emoji.getId();
+            MemberEmoji memberEmoji = memberEmojiRepository.findByMemberIdAndCommunityId(memberId.longValue(), community.getId()).orElseGet(() -> MemberEmoji.builder()
+                    .isHeart(false)
+                    .isSmile(false)
+                    .isExcited(false)
+                    .isAngry(false)
+                    .isCrying(false)
+                    .build());
+
+            List<EmojiInfoDto> emojis = List.of(
+                    new EmojiInfoDto("heart", emoji.getHeart(), memberEmoji.getIsHeart()),
+                    new EmojiInfoDto("smile", emoji.getSmile(), memberEmoji.getIsSmile()),
+                    new EmojiInfoDto("excited", emoji.getExcited(), memberEmoji.getIsExcited()),
+                    new EmojiInfoDto("angry", emoji.getAngry(), memberEmoji.getIsAngry()),
+                    new EmojiInfoDto("crying", emoji.getCrying(), memberEmoji.getIsCrying())
+            );
+
+
             CommunityPageInfoDto pageInfo = CommunityPageInfoDto.builder()
                     .communityId(community.getId())
                     .content(community.getContent())
                     .writer(communityMemberDto)
                     .bookInfo(communityBookDto)
+                    .emojiInfo(new EmojiDto(id, emojis))
                     .createDate(community.getCreateDate())
                     .updateDate(community.getUpdateDate())
                     .build();
