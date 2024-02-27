@@ -23,14 +23,14 @@ public class DeliverySaveDto {
     private String phone;
 
     @Schema(description = "배송 받는 사람 주소", example = "주소 풀네임")
-    @NotNull(message = "배송 받는 사람의 이름은 필수입니다.")
+    @NotNull(message = "배송 받는 사람의 주소는 필수입니다.")
     private String address;
 
     @Schema(description = "배송 시 전달할 메시지")
     private String message;
 
     @Schema(description = "기본 배송지 저장 여부")
-    private boolean isBasicAddress;
+    private Boolean basicAddress;
 
     @Schema(description = "결제 방법", example = "CARD")
     @NotNull(message = "결제 방법은 필수입니다.")
