@@ -1,6 +1,7 @@
 package com.bookstore.readme.domain.member.model;
 
 import com.bookstore.readme.domain.category.domain.PreferredCategory;
+import com.bookstore.readme.domain.delivery.domain.BasicAddress;
 import com.bookstore.readme.domain.delivery.domain.Delivery;
 import com.bookstore.readme.domain.review.domain.Review;
 import com.bookstore.readme.domain.social.domain.SocialId;
@@ -47,8 +48,6 @@ public class Member {
     @JsonIgnore
     private String password;
 
-    private String address;
-
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
@@ -68,6 +67,10 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private Set<PreferredCategory> categories;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "basicAddressId")
+    private BasicAddress basicAddress;
 
     @CreatedDate
     @Column(updatable = false)
@@ -102,5 +105,6 @@ public class Member {
         this.refreshToken = updateRefreshToken;
     }
 
-    public void updateAddress(String address) { this.address = address; }
+    public void updateBasicAddress(BasicAddress basicAddress) { this.basicAddress = basicAddress; }
+
 }
