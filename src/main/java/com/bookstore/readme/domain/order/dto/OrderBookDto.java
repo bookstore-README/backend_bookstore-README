@@ -23,7 +23,7 @@ public class OrderBookDto {
 
     private Integer price;
 
-    private Integer quantity;
+    private Integer count;
 
     public static OrderBookDto of(OrderBook orderBook) {
         return OrderBookDto.builder()
@@ -33,7 +33,7 @@ public class OrderBookDto {
                 .authors(orderBook.getBook().getAuthors())
                 .bookImgUrl(orderBook.getBook().getBookImgUrl())
                 .price(orderBook.getBook().getPrice())
-                .quantity(orderBook.getQuantity())
+                .count(orderBook.getCount())
                 .build();
     }
 
