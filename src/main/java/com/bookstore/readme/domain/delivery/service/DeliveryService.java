@@ -4,6 +4,7 @@ import com.bookstore.readme.domain.basket.repository.BasketRepository;
 import com.bookstore.readme.domain.book.domain.Book;
 import com.bookstore.readme.domain.book.exception.NotFoundBookByIdException;
 import com.bookstore.readme.domain.book.repository.BookRepository;
+import com.bookstore.readme.domain.delivery.domain.BasicAddress;
 import com.bookstore.readme.domain.delivery.domain.Delivery;
 import com.bookstore.readme.domain.delivery.domain.DeliveryStatus;
 import com.bookstore.readme.domain.delivery.dto.DeliveryDto;
@@ -12,6 +13,7 @@ import com.bookstore.readme.domain.delivery.dto.DeliveryStatusDto;
 import com.bookstore.readme.domain.delivery.exception.DeliverySaveException;
 import com.bookstore.readme.domain.delivery.exception.NotFoundDeliveryByIdException;
 import com.bookstore.readme.domain.delivery.exception.NotFoundDeliveryByMemberIdException;
+import com.bookstore.readme.domain.delivery.repository.BasicAddressRepository;
 import com.bookstore.readme.domain.delivery.repository.DeliveryRepository;
 import com.bookstore.readme.domain.member.exception.NotFoundMemberByIdException;
 import com.bookstore.readme.domain.member.model.Member;
@@ -42,6 +44,7 @@ public class DeliveryService {
     private final OrderRepository orderRepository;
     private final DeliveryRepository deliveryRepository;
     private final BasketRepository basketRepository;
+    private final BasicAddressRepository basicAddressRepository;
 
     @Transactional(rollbackFor = Exception.class)
     public Long save(Long memberId, DeliverySaveDto deliverySaveDto) {
@@ -73,11 +76,23 @@ public class DeliveryService {
                 orderBookRepository.save(orderBook);
             }
 
-            // 기본 배송지 저장 시, Member의 Address 컬럼 업데이트
-            if(deliverySaveDto.getBasicAddress() && !Objects.equals(member.getAddress(), deliverySaveDto.getAddress())) {
-                member.updateAddress(deliverySaveDto.getAddress());
+            // 기본 배송지 저장 시, 회원 BasicAddress 업데이트
+            if(deliverySaveDto.getBasicAddress()) {
 
-                memberRepository.saveAndFlush(member);
+                if(null != member.getBasicAddress()) {
+                    basicAddressRepository.deleteById(member.getBasicAddress().getId());
+                }
+
+                BasicAddress basicAddress = BasicAddress.builder()
+                        .name(deliverySaveDto.getName())
+                        .phone(deliverySaveDto.getPhone())
+                        .address(deliverySaveDto.getAddress())
+                        .member(member)
+                        .build();
+
+                basicAddressRepository.save(basicAddress);
+
+                member.updateBasicAddress(basicAddress);
             }
 
             // 장바구니 -> 주문하기로 장바구니 삭제 분기 처리

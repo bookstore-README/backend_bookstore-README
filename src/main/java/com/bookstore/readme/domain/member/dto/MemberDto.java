@@ -1,5 +1,6 @@
 package com.bookstore.readme.domain.member.dto;
 
+import com.bookstore.readme.domain.delivery.dto.BasicAddressDto;
 import com.bookstore.readme.domain.delivery.dto.DeliveryDto;
 import com.bookstore.readme.domain.member.model.Member;
 import lombok.*;
@@ -15,11 +16,13 @@ import java.util.List;
 public class MemberDto {
 
     private Long memberId;
-    private String name;
     private String nickname;
     private String profileImage;
     private String email;
     private String password;
+
+    private String name;
+    private String phone;
     private String address;
 
     private List<DeliveryDto> deliveries;
@@ -34,15 +37,18 @@ public class MemberDto {
     }
 
     public static MemberDto of(Member member) {
-        List<DeliveryDto> ofs = DeliveryDto.ofs(member.getDeliveries());
+        List<DeliveryDto> deliveries = DeliveryDto.ofs(member.getDeliveries());
+        BasicAddressDto basic = BasicAddressDto.of(member.getBasicAddress());
 
         return MemberDto.builder()
                 .memberId(member.getId())
                 .nickname(member.getNickname())
                 .profileImage(member.getProfileImage())
                 .email(member.getEmail())
-                .address(member.getAddress())
-                .deliveries(ofs)
+                .name(basic.getName())
+                .phone(basic.getPhone())
+                .address(basic.getAddress())
+                .deliveries(deliveries)
                 .build();
     }
 }
