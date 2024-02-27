@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -73,7 +74,7 @@ public class DeliveryService {
             }
 
             // 기본 배송지 저장 시, Member의 Address 컬럼 업데이트
-            if(deliverySaveDto.isBasicAddress() && member.getAddress().equals(deliverySaveDto.getAddress())) {
+            if(deliverySaveDto.getBasicAddress() && !Objects.equals(member.getAddress(), deliverySaveDto.getAddress())) {
                 member.updateAddress(deliverySaveDto.getAddress());
 
                 memberRepository.saveAndFlush(member);
