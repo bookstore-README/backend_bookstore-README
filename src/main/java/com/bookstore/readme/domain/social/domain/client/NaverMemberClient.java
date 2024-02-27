@@ -36,9 +36,8 @@ public class NaverMemberClient implements SocialMemberClient {
         params.add("grant_type", "authorization_code");
         params.add("client_id", naverOauthConfig.clientId());
         params.add("client_secret", naverOauthConfig.clientSecret());
-        params.add("redirect_uri", naverOauthConfig.redirectUri());
         params.add("code", authCode);
-        params.add("state", naverOauthConfig.state());
+        params.add("state", "samplestate");
         return params;
     }
 }
