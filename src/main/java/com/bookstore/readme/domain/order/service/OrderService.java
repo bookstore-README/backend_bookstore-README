@@ -48,7 +48,7 @@ public class OrderService {
 
                 OrderBook orderBook = OrderBook.builder()
                         .book(book)
-                        .quantity(orderSaveDto.getQuantity())
+                        .count(orderSaveDto.getCount())
                         .order(order)
                         .build();
 
