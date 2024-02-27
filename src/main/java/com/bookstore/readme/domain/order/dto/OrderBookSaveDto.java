@@ -15,6 +15,6 @@ public class OrderBookSaveDto {
     @Schema(description = "주문 책 권수")
     @NotNull(message = "주문한 책 권수는 필수입니다.")
     @Min(message = "주문한 책 권수는 1권 이상이여야 합니다.", value = 1)
-    Integer quantity;
+    Integer count;
 
 }

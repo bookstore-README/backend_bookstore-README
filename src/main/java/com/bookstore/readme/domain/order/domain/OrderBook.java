@@ -25,16 +25,16 @@ public class OrderBook {
     @JoinColumn(name = "book_id")
     private Book book;
 
-    private Integer quantity;
+    private Integer count;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orderId")
     private Order order;
 
     @Builder
-    public OrderBook(Book book, Integer quantity, Order order) {
+    public OrderBook(Book book, Integer count, Order order) {
         this.book = book;
-        this.quantity = quantity;
+        this.count = count;
         this.order = order;
     }
 
