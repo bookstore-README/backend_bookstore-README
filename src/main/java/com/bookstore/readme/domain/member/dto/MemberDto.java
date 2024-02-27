@@ -38,17 +38,28 @@ public class MemberDto {
 
     public static MemberDto of(Member member) {
         List<DeliveryDto> deliveries = DeliveryDto.ofs(member.getDeliveries());
-        BasicAddressDto basic = BasicAddressDto.of(member.getBasicAddress());
 
-        return MemberDto.builder()
-                .memberId(member.getId())
-                .nickname(member.getNickname())
-                .profileImage(member.getProfileImage())
-                .email(member.getEmail())
-                .name(basic.getName())
-                .phone(basic.getPhone())
-                .address(basic.getAddress())
-                .deliveries(deliveries)
-                .build();
+        if(null != member.getBasicAddress()) {
+            BasicAddressDto basic = BasicAddressDto.of(member.getBasicAddress());
+
+            return MemberDto.builder()
+                    .memberId(member.getId())
+                    .nickname(member.getNickname())
+                    .profileImage(member.getProfileImage())
+                    .email(member.getEmail())
+                    .name(basic.getName())
+                    .phone(basic.getPhone())
+                    .address(basic.getAddress())
+                    .deliveries(deliveries)
+                    .build();
+        } else {
+            return MemberDto.builder()
+                    .memberId(member.getId())
+                    .nickname(member.getNickname())
+                    .profileImage(member.getProfileImage())
+                    .email(member.getEmail())
+                    .deliveries(deliveries)
+                    .build();
+        }
     }
 }
