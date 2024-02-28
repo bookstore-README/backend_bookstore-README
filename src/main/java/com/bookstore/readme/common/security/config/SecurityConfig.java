@@ -122,7 +122,7 @@ public class SecurityConfig {
         config.setAllowedOrigins(Arrays.asList(
                 "http://localhost:3000", "http://localhost:3001"
                 , "https://localhost:3001", "https://front-bookstore-readme-virid.vercel.app/"
-                , "https://readme-bookstore.store"
+                , "https://readme-bookstore.store", "https://front-bookstore-readme.vercel.app/"
         ));
         config.setAllowedMethods(Collections.singletonList("*"));
         config.setAllowCredentials(true);
